@@ -1,0 +1,126 @@
+// Simplified Xtext grammar for MM_M4DS
+grammar xtext.MM_M4DS with org.eclipse.xtext.common.Terminals
+
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+generate mm_M4DS "http://www.example.org/mm_M4DS"
+
+// Root rule
+Model:
+	elements+=Element*;
+
+Element:
+	Library | Workflow | Contract;
+
+// Basic Library elements
+Library:
+	'Library' name=ID '{'
+		('jobs' '{' jobs+=Job ( "," jobs+=Job)* '}' )?
+		('transformations' '{' transformations+=Transformation ( "," transformations+=Transformation)* '}' )?
+	'}';
+
+Job:
+	'Job' name=ID '{'
+		'input' input=DataField
+		'output' output=DataField
+		('parameters' '{' parameters+=Parameter ( "," parameters+=Parameter)* '}' )?
+	'}';
+
+Transformation:
+	'Transformation' name=ID '{'
+		'input' input=DataField
+		'output' output=DataField
+		('parameters' '{' parameters+=Parameter ( "," parameters+=Parameter)* '}' )?
+	'}';
+
+// Basic Workflow elements
+Workflow:
+	 'Workflow' name=ID '{'
+	  ('steps' '{' steps+=ProcessingStep ( "," steps+=ProcessingStep)* '}' )?
+	  ('dataFields' '{' dataFields+=DataField ( "," dataFields+=DataField)* '}' )?
+	  ('contracts' '{' contracts+=Contract ( "," contracts+=Contract)* '}' )?
+ 	'}';
+
+ProcessingStep:
+	PMMLModel | DataProcessing;
+
+PMMLModel:
+	'PMMLModel' name=ID '{'
+		('filePath' filePath=STRING)?
+		'input' input=DataField
+		'output' output=DataField
+	'}';
+
+DataProcessing:
+	'DataProcessing' name=ID '{'
+		'input' input=DataField
+		'output' output=DataField
+		('operation' operation=Operation)?
+	'}';
+
+// Basic Contract elements
+Contract:
+	'Contract' name=ID '{'
+		('conditions' '{' conditions+=Condition ( "," conditions+=Condition)* '}' )?
+	'}';
+
+Condition:
+	'Condition' name=ID '{'
+		'field' field=[DataField]
+		'operator' operator=ComparisonOperator
+		'value' value=Value
+	'}';
+
+// Common elements
+DataField:
+	Categorical | Continuous | DateField;
+
+Categorical:
+	'Categorical' name=ID '{'
+		('dataType' dataType=DataType)?
+		('validValues' '{' validValues+=STRING ( "," validValues+=STRING)* '}' )?
+	'}';
+
+Continuous:
+	'Continuous' name=ID '{'
+		('dataType' dataType=DataType)?
+		('min' min=NUMBER)?
+		('max' max=NUMBER)?
+	'}';
+
+DateField:
+	'Date' name=ID '{'
+		('format' format=STRING)?
+	'}';
+
+Parameter:
+	'Parameter' name=ID '{'
+		'type' type=DataType
+		('value' value=Value)?
+	'}';
+
+Value:
+	StringValue | NumberValue | BooleanValue;
+
+StringValue:
+	value=STRING;
+
+NumberValue:
+	value=NUMBER;
+
+BooleanValue:
+	value=('true' | 'false');
+
+// Enums
+enum DataType:
+	STRING='String' | INTEGER='Integer' | DOUBLE='Double' | BOOLEAN='Boolean' | DATE='Date';
+
+enum Operation:
+	FILTER='filter' | MAP='map' | REDUCE='reduce' | JOIN='join';
+
+enum ComparisonOperator:
+	EQUALS='equals' | GREATER='greater' | LESS='less' | CONTAINS='contains';
+
+// Terminals
+terminal NUMBER returns ecore::EDouble:
+	'-'? INT ('.' INT)?;
