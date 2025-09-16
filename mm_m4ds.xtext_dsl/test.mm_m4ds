@@ -1,0 +1,57 @@
+// Ejemplo de un flujo de trabajo
+Workflow myFirstWorkflow {
+ steps {
+  DataProcessing cleaningStep {
+   input Continuous rawInput {
+    dataType Double
+    min 0.0
+    max 100.0
+   }
+   output Continuous processedOutput {
+    dataType Double
+   }
+   operation map
+  }
+ }
+ dataFields {
+  Categorical status {
+   dataType String
+   validValues { "OK", "ERROR" }
+  }
+ }
+ contracts {
+  Contract qualityCheck {
+   conditions {
+    Condition outputValueCheck {
+     field status // Esta referencia ahora es válida
+     operator equals
+     value "OK"
+    }
+   }
+  }
+ }
+}
+
+// Ejemplo de una librería
+Library commonAssets {
+ jobs {
+  Job dataIngestion {
+   input Continuous sourceData {
+    dataType Double
+   }
+   output Continuous ingestedData {
+    dataType Double
+   }
+  }
+ }
+ transformations {
+  Transformation normalizeData {
+   input Continuous rawData {
+    dataType Double
+   }
+   output Continuous normalizedData {
+    dataType Double
+   }
+  }
+ }
+}
