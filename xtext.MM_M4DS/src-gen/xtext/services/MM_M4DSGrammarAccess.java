@@ -432,14 +432,14 @@ public class MM_M4DSGrammarAccess extends AbstractElementFinder.AbstractGrammarE
 		//     'Workflow' name=ID '{'
 		//      ('steps' '{' steps+=ProcessingStep ( "," steps+=ProcessingStep)* '}' )?
 		//      ('dataFields' '{' dataFields+=DataField ( "," dataFields+=DataField)* '}' )?
-		//      ('contracts' '{' contracts+=Contract ( "," contracts+=Contract)* '}' )? // <-- Añade esta línea
+		//      ('contracts' '{' contracts+=Contract ( "," contracts+=Contract)* '}' )?
 		//     '}';
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'Workflow' name=ID '{'
 		// ('steps' '{' steps+=ProcessingStep ( "," steps+=ProcessingStep)* '}' )?
 		// ('dataFields' '{' dataFields+=DataField ( "," dataFields+=DataField)* '}' )?
-		// ('contracts' '{' contracts+=Contract ( "," contracts+=Contract)* '}' )? // <-- Añade esta línea
+		// ('contracts' '{' contracts+=Contract ( "," contracts+=Contract)* '}' )?
 		//'}'
 		public Group getGroup() { return cGroup; }
 		
@@ -545,8 +545,7 @@ public class MM_M4DSGrammarAccess extends AbstractElementFinder.AbstractGrammarE
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_5_4() { return cRightCurlyBracketKeyword_5_4; }
 		
-		//// <-- Añade esta línea
-		//    '}'
+		//'}'
 		public Keyword getRightCurlyBracketKeyword_6() { return cRightCurlyBracketKeyword_6; }
 	}
 	public class ProcessingStepElements extends AbstractParserRuleElementFinder {
@@ -1572,7 +1571,7 @@ public class MM_M4DSGrammarAccess extends AbstractElementFinder.AbstractGrammarE
 	//     'Workflow' name=ID '{'
 	//      ('steps' '{' steps+=ProcessingStep ( "," steps+=ProcessingStep)* '}' )?
 	//      ('dataFields' '{' dataFields+=DataField ( "," dataFields+=DataField)* '}' )?
-	//      ('contracts' '{' contracts+=Contract ( "," contracts+=Contract)* '}' )? // <-- Añade esta línea
+	//      ('contracts' '{' contracts+=Contract ( "," contracts+=Contract)* '}' )?
 	//     '}';
 	public WorkflowElements getWorkflowAccess() {
 		return pWorkflow;
