@@ -1,0 +1,25 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: xtext.Workflow.ui
+Bundle-ManifestVersion: 2
+Bundle-Name: xtext.Workflow.ui
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: xtext.Workflow.ui; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: xtext.Workflow,
+ xtext.Workflow.ide,
+ prueba_M4DS,
+ org.eclipse.xtext.ui,
+ org.eclipse.xtext.ui.shared,
+ org.eclipse.xtext.ui.codetemplates.ui,
+ org.eclipse.ui.editors;bundle-version="3.14.300",
+ org.eclipse.ui.ide;bundle-version="3.18.500",
+ org.eclipse.ui,
+ org.eclipse.compare,
+ org.eclipse.xtext.builder
+Import-Package: org.apache.log4j
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Export-Package: xtext.ui.quickfix,
+ xtext.Workflow.ui.internal,
+ xtext.ui.contentassist
+Bundle-Activator: xtext.Workflow.ui.internal.WorkflowActivator

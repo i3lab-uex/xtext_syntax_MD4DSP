@@ -1,0 +1,430 @@
+library "library" {
+
+  transformation imputeByDerivedValue {
+    input in: dataDictionary.CategoricalDef "imputeByDerivedValue_input_dataField"
+    output out: dataDictionary.CategoricalDef "imputeByDerivedValue_output_dataField"
+    parameter derivedValue imputeByDerivedValue_param_derivedValue
+
+    precondition imputeByDerivedValue_PRECONDITION {
+      valueRange imputeByDerivedValue_PRE_valueRange {
+        in imputeByDerivedValue_PRE_input_datafield
+        specialValue imputeByDerivedValue_PRE_specialValue {
+          percent imputeByDerivedValue_PRE_percent
+        }
+      }
+    }
+
+    postcondition imputeByDerivedValue_POSTCONDITION {
+      valueRange imputeByDerivedValue_POST_valueRange {
+        in imputeByDerivedValue_POST_input_datafield
+        specialValue imputeByDerivedValue_POST_specialValue
+      }
+    }
+
+    invariant imputeByDerivedValue_INVARIANT {
+      condition imputeByDerivedValue_INV_condition {
+        in imputeByDerivedValue_INV_input_datafield
+        out imputeByDerivedValue_INV_output_datafield
+        then imputeByDerivedValue_INV_THEN {
+          derivedValue imputeByDerivedValue_INV_derivedValue
+        }
+        if imputeByDerivedValue_INV_IF {
+          specialValue imputeByDerivedValue_INV_specialValue
+        }
+      }
+    }
+  }
+
+  transformation imputeByFixValue {
+    input in: dataDictionary.CategoricalDef "imputeByFixValue_input_dataField"
+    output out: dataDictionary.CategoricalDef "imputeByFixValue_output_dataField"
+    parameter fixValue imputeByFixValue_param_fixValue {
+      value imputeByFixValue_param_primitive
+    }
+
+    precondition imputeByFixValue_PRECONDITION {
+      valueRange imputeByFixValue_PRE_valueRange {
+        in imputeByFixValue_PRE_input_datafield
+        specialValue imputeByFixValue_PRE_specialValue {
+          percent imputeByFixValue_PRE_percent
+        }
+      }
+    }
+
+    postcondition imputeByFixValue_POSTCONDITION {
+      valueRange imputeByFixValue_POST_valueRange {
+        in imputeByFixValue_POST_input_datafield
+        specialValue imputeByFixValue_POST_specialValue
+      }
+    }
+
+    invariant imputeByFixValue_INVARIANT {
+      condition imputeByFixValue_INV_condition {
+        in imputeByFixValue_INV_input_datafield
+        out imputeByFixValue_INV_output_datafield
+        then imputeByFixValue_INV_THEN {
+          fixValue imputeByFixValue_INV_fixValue
+        }
+        if imputeByFixValue_INV_IF {
+          specialValue imputeByFixValue_INV_specialValue
+        }
+      }
+    }
+  }
+
+  transformation rowFilterPrimitive {
+    input in: dataDictionary.ContinuousDef "rowFilterPrimitive_input_dataField"
+    output out: dataDictionary.ContinuousDef "rowFilterPrimitive_output_dataField"
+    parameter filter rowFilterPrimitive_param_filter {
+      primitive rowFilterPrimitive_param_primitive
+    }
+
+    precondition rowFilterPrimitive_PRECONDITION {
+      valueRange rowFilterPrimitive_PRE_valueRange {
+        in rowFilterPrimitive_PRE_input_datafield
+        fixValue rowFilterPrimitive_PRE_fixValue
+      }
+    }
+
+    postcondition rowFilterPrimitive_POSTCONDITION {
+      valueRange rowFilterPrimitive_POST_valueRange {
+        in rowFilterPrimitive_POST_input_datafield
+        fixValue rowFilterPrimitive_POST_fixValue
+      }
+    }
+
+    invariant rowFilterPrimitive_INVARIANT {
+      condition rowFilterPrimitive_INV_condition {
+        in rowFilterPrimitive_INV_input_dataField
+        out rowFilterPrimitive_INV_output_dataField
+        then rowFilterPrimitive_INV_THEN {
+          fixValue rowFilterPrimitive_INV_valueResult
+        }
+        if rowFilterPrimitive_INV_IF {
+          interval rowFilterPrimitive_INV_valueCondition
+        }
+      }
+    }
+  }
+
+  transformation columnFilter {
+    input in: dataDictionary {
+      continuous columnFilter_input_dataField
+      categorical columnFilter_input_dataField
+    }
+    output out: dataDictionary
+    parameter fieldRange columnFilter_param_field
+
+    precondition columnFilter_PRECONDITION {
+      fieldRange columnFilter_PRE_field_range {
+        in columnFilter_PRE_in_dataDictionary
+      }
+    }
+
+    postcondition columnFilter_POSTCONDITION {
+      fieldRange columnFilter_POST_field_range {
+        in columnFilter_POST_in_dataDictionary
+      }
+    }
+
+    invariant columnFilter_INVARIANT {
+      condition columnFilter_INV_condition {
+        in columnFilter_INV_input_dataDictionary
+        out columnFilter_INV_output_dataDictionary
+        then columnFilter_INV_THEN {
+          interval columnFilter_INV_value_input
+        }
+        if columnFilter_INV_IF {
+          interval columnFilter_INV_valueCondition
+        }
+      }
+    }
+  }
+
+  transformation mapping {
+    input in: dataDictionary.CategoricalDef "mapping_input_dataField"
+    output out: dataDictionary.CategoricalDef "mapping_output_dataField"
+    parameter map mapping_param_map
+
+    precondition mapping_PRECONDITION {
+      valueRange mapping_PRE_valueRange {
+        in mapping_PRE_input_datafield
+        fixValue mapping_PRE_fixValue
+      }
+    }
+
+    postcondition mapping_POSTCONDITION {
+      valueRange mapping_POST_valueRange {
+        in mapping_POST_input_datafield
+        fixValue mapping_POST_fixValue
+      }
+    }
+
+    invariant mapping_INVARIANT {
+      condition mapping_INV_condition {
+        in mapping_INV_input_datafield
+        out mapping_INV_output_datafield
+        then mapping_INV_THEN {
+          fixValue mapping_INV_value_result_fix
+        }
+        if mapping_INV_IF {
+          fixValue mapping_INV_value_input_fix
+        }
+      }
+    }
+  }
+
+  transformation imputeByNumericOp {
+    input in: dataDictionary.ContinuousDef "imputeByNumericOp_input_dataField"
+    output out: dataDictionary.ContinuousDef "imputeByNumericOp_output_dataField"
+    parameter numOp imputeByNumericOp_param_numOp
+
+    precondition imputeByNumericOp_PRECONDITION {
+      valueRange imputeByNumericOp_PRE_valueRange {
+        in imputeByNumericOp_PRE_input_datafield
+        specialValue imputeByNumericOp_PRE_specialValue {
+          percent imputeByNumericOp_PRE_percent
+        }
+      }
+    }
+
+    postcondition imputeByNumericOp_POSTCONDITION {
+      valueRange imputeByNumericOp_POST_valueRange {
+        in imputeByNumericOp_POST_input_datafield
+        specialValue imputeByNumericOp_POST_specialValue
+      }
+    }
+
+    invariant imputeByNumericOp_INVARIANT {
+      condition imputeByNumericOp_INV_condition {
+        in imputeByNumericOp_INV_input_dataField
+        out imputeByNumericOp_INV_output_dataField
+        then imputeByNumericOp_INV_THEN {
+          numOp imputeByNumericOp_INV_value_result
+        }
+        if imputeByNumericOp_INV_IF {
+          specialValue imputeByNumericOp_INV_value_input
+        }
+      }
+    }
+  }
+
+  transformation categoricalToContinuous {
+    input in: dataDictionary.CategoricalDef "categoricalToContinuous_input_dataField"
+    output out: dataDictionary.ContinuousDef "categoricalToContinuous_output_dataField"
+    parameter castType categoricalToContinuous_param_castType
+
+    precondition categoricalToContinuous_castType_PRECONDITION {
+      valueRange categoricalToContinuous_castType_PRE_valueRange {
+        in categoricalToContinuous_PRE_input_datafield
+        castType categoricalToContinuous_PRE_castType
+      }
+    }
+
+    postcondition categoricalToContinuous_castType_POSTCONDITION {
+      valueRange categoricalToContinuous_castType_POST_valueRange {
+        in categoricalToContinuous_POST_input_datafield
+        castType categoricalToContinuous_POST_castType
+      }
+    }
+
+    invariant categoricalToContinuous_castType_INVARIANT {
+      condition categoricalToContinuous_castType_INV_condition {
+        in categoricalToContinuous_castType_INV_input_datafield
+        out categoricalToContinuous_castType_INV_output_datafield
+        then categoricalToContinuous_castType_INV_THEN {
+          castType categoricalToContinuous_castType_INV_valueResult
+        }
+        if categoricalToContinuous_castType_INV_IF {
+          castType categoricalToContinuous_castType_INV_valueCondition
+        }
+      }
+    }
+
+    invariant categoricalToContinuous_specialValue_INVARIANT {
+      condition categoricalToContinuous_specialValue_INV_condition {
+        in categoricalToContinuous_specialValue_INV_input_datafield
+        out categoricalToContinuous_specialValue_INV_output_datafield
+        then categoricalToContinuous_specialValue_INV_THEN {
+          specialValue categoricalToContinuous_specialValue_INV_valueResult
+        }
+        if categoricalToContinuous_specialValue_INV_IF {
+          specialValue categoricalToContinuous_specialValue_INV_valueCondition
+        }
+      }
+    }
+  }
+
+  transformation binner {
+    input in: dataDictionary.ContinuousDef "binner_input_dataField"
+    output out: dataDictionary.CategoricalDef "binner_output_dataField"
+    parameter derivedField binner_param_derived_field
+    parameter bin binner_param_bin
+
+    precondition binner_PRECONDITION {
+      valueRange binner_PRE_valueRange {
+        in binner_PRE_input_dataField
+        interval binner_PRE_interval
+      }
+    }
+
+    postcondition binner_POSTCONDITION {
+      valueRange binner_POST_valueRange {
+        in binner_POST_input_dataField
+        interval binner_POST_interval
+      }
+    }
+
+    invariant binner_INVARIANT {
+      condition binner_INV_condition {
+        in binner_INV_input_dataField
+        out binner_INV_output_dataField
+        then binner_INV_THEN {
+          fixValue binner_INV_valueResult
+        }
+        if binner_INV_IF {
+          interval binner_INV_valueCondition
+        }
+      }
+    }
+  }
+
+  transformation rowFilterRange {
+    input in: dataDictionary.ContinuousDef "rowFilterRange_input_dataField"
+    output out: dataDictionary.ContinuousDef "rowFilterRange_output_dataField"
+    parameter filter rowFilterRange_param_filter
+    parameter range rowFilterRange_param_range
+
+    precondition rowFilterRange_PRECONDITION {
+      valueRange rowFilterRange_PRE_valueRange {
+        in rowFilterRange_PRE_input_dataField
+        interval rowFilterRange_PRE_interval
+      }
+    }
+
+    postcondition rowFilterRange_POSTCONDITION {
+      valueRange rowFilterRange_POST_valueRange {
+        in rowFilterRange_POST_input_dataField
+        interval rowFilterRange_POST_interval
+      }
+    }
+
+    invariant rowFilterRange_INVARIANT {
+      condition rowFilterRange_INV_condition {
+        in rowFilterRange_INV_input_dataField
+        out rowFilterRange_INV_output_dataField
+        then rowFilterRange_INV_THEN {
+          interval rowFilterRange_INV_valueResult
+        }
+        if rowFilterRange_INV_IF {
+          interval rowFilterRange_INV_valueCondition
+        }
+      }
+    }
+  }
+
+  transformation mathOperation {
+    input in: dataDictionary.ContinuousDef "mathOperation_input_DataField"
+    output out: dataDictionary.ContinuousDef "mathOperation_output_DataField"
+    parameter derivedField mathOperation_param_derived_field
+    parameter mathOp mathOperation_param_mathop {
+      operand fixValue mathOperation_op_fix_value {
+        value mathOperation_op_fix_value_primitive
+      }
+      operand field mathOperation_op_field
+    }
+
+    precondition mathOperation_PRECONDITION {
+      valueRange mathOperation_PRE_valueRange {
+        in mathOperation_PRE_input_datafield
+        specialValue mathOperation_PRE_specialValue
+      }
+    }
+
+    postcondition mathOperation_POSTCONDITION {
+      valueRange mathOperation_POST_valueRange {
+        in mathOperation_POST_input_datafield
+        specialValue mathOperation_POST_specialValue
+      }
+    }
+
+    invariant mathOperation_INVARIANT {
+      condition mathOperation_INV_condition {
+        in mathOperation_INV_input_dataField
+        out mathOperation_INV_output_dataField
+        then mathOperation_INV_THEN {
+          mathOp mathOperation_INV_valueResult {
+            operand fixValue mathOperation_op_fix_value
+            operand field mathOperation_op_field
+          }
+        }
+        if mathOperation_INV_IF {
+          interval mathOperation_INV_valueCondition
+        }
+      }
+    }
+
+    precondition mathOperation_zeroDivision_PRECONDITION {
+      valueRange mathOperation_zeroDivision_PRE_valueRange {
+        in mathOperation_zeroDivision_PRE_input_datafield
+        fixValue mathOperation_zeroDivision_PRE_fix_value
+      }
+    }
+  }
+
+  transformation rowFilterMissing {
+    input in: dataDictionary.ContinuousDef "rowFilterMissing_input_dataField"
+    output out: dataDictionary.ContinuousDef "rowFilterMissing_output_dataField"
+    parameter filter rowFilterMissing_param_filter {
+      matchingValues missingValues rowFilterMissing_param_missing_values
+    }
+
+    precondition rowFilterMissing_PRECONDITION {
+      valueRange rowFilterMissing_PRE_valueRange {
+        in rowFilterMissing_PRE_input_datafield
+        specialValue rowFilterMissing_PRE_specialValue {
+          percent rowFilterMissing_PRE_percent
+        }
+      }
+    }
+
+    postcondition rowFilterMissing_POSTCONDITION {
+      valueRange rowFilterMissing_POST_valueRange {
+        in rowFilterMissing_POST_input_datafield
+        specialValue rowFilterMissing_POST_specialValue
+      }
+    }
+
+    invariant rowFilterMissing_INVARIANT {
+      condition rowFilterMissing_INV_condition {
+        in rowFilterMissing_INV_input_dataField
+        out rowFilterMissing_INV_output_dataField
+        then rowFilterMissing_INV_THEN {
+          specialValue rowFilterMissing_INV_valueResult
+        }
+        if rowFilterMissing_INV_IF {
+          interval rowFilterMissing_INV_valueCondition
+        }
+      }
+    }
+  }
+
+  transformation join {
+    input in: dataDictionary.CategoricalDef "join_input_DataField"
+    output out: dataDictionary.CategoricalDef "join_output_DataField"
+    parameter join join_param_join {
+      operand fixValue join_op_fix_value {
+        value join_op_fix_value_primitive
+      }
+      operand field join_op_field
+    }
+    parameter derivedField join_param_derived_field
+
+    invariant join_check_INVARIANT {
+      condition join_check_INV_condition {
+        in join_check_INV_input_datafield
+        out join_check_INV_output_datafield
+        then join_check_INV_THEN {
+          join join_check_INV_valueResult {
+            operand fixValue join_op_fix_value
+            operand field
