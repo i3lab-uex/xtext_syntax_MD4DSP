@@ -3,7 +3,7 @@
 <plugin>
 	<extension point="org.eclipse.emf.ecore.generated_package">
 		<package
-			uri = "http://www.example.org/workflow"
+			uri = "https://www.example.org/workflow"
 			class = "xtext.workflow.WorkflowPackage"
 			genModel = "model/generated/Workflow.genmodel" />
 	</extension>

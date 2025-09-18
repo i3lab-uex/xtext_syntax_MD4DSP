@@ -29,14 +29,14 @@ public class ExportToXmiHandler extends AbstractHandler {
             if (firstElement instanceof IFile) {
                 IFile file = (IFile) firstElement;
 
-                if ("mm_m4ds".equals(file.getFileExtension())) {
+                if ("workflow".equals(file.getFileExtension())) {
                     try {
                         exportToXmi(file);
                         MessageDialog.openInformation(
                             HandlerUtil.getActiveShell(event),
                             "Export Successful",
                             "File exported to XMI successfully: " +
-                            file.getName().replace(".mm_m4ds", ".xmi")
+                            file.getName().replace(".workflow", ".xmi")
                         );
                     } catch (Exception e) {
                         MessageDialog.openError(
@@ -59,7 +59,7 @@ public class ExportToXmiHandler extends AbstractHandler {
         resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
             .put("xmi", new XMIResourceFactoryImpl());
 
-        // Load the MM_M4DS file
+        // Load the workflow file
         URI sourceUri = URI.createPlatformResourceURI(file.getFullPath().toString(), true);
         Resource sourceResource = resourceSet.getResource(sourceUri, true);
 

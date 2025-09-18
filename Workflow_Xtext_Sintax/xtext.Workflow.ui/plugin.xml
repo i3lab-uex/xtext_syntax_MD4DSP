@@ -4,48 +4,48 @@
 	<extension
 		point="org.eclipse.ui.editors">
 		<editor
-			class="xtext.ui.MM_M4DSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+			class="xtext.ui.WorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
 			contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
 			default="true"
-			extensions="mm_m4ds"
-			id="xtext.MM_M4DS"
-			name="MM_M4DS Editor">
+			extensions="workflow"
+			id="xtext.Workflow"
+			name="Workflow Editor">
 		</editor>
 	</extension>
 	<extension
 		point="org.eclipse.ui.handlers">
 		<handler
-			class="xtext.ui.MM_M4DSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclarationHandler"
+			class="xtext.ui.WorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclarationHandler"
 			commandId="org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclaration">
 			<activeWhen>
 				<reference
-					definitionId="xtext.MM_M4DS.Editor.opened">
+					definitionId="xtext.Workflow.Editor.opened">
 				</reference>
 			</activeWhen>
 		</handler>
 		<handler
-			class="xtext.ui.MM_M4DSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.handler.ValidateActionHandler"
-			commandId="xtext.MM_M4DS.validate">
+			class="xtext.ui.WorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.editor.handler.ValidateActionHandler"
+			commandId="xtext.Workflow.validate">
 			<activeWhen>
 				<reference
-					definitionId="xtext.MM_M4DS.Editor.opened">
+					definitionId="xtext.Workflow.Editor.opened">
 				</reference>
 			</activeWhen>
 		</handler>
 		<!-- copy qualified name -->
 		<handler
-			class="xtext.ui.MM_M4DSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedNameHandler"
+			class="xtext.ui.WorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedNameHandler"
 			commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName">
 			<activeWhen>
-				<reference definitionId="xtext.MM_M4DS.Editor.opened" />
+				<reference definitionId="xtext.Workflow.Editor.opened" />
 			</activeWhen>
 		</handler>
 		<handler
-			class="xtext.ui.MM_M4DSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedNameHandler"
+			class="xtext.ui.WorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedNameHandler"
 			commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedName">
 			<activeWhen>
 				<and>
-					<reference definitionId="xtext.MM_M4DS.XtextEditor.opened" />
+					<reference definitionId="xtext.Workflow.XtextEditor.opened" />
 					<iterate>
 						<adapt type="org.eclipse.xtext.ui.editor.outline.IOutlineNode" />
 					</iterate>
@@ -55,26 +55,26 @@
 		<!-- Export to XMI handler -->
 		<handler
 			class="xtext.ui.handlers.ExportToXmiHandler"
-			commandId="xtext.MM_M4DS.exportToXmi">
+			commandId="xtext.Workflow.exportToXmi">
 		</handler>
 	</extension>
 	<extension point="org.eclipse.core.expressions.definitions">
-		<definition id="xtext.MM_M4DS.Editor.opened">
+		<definition id="xtext.Workflow.Editor.opened">
 			<and>
 				<reference definitionId="isActiveEditorAnInstanceOfXtextEditor"/>
 				<with variable="activeEditor">
 					<test property="org.eclipse.xtext.ui.editor.XtextEditor.languageName"
-						value="xtext.MM_M4DS"
+						value="xtext.Workflow"
 						forcePluginActivation="true"/>
 				</with>
 			</and>
 		</definition>
-		<definition id="xtext.MM_M4DS.XtextEditor.opened">
+		<definition id="xtext.Workflow.XtextEditor.opened">
 			<and>
 				<reference definitionId="isXtextEditorActive"/>
 				<with variable="activeEditor">
 					<test property="org.eclipse.xtext.ui.editor.XtextEditor.languageName"
-						value="xtext.MM_M4DS"
+						value="xtext.Workflow"
 						forcePluginActivation="true"/>
 				</with>
 			</and>
@@ -83,33 +83,33 @@
 	<extension
 			point="org.eclipse.ui.preferencePages">
 		<page
-			class="xtext.ui.MM_M4DSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
-			id="xtext.MM_M4DS"
-			name="MM_M4DS">
-			<keywordReference id="xtext.ui.keyword_MM_M4DS"/>
+			class="xtext.ui.WorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+			id="xtext.Workflow"
+			name="Workflow">
+			<keywordReference id="xtext.ui.keyword_Workflow"/>
 		</page>
 		<page
-			category="xtext.MM_M4DS"
-			class="xtext.ui.MM_M4DSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.syntaxcoloring.SyntaxColoringPreferencePage"
-			id="xtext.MM_M4DS.coloring"
+			category="xtext.Workflow"
+			class="xtext.ui.WorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.editor.syntaxcoloring.SyntaxColoringPreferencePage"
+			id="xtext.Workflow.coloring"
 			name="Syntax Coloring">
-			<keywordReference id="xtext.ui.keyword_MM_M4DS"/>
+			<keywordReference id="xtext.ui.keyword_Workflow"/>
 		</page>
 		<page
-			category="xtext.MM_M4DS"
-			class="xtext.ui.MM_M4DSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.templates.XtextTemplatePreferencePage"
-			id="xtext.MM_M4DS.templates"
+			category="xtext.Workflow"
+			class="xtext.ui.WorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.editor.templates.XtextTemplatePreferencePage"
+			id="xtext.Workflow.templates"
 			name="Templates">
-			<keywordReference id="xtext.ui.keyword_MM_M4DS"/>
+			<keywordReference id="xtext.ui.keyword_Workflow"/>
 		</page>
 	</extension>
 	<extension
 			point="org.eclipse.ui.propertyPages">
 		<page
-			class="xtext.ui.MM_M4DSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
-			id="xtext.MM_M4DS"
-			name="MM_M4DS">
-			<keywordReference id="xtext.ui.keyword_MM_M4DS"/>
+			class="xtext.ui.WorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+			id="xtext.Workflow"
+			name="Workflow">
+			<keywordReference id="xtext.ui.keyword_Workflow"/>
 			<enabledWhen>
 				<adapt type="org.eclipse.core.resources.IProject"/>
 			</enabledWhen>
@@ -119,14 +119,14 @@
 	<extension
 		point="org.eclipse.ui.keywords">
 		<keyword
-			id="xtext.ui.keyword_MM_M4DS"
-			label="MM_M4DS"/>
+			id="xtext.ui.keyword_Workflow"
+			label="Workflow"/>
 	</extension>
 	<extension
 		point="org.eclipse.ui.commands">
 		<command
 			description="Trigger expensive validation"
-			id="xtext.MM_M4DS.validate"
+			id="xtext.Workflow.validate"
 			name="Validate">
 		</command>
 		<!-- copy qualified name -->
@@ -144,21 +144,21 @@
 		</command>
 		<!-- Export to XMI command -->
 		<command
-			id="xtext.MM_M4DS.exportToXmi"
+			id="xtext.Workflow.exportToXmi"
 			name="Export to XMI"
-			description="Export .mm_m4ds file to XMI format">
+			description="Export .workflow file to XMI format">
 		</command>
 	</extension>
 	<extension point="org.eclipse.ui.menus">
 		<menuContribution
 			locationURI="popup:#TextEditorContext?after=group.edit">
 			<command
-				commandId="xtext.MM_M4DS.validate"
+				commandId="xtext.Workflow.validate"
 				style="push"
 				tooltip="Trigger expensive validation">
 				<visibleWhen checkEnabled="false">
 					<reference
-						definitionId="xtext.MM_M4DS.Editor.opened">
+						definitionId="xtext.Workflow.Editor.opened">
 					</reference>
 				</visibleWhen>
 			</command>
@@ -168,7 +168,7 @@
 			<command commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName"
 				style="push" tooltip="Copy Qualified Name">
 				<visibleWhen checkEnabled="false">
-					<reference definitionId="xtext.MM_M4DS.Editor.opened" />
+					<reference definitionId="xtext.Workflow.Editor.opened" />
 				</visibleWhen>
 			</command>
 		</menuContribution>
@@ -176,7 +176,7 @@
 			<command commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName"
 				style="push" tooltip="Copy Qualified Name">
 				<visibleWhen checkEnabled="false">
-					<reference definitionId="xtext.MM_M4DS.Editor.opened" />
+					<reference definitionId="xtext.Workflow.Editor.opened" />
 				</visibleWhen>
 			</command>
 		</menuContribution>
@@ -185,7 +185,7 @@
 				style="push" tooltip="Copy Qualified Name">
 				<visibleWhen checkEnabled="false">
 					<and>
-						<reference definitionId="xtext.MM_M4DS.XtextEditor.opened" />
+						<reference definitionId="xtext.Workflow.XtextEditor.opened" />
 						<iterate>
 							<adapt type="org.eclipse.xtext.ui.editor.outline.IOutlineNode" />
 						</iterate>
@@ -196,13 +196,13 @@
 		<!-- Export to XMI menu contribution -->
 		<menuContribution locationURI="popup:#ResourceContext?after=additions">
 			<command
-				commandId="xtext.MM_M4DS.exportToXmi"
+				commandId="xtext.Workflow.exportToXmi"
 				style="push"
 				label="Export to XMI">
 				<visibleWhen checkEnabled="false">
 					<iterate>
 						<adapt type="org.eclipse.core.resources.IFile">
-							<test property="org.eclipse.core.resources.extension" value="mm_m4ds"/>
+							<test property="org.eclipse.core.resources.extension" value="workflow"/>
 						</adapt>
 					</iterate>
 				</visibleWhen>
@@ -213,7 +213,7 @@
 		<menuContribution locationURI="popup:#TextEditorContext?endof=group.find">
 			<command commandId="org.eclipse.xtext.ui.editor.FindReferences">
 				<visibleWhen checkEnabled="false">
-					<reference definitionId="xtext.MM_M4DS.Editor.opened">
+					<reference definitionId="xtext.Workflow.Editor.opened">
 					</reference>
 				</visibleWhen>
 			</command>
@@ -221,11 +221,11 @@
 	</extension>
 	<extension point="org.eclipse.ui.handlers">
 		<handler
-			class="xtext.ui.MM_M4DSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.findrefs.FindReferencesHandler"
+			class="xtext.ui.WorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.editor.findrefs.FindReferencesHandler"
 			commandId="org.eclipse.xtext.ui.editor.FindReferences">
 			<activeWhen>
 				<reference
-					definitionId="xtext.MM_M4DS.Editor.opened">
+					definitionId="xtext.Workflow.Editor.opened">
 				</reference>
 			</activeWhen>
 		</handler>
@@ -233,9 +233,9 @@
 	<extension point="org.eclipse.core.contenttype.contentTypes">
 		<content-type
 			base-type="org.eclipse.core.runtime.text"
-			file-extensions="mm_m4ds"
-			id="xtext.MM_M4DS.contenttype"
-			name="MM_M4DS File"
+			file-extensions="workflow"
+			id="xtext.Workflow.contenttype"
+			name="Workflow File"
 			priority="normal">
 		</content-type>
 	</extension>
@@ -243,68 +243,68 @@
 	<extension
 		point="org.eclipse.emf.ecore.extension_parser">
 		<parser
-			class="xtext.ui.MM_M4DSExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
-			type="mm_m4ds">
+			class="xtext.ui.WorkflowExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+			type="workflow">
 		</parser>
 	</extension>
 	<extension point="org.eclipse.xtext.extension_resourceServiceProvider">
 		<resourceServiceProvider
-			class="xtext.ui.MM_M4DSExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
-			uriExtension="mm_m4ds">
+			class="xtext.ui.WorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+			uriExtension="workflow">
 		</resourceServiceProvider>
 	</extension>
-	<!-- marker definitions for xtext.MM_M4DS -->
+	<!-- marker definitions for xtext.Workflow -->
 	<extension
-			id="mm_m4ds.check.fast"
-			name="MM_M4DS Problem"
+			id="workflow.check.fast"
+			name="Workflow Problem"
 			point="org.eclipse.core.resources.markers">
 		<super type="org.eclipse.xtext.ui.check.fast"/>
 		<persistent value="true"/>
 	</extension>
 	<extension
-			id="mm_m4ds.check.normal"
-			name="MM_M4DS Problem"
+			id="workflow.check.normal"
+			name="Workflow Problem"
 			point="org.eclipse.core.resources.markers">
 		<super type="org.eclipse.xtext.ui.check.normal"/>
 		<persistent value="true"/>
 	</extension>
 	<extension
-			id="mm_m4ds.check.expensive"
-			name="MM_M4DS Problem"
+			id="workflow.check.expensive"
+			name="Workflow Problem"
 			point="org.eclipse.core.resources.markers">
 		<super type="org.eclipse.xtext.ui.check.expensive"/>
 		<persistent value="true"/>
 	</extension>
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
-			category="xtext.MM_M4DS"
-			class="xtext.ui.MM_M4DSExecutableExtensionFactory:org.eclipse.xtext.ui.validation.ValidatorPreferencePage"
-			id="xtext.MM_M4DS.validator.preferencePage"
+			category="xtext.Workflow"
+			class="xtext.ui.WorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.validation.ValidatorPreferencePage"
+			id="xtext.Workflow.validator.preferencePage"
 			name="Errors/Warnings">
-			<keywordReference id="xtext.ui.keyword_MM_M4DS"/>
+			<keywordReference id="xtext.ui.keyword_Workflow"/>
 		</page>
 	</extension>
 	<extension point="org.eclipse.xtext.builder.participant">
 		<participant
-			class="xtext.ui.MM_M4DSExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
-			fileExtensions="mm_m4ds"/>
+			class="xtext.ui.WorkflowExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
+			fileExtensions="workflow"/>
 	</extension>
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
-			category="xtext.MM_M4DS"
-			class="xtext.ui.MM_M4DSExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
-			id="xtext.MM_M4DS.compiler.preferencePage"
+			category="xtext.Workflow"
+			class="xtext.ui.WorkflowExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
+			id="xtext.Workflow.compiler.preferencePage"
 			name="Compiler">
-			<keywordReference id="xtext.ui.keyword_MM_M4DS"/>
+			<keywordReference id="xtext.ui.keyword_Workflow"/>
 		</page>
 	</extension>
 	<extension point="org.eclipse.ui.propertyPages">
 		<page
-			category="xtext.MM_M4DS"
-			class="xtext.ui.MM_M4DSExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
-			id="xtext.MM_M4DS.compiler.propertyPage"
+			category="xtext.Workflow"
+			class="xtext.ui.WorkflowExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
+			id="xtext.Workflow.compiler.propertyPage"
 			name="Compiler">
-			<keywordReference id="xtext.ui.keyword_MM_M4DS"/>
+			<keywordReference id="xtext.ui.keyword_Workflow"/>
 			<enabledWhen>
 				<adapt type="org.eclipse.core.resources.IProject"/>
 			</enabledWhen>
@@ -315,20 +315,20 @@
 		<menuContribution locationURI="popup:#TextEditorContext?after=xtext.ui.openDeclaration">
 			<command
 				commandId="org.eclipse.xtext.ui.OpenGeneratedFileCommand"
-				id="xtext.MM_M4DS.OpenGeneratedCode"
+				id="xtext.Workflow.OpenGeneratedCode"
 				style="push">
 				<visibleWhen checkEnabled="false">
-					<reference definitionId="xtext.MM_M4DS.Editor.opened" />
+					<reference definitionId="xtext.Workflow.Editor.opened" />
 				</visibleWhen>
 			</command>
 		</menuContribution>
 	</extension>
 	<extension point="org.eclipse.ui.handlers">
 		<handler
-			class="xtext.ui.MM_M4DSExecutableExtensionFactory:org.eclipse.xtext.ui.generator.trace.OpenGeneratedFileHandler"
+			class="xtext.ui.WorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.generator.trace.OpenGeneratedFileHandler"
 			commandId="org.eclipse.xtext.ui.OpenGeneratedFileCommand">
 			<activeWhen>
-				<reference definitionId="xtext.MM_M4DS.Editor.opened" />
+				<reference definitionId="xtext.Workflow.Editor.opened" />
 			</activeWhen>
 		</handler>
 	</extension>
@@ -336,11 +336,11 @@
 	<extension
 		point="org.eclipse.ui.handlers">
 		<handler
-			class="xtext.ui.MM_M4DSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.outline.quickoutline.ShowQuickOutlineActionHandler"
+			class="xtext.ui.WorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.editor.outline.quickoutline.ShowQuickOutlineActionHandler"
 			commandId="org.eclipse.xtext.ui.editor.outline.QuickOutline">
 			<activeWhen>
 				<reference
-					definitionId="xtext.MM_M4DS.Editor.opened">
+					definitionId="xtext.Workflow.Editor.opened">
 				</reference>
 			</activeWhen>
 		</handler>
@@ -360,33 +360,33 @@
 				style="push"
 				tooltip="Open Quick Outline">
 				<visibleWhen checkEnabled="false">
-					<reference definitionId="xtext.MM_M4DS.Editor.opened"/>
+					<reference definitionId="xtext.Workflow.Editor.opened"/>
 				</visibleWhen>
 			</command>
 		</menuContribution>
 	</extension>
-	<!-- quickfix marker resolution generator for xtext.MM_M4DS -->
+	<!-- quickfix marker resolution generator for xtext.Workflow -->
 	<extension
 			point="org.eclipse.ui.ide.markerResolution">
 		<markerResolutionGenerator
-			class="xtext.ui.MM_M4DSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
-			markerType="xtext.MM_M4DS.ui.mm_m4ds.check.fast">
+			class="xtext.ui.WorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+			markerType="xtext.Workflow.ui.workflow.check.fast">
 			<attribute
 				name="FIXABLE_KEY"
 				value="true">
 			</attribute>
 		</markerResolutionGenerator>
 		<markerResolutionGenerator
-			class="xtext.ui.MM_M4DSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
-			markerType="xtext.MM_M4DS.ui.mm_m4ds.check.normal">
+			class="xtext.ui.WorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+			markerType="xtext.Workflow.ui.workflow.check.normal">
 			<attribute
 				name="FIXABLE_KEY"
 				value="true">
 			</attribute>
 		</markerResolutionGenerator>
 		<markerResolutionGenerator
-			class="xtext.ui.MM_M4DSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
-			markerType="xtext.MM_M4DS.ui.mm_m4ds.check.expensive">
+			class="xtext.ui.WorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+			markerType="xtext.Workflow.ui.workflow.check.expensive">
 			<attribute
 				name="FIXABLE_KEY"
 				value="true">
@@ -396,11 +396,11 @@
 	<!-- Rename Refactoring -->
 	<extension point="org.eclipse.ui.handlers">
 		<handler
-			class="xtext.ui.MM_M4DSExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler"
+			class="xtext.ui.WorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler"
 			commandId="org.eclipse.xtext.ui.refactoring.RenameElement">
 			<activeWhen>
 				<reference
-					definitionId="xtext.MM_M4DS.Editor.opened">
+					definitionId="xtext.Workflow.Editor.opened">
 				</reference>
 			</activeWhen>
 		</handler>
@@ -412,7 +412,7 @@
 				style="push">
 				<visibleWhen checkEnabled="false">
 					<reference
-						definitionId="xtext.MM_M4DS.Editor.opened">
+						definitionId="xtext.Workflow.Editor.opened">
 					</reference>
 				</visibleWhen>
 			</command>
@@ -420,47 +420,47 @@
 	</extension>
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
-			category="xtext.MM_M4DS"
-			class="xtext.ui.MM_M4DSExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.RefactoringPreferencePage"
-			id="xtext.MM_M4DS.refactoring"
+			category="xtext.Workflow"
+			class="xtext.ui.WorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.RefactoringPreferencePage"
+			id="xtext.Workflow.refactoring"
 			name="Refactoring">
-			<keywordReference id="xtext.ui.keyword_MM_M4DS"/>
+			<keywordReference id="xtext.ui.keyword_Workflow"/>
 		</page>
 	</extension>
 	<extension point="org.eclipse.compare.contentViewers">
-		<viewer id="xtext.MM_M4DS.compare.contentViewers"
-			class="xtext.ui.MM_M4DSExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-			extensions="mm_m4ds">
+		<viewer id="xtext.Workflow.compare.contentViewers"
+			class="xtext.ui.WorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+			extensions="workflow">
 		</viewer>
 		<contentTypeBinding
-			contentTypeId="xtext.MM_M4DS.contenttype"
-			contentViewerId="xtext.MM_M4DS.compare.contentViewers" />
+			contentTypeId="xtext.Workflow.contenttype"
+			contentViewerId="xtext.Workflow.compare.contentViewers" />
 	</extension>
 	<extension point="org.eclipse.compare.contentMergeViewers">
-		<viewer id="xtext.MM_M4DS.compare.contentMergeViewers"
-			class="xtext.ui.MM_M4DSExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-			extensions="mm_m4ds" label="MM_M4DS Compare">
+		<viewer id="xtext.Workflow.compare.contentMergeViewers"
+			class="xtext.ui.WorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+			extensions="workflow" label="Workflow Compare">
 		</viewer>
 		<contentTypeBinding
-			contentTypeId="xtext.MM_M4DS.contenttype"
-			contentMergeViewerId="xtext.MM_M4DS.compare.contentMergeViewers" />
+			contentTypeId="xtext.Workflow.contenttype"
+			contentMergeViewerId="xtext.Workflow.compare.contentMergeViewers" />
 	</extension>
 	<extension point="org.eclipse.ui.editors.documentProviders">
-		<provider id="xtext.MM_M4DS.editors.documentProviders"
-			class="xtext.ui.MM_M4DSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
-			extensions="mm_m4ds">
+		<provider id="xtext.Workflow.editors.documentProviders"
+			class="xtext.ui.WorkflowExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
+			extensions="workflow">
 		</provider>
 	</extension>
 	<extension point="org.eclipse.team.core.fileTypes">
 		<fileTypes
-			extension="mm_m4ds"
+			extension="workflow"
 			type="text">
 		</fileTypes>
 	</extension>
 	<extension point="org.eclipse.ui.commands">
       <command
             defaultHandler="xtext.ui.handlers.ExportToXmiHandler"
-            id="xtext.MM_M4DS.ui.exportToXmi"
+            id="xtext.Workflow.ui.exportToXmi"
             name="Export to XMI">
       </command>
    </extension>
@@ -470,7 +470,7 @@
             allPopups="false"
             locationURI="popup:org.eclipse.ui.popup.any?after=additions">
          <command
-               commandId="xtext.MM_M4DS.ui.exportToXmi"
+               commandId="xtext.Workflow.ui.exportToXmi"
                label="Export to XMI"
                style="push">
             <visibleWhen
@@ -484,7 +484,7 @@
                            type="org.eclipse.core.resources.IResource">
                         <test
                               property="org.eclipse.core.resources.extension"
-                              value="mm_m4ds">
+                              value="workflow">
                         </test>
                      </adapt>
                   </iterate>
