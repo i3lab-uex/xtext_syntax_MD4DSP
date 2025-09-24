@@ -31,4 +31,11 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.pde.PluginNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>prueba_M4DS</name>
+			<type>2</type>
+			<location>/home/carlosbc24/eclipse-workspace/prueba_M4DS</location>
+		</link>
+	</linkedResources>
 </projectDescription>

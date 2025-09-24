@@ -52,11 +52,6 @@
 				</and>
 			</activeWhen>
 		</handler>
-		<!-- Export to XMI handler -->
-		<handler
-			class="xtext.ui.handlers.ExportToXmiHandler"
-			commandId="xtext.Workflow.exportToXmi">
-		</handler>
 	</extension>
 	<extension point="org.eclipse.core.expressions.definitions">
 		<definition id="xtext.Workflow.Editor.opened">
@@ -142,12 +137,6 @@
 			description="Copy the qualified name for the selected element"
 			name="Copy Qualified Name">
 		</command>
-		<!-- Export to XMI command -->
-		<command
-			id="xtext.Workflow.exportToXmi"
-			name="Export to XMI"
-			description="Export .workflow file to XMI format">
-		</command>
 	</extension>
 	<extension point="org.eclipse.ui.menus">
 		<menuContribution
@@ -190,21 +179,6 @@
 							<adapt type="org.eclipse.xtext.ui.editor.outline.IOutlineNode" />
 						</iterate>
 					</and>
-				</visibleWhen>
-			</command>
-		</menuContribution>
-		<!-- Export to XMI menu contribution -->
-		<menuContribution locationURI="popup:#ResourceContext?after=additions">
-			<command
-				commandId="xtext.Workflow.exportToXmi"
-				style="push"
-				label="Export to XMI">
-				<visibleWhen checkEnabled="false">
-					<iterate>
-						<adapt type="org.eclipse.core.resources.IFile">
-							<test property="org.eclipse.core.resources.extension" value="workflow"/>
-						</adapt>
-					</iterate>
 				</visibleWhen>
 			</command>
 		</menuContribution>
@@ -457,40 +431,4 @@
 			type="text">
 		</fileTypes>
 	</extension>
-	<extension point="org.eclipse.ui.commands">
-      <command
-            defaultHandler="xtext.ui.handlers.ExportToXmiHandler"
-            id="xtext.Workflow.ui.exportToXmi"
-            name="Export to XMI">
-      </command>
-   </extension>
-   
-   <extension point="org.eclipse.ui.menus">
-      <menuContribution
-            allPopups="false"
-            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
-         <command
-               commandId="xtext.Workflow.ui.exportToXmi"
-               label="Export to XMI"
-               style="push">
-            <visibleWhen
-                  checkEnabled="false">
-               <with
-                     variable="selection">
-                  <iterate
-                        ifEmpty="false"
-                        operator="and">
-                     <adapt
-                           type="org.eclipse.core.resources.IResource">
-                        <test
-                              property="org.eclipse.core.resources.extension"
-                              value="workflow">
-                        </test>
-                     </adapt>
-                  </iterate>
-               </with>
-            </visibleWhen>
-         </command>
-      </menuContribution>
-   </extension>
 </plugin>

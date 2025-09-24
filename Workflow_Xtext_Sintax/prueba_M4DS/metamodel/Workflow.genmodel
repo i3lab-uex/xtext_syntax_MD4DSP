@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/prueba_M4DS/src" modelPluginID="prueba_M4DS" modelName="Workflow"
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="17.0" copyrightFields="false" operationReflection="true" importOrganizing="true">
+  <foreignModel>Workflow.ecore</foreignModel>
+  <genPackages prefix="Workflow" disposableProviderFactory="true" ecorePackage="Workflow.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Workflow.ecore#//DataType">
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//DataType/String"/>
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//DataType/Time"/>
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//DataType/Integer"/>
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//DataType/DateTime"/>
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//DataType/Boolean"/>
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//DataType/Double"/>
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//DataType/Float"/>
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//DataType/Date"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Workflow.ecore#//ClosureType">
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//ClosureType/openOpen"/>
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//ClosureType/openClosed"/>
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//ClosureType/closedOpen"/>
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//ClosureType/closedClosed"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Workflow.ecore#//Operation">
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//Operation/Interpolation"/>
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//Operation/Mean"/>
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//Operation/Median"/>
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//Operation/Closest"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Workflow.ecore#//DerivedType">
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//DerivedType/MostFrequent"/>
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//DerivedType/Previous"/>
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//DerivedType/Next"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Workflow.ecore#//SpecialValue">
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//SpecialValue/Missing"/>
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//SpecialValue/Invalid"/>
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//SpecialValue/Outlier"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Workflow.ecore#//Operator">
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//Operator/BELONG"/>
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//Operator/NOTBELONG"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Workflow.ecore#//FilterType">
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//FilterType/EXCLUDE"/>
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//FilterType/INCLUDE"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Workflow.ecore#//MapOperation">
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//MapOperation/VALUE_MAPPING"/>
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//MapOperation/SUBSTRING"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Workflow.ecore#//MathOperator">
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//MathOperator/SUM"/>
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//MathOperator/SUBSTRACT"/>
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//MathOperator/MULTIPLY"/>
+      <genEnumLiterals ecoreEnumLiteral="Workflow.ecore#//MathOperator/DIVIDE"/>
+    </genEnums>
+    <genClasses ecoreClass="Workflow.ecore#//Workflow">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//Workflow/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Workflow.ecore#//Workflow/dataprocessing"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Workflow.ecore#//Workflow/link"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="Workflow.ecore#//ProcessingStep">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Workflow.ecore#//ProcessingStep/outgoing"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Workflow.ecore#//ProcessingStep/incoming"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Workflow.ecore#//ProcessingStep/inputPort"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Workflow.ecore#//ProcessingStep/outputPort"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Workflow.ecore#//ProcessingStep/in"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Workflow.ecore#//ProcessingStep/out"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//ProcessingStep/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//ProcessingStep/origin_function"/>
+    </genClasses>
+    <genClasses ecoreClass="Workflow.ecore#//Link">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Workflow.ecore#//Link/source"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Workflow.ecore#//Link/target"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//Link/name"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="Workflow.ecore#//Parameter">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//Parameter/name"/>
+    </genClasses>
+    <genClasses ecoreClass="Workflow.ecore#//Map">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//Map/inValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//Map/outvalue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//Map/mapOperation"/>
+    </genClasses>
+    <genClasses ecoreClass="Workflow.ecore#//Primitive">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//Primitive/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//Primitive/dataType"/>
+    </genClasses>
+    <genClasses ecoreClass="Workflow.ecore#//DerivedField">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Workflow.ecore#//DerivedField/der_dataField"/>
+    </genClasses>
+    <genClasses ecoreClass="Workflow.ecore#//FilterValue">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Workflow.ecore#//FilterValue/primitive"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Workflow.ecore#//FilterValue/matchingvalue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//FilterValue/filterType"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="Workflow.ecore#//MatchingValue"/>
+    <genClasses ecoreClass="Workflow.ecore#//Range">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//Range/min"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//Range/max"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//Range/clousure"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//Range/minInfinity"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//Range/maxInfinity"/>
+    </genClasses>
+    <genClasses ecoreClass="Workflow.ecore#//SpecialValues">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//SpecialValues/specialType"/>
+    </genClasses>
+    <genClasses ecoreClass="Workflow.ecore#//DiscretizeBin">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//DiscretizeBin/binValue"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Workflow.ecore#//DiscretizeBin/interval"/>
+    </genClasses>
+    <genClasses ecoreClass="Workflow.ecore#//DataDictionary">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Workflow.ecore#//DataDictionary/datafield"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//DataDictionary/fileName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//DataDictionary/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Workflow.ecore#//DataDictionary/in"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Workflow.ecore#//DataDictionary/out"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="Workflow.ecore#//DataField">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//DataField/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//DataField/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//DataField/dataType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//DataField/target"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Workflow.ecore#//DataField/validValues"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Workflow.ecore#//DataField/invalidValues"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Workflow.ecore#//DataField/missingValues"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//DataField/displayName"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Workflow.ecore#//DataField/in"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Workflow.ecore#//DataField/out"/>
+    </genClasses>
+    <genClasses ecoreClass="Workflow.ecore#//Categorical">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//Categorical/ordinal"/>
+    </genClasses>
+    <genClasses ecoreClass="Workflow.ecore#//Continuous">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Workflow.ecore#//Continuous/interval"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//Continuous/numDecimals"/>
+    </genClasses>
+    <genClasses ecoreClass="Workflow.ecore#//Interval">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//Interval/leftMargin"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//Interval/rightMargin"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//Interval/clousure"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="Workflow.ecore#//Argument"/>
+    <genClasses image="false" ecoreClass="Workflow.ecore#//ImputeType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//ImputeType/imputeValue"/>
+    </genClasses>
+    <genClasses ecoreClass="Workflow.ecore#//CastType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//CastType/type"/>
+    </genClasses>
+    <genClasses ecoreClass="Workflow.ecore#//DerivedValue">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//DerivedValue/type"/>
+    </genClasses>
+    <genClasses ecoreClass="Workflow.ecore#//NumOp">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//NumOp/operation"/>
+    </genClasses>
+    <genClasses ecoreClass="Workflow.ecore#//FixValue">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Workflow.ecore#//FixValue/value"/>
+    </genClasses>
+    <genClasses ecoreClass="Workflow.ecore#//ValueField">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//ValueField/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//ValueField/count"/>
+    </genClasses>
+    <genClasses ecoreClass="Workflow.ecore#//FieldRange">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Workflow.ecore#//FieldRange/dataField"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//FieldRange/operator"/>
+    </genClasses>
+    <genClasses ecoreClass="Workflow.ecore#//PMMLModel">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//PMMLModel/filePath"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//PMMLModel/onlyPredictions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Workflow.ecore#//PMMLModel/test"/>
+    </genClasses>
+    <genClasses ecoreClass="Workflow.ecore#//DataProcessing">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Workflow.ecore#//DataProcessing/parameter"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Workflow.ecore#//DataProcessing/initial_accumulated_processing"/>
+    </genClasses>
+    <genClasses ecoreClass="Workflow.ecore#//Test">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//Test/path"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//Test/trainSize"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//Test/testSize"/>
+    </genClasses>
+    <genClasses ecoreClass="Workflow.ecore#//MathOp">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//MathOp/operator"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Workflow.ecore#//MathOp/operand"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="Workflow.ecore#//Operand">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Workflow.ecore#//Operand/next_operand"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Workflow.ecore#//Operand/previous_operand"/>
+    </genClasses>
+    <genClasses ecoreClass="Workflow.ecore#//Field">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Workflow.ecore#//Field/datafield"/>
+    </genClasses>
+    <genClasses ecoreClass="Workflow.ecore#//Join">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Workflow.ecore#//Join/operand"/>
+    </genClasses>
+    <genClasses ecoreClass="Workflow.ecore#//DateRange">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//DateRange/clousure"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//DateRange/max"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//DateRange/min"/>
+    </genClasses>
+    <genClasses ecoreClass="Workflow.ecore#//Date">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Workflow.ecore#//Date/intervaldate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//Date/format"/>
+    </genClasses>
+    <genClasses ecoreClass="Workflow.ecore#//IntervalDate">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//IntervalDate/rightMargin"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//IntervalDate/clousure"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Workflow.ecore#//IntervalDate/leftMargin"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

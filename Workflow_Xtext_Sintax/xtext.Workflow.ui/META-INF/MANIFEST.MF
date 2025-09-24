@@ -18,7 +18,7 @@ Require-Bundle: xtext.Workflow,
  org.eclipse.compare,
  org.eclipse.xtext.builder
 Import-Package: org.apache.log4j
-Bundle-RequiredExecutionEnvironment: JavaSE-21
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: xtext.ui.quickfix,
  xtext.Workflow.ui.internal,
  xtext.ui.contentassist

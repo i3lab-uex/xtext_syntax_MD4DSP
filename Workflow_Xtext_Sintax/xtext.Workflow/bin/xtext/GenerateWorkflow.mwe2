@@ -33,7 +33,10 @@ Workflow {
 		language = StandardLanguage {
 			name = "xtext.Workflow"
 			fileExtensions = "workflow"
+			referencedResource = "platform:/resource/prueba_M4DS/metamodel/Workflow.genmodel"
 			
+			fragment = ecore2xtext.Ecore2XtextValueConverterServiceFragment2 auto-inject {}
+
 			formatter = {
 				generateStub = true
 				generateXtendStub = true
