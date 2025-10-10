@@ -1,0 +1,84 @@
+workflow "Model Data Set" {
+    source data = read_file("/Users/paulschwal/Documents/School Work/Fall 2021/ITSCM 774 (data analytics)/Term project/Data_model(1).csv")
+
+    missing_val_sex_ethnicity_irschool = impute(sex, ETHNICITY, IRSCHOOL) {
+        most_frequent
+    } |> data
+
+    missing_val_satscore = impute(satscore) {
+        interpolation
+    } |> missing_val_sex_ethnicity_irschool
+
+    missing_val_avg_distance = impute(avg_income, distance) {
+        mean
+    } |> missing_val_satscore
+
+    missing_val_academic = impute(ACADEMIC_INTEREST_1, ACADEMIC_INTEREST_2) {
+        fixed = ["Unknown", "Unknown"]
+    } |> missing_val_avg_distance
+
+    filter_row_init_span = filter_rows {
+        range(init_span, [0.0, *), include)
+    } |> missing_val_academic
+
+    column_filter = remove {
+        TRAVEL_INIT_CNTCTS, REFERRAL_CNTCTS, CONTACT_CODE1, telecq, interest, stuemail
+    } |> filter_row_init_span
+
+    rule_engine_territory = map(TERRITORY) {
+        "*N*" => "0",
+        "*A*" => "0",
+        "TRUE" => "TERRITORY"
+    } as TERRITORY |> column_filter
+
+    rule_engine_instate = map(Instate) {
+        "*Y*" => "1",
+        "*N*" => "0",
+        "TRUE" => "Instate"
+    } as Instate |> rule_engine_territory
+
+    string_to_number = to_numeric(TERRITORY, Instate, ETHNICITY, ACADEMIC_INTEREST_1, ACADEMIC_INTEREST_2, Enroll, IRSCHOOL, sex, premiere, CONTACT_CODE1, stuemail, prediction) |> rule_engine_instate
+
+    numeric_outliers = outliers(avg_income, distance, Instate) {
+    replace_by_closest iqr scalar = 1.5 estimation = R_4 scope = all_outliers
+	} |> string_to_number
+
+    binner_satscore = bin(satscore) {
+        "54 Percentile and Under" : [-Infinity, 1040.0),
+        "55-75 Percentile" : [1040.0, 1160.0),
+        "76-93 Percentile" : [1160.0, 1340.0),
+        "94+ percentile" : [1340.0, Infinity)
+    } as satscore_binned |> numeric_outliers
+
+    binner_territory = bin(TERRITORY) {
+        "Unknown" : [-Infinity, 1.0),
+        "Zone 1" : [1.0, 3.0),
+        "Zone 2" : [3.0, 5.0),
+        "Zone 3" : [5.0, 7.0),
+        "Zone 4" : [7.0, Infinity)
+    } as TERRITORY_binned |> binner_satscore
+
+    binner_avg_income = bin(avg_income) {
+        "low" : [-Infinity, 42830.0),
+        "Moderate" : [42830.0, 55559.0),
+        "High" : [55559.0, Infinity)
+    } as avg_income_binned |> binner_territory
+
+    binner_total_contacts = bin(TOTAL_CONTACTS) {
+        "Low" : [-Infinity, 1.0),
+        "Moderate" : [1.0, 4.0),
+        "High" : [4.0, Infinity)
+    } as TOTAL_CONTACTS_binned |> binner_avg_income
+
+    binner_solicited_contacts = bin(SOLICITED_CNTCTS) {
+        "Low" : [-Infinity, 1.0),
+        "Moderate" : [1.0, 4.0),
+        "High" : [4.0, Infinity)
+    } as SOLICITED_CNTCTS_binned |> binner_total_contacts
+
+    binner_self_init_contacts = bin(SELF_INIT_CNTCTS) {
+        "Low" : [-Infinity, 1.0),
+        "Moderate" : [1.0, 4.0),
+        "High" : [4.0, Infinity)
+    } as SELF_INIT_CNTCTS_binned |> binner_solicited_contacts
+}
