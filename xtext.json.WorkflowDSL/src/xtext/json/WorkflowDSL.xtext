@@ -294,9 +294,9 @@ DetectionMethod:
     IQRMethod | ZScoreMethod | PercentileMethod;
 
 IQRMethod:
-    "iqr" params=IQRParams?;
+    "iqr" (params+=IQRParam)*;
 
-IQRParams:
+IQRParam:
     "scalar" "=" scalar=Number
     | "estimation" "=" estimation=EstimationType;
 

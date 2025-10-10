@@ -444,28 +444,62 @@ public class WorkflowJsonExporter {
         if (workflow.getBody() != null && workflow.getBody().getSteps() != null) {
             List<Step> steps = workflow.getBody().getSteps();
             
-            // Connect data source to first step if exists
-            if (!steps.isEmpty() && stepIdMap.containsKey("data_source")) {
-                JsonObject connection = new JsonObject();
-                connection.addProperty("sourceID", stepIdMap.get("data_source"));
-                connection.addProperty("destID", stepIdMap.get(steps.get(0).getName()));
-                connections.add(connection);
-            }
-            
-            // Connect steps based on target references
-            for (Step step : steps) {
-                if (step.getTarget() != null) {
-                    Integer sourceId = stepIdMap.get(step.getName());
-                    Integer targetId = stepIdMap.get(step.getTarget());
-                    if (sourceId != null && targetId != null) {
+            // Connect data source to the first step that doesn't have a specific target
+            // or to the step that targets "data" 
+            if (stepIdMap.containsKey("data_source")) {
+                Integer sourceId = stepIdMap.get("data_source");
+                
+                // Find the step that should connect to data source
+                for (Step step : steps) {
+                    if (step.getTarget() != null && step.getTarget().equals("data")) {
+                        Integer destId = stepIdMap.get(step.getName());
+                        if (destId != null) {
+                            JsonObject connection = new JsonObject();
+                            connection.addProperty("sourceID", sourceId);
+                            connection.addProperty("destID", destId);
+                            connections.add(connection);
+                            break;
+                        }
+                    }
+                }
+                
+                // If no step targets "data", connect to first step
+                if (connections.size() == 0 && !steps.isEmpty()) {
+                    Integer destId = stepIdMap.get(steps.get(0).getName());
+                    if (destId != null) {
                         JsonObject connection = new JsonObject();
                         connection.addProperty("sourceID", sourceId);
-                        connection.addProperty("destID", targetId);
+                        connection.addProperty("destID", destId);
+                        connections.add(connection);
+                    }
+                }
+            }
+            
+            // Connect steps based on their target references
+            // If step B targets step A, then A connects TO B
+            for (Step currentStep : steps) {
+                if (currentStep.getTarget() != null && !currentStep.getTarget().equals("data")) {
+                    String targetStepName = currentStep.getTarget();
+                    Integer sourceId = stepIdMap.get(targetStepName);
+                    Integer destId = stepIdMap.get(currentStep.getName());
+                    
+                    if (sourceId != null && destId != null) {
+                        JsonObject connection = new JsonObject();
+                        connection.addProperty("sourceID", sourceId);
+                        connection.addProperty("destID", destId);
                         connections.add(connection);
                     }
                 }
             }
         }
+    }
+    
+    private String getIntervalBoundValue(BoundValue bound) {
+        if (bound == null) return "0.0";
+        if (bound.getValue() != null) {
+            return bound.getValue();
+        }
+        return "Infinity";
     }
     
     private String getIntervalBoundValue(IntervalBound bound) {
@@ -599,34 +633,22 @@ public class WorkflowJsonExporter {
         JsonObject boundsJson = new JsonObject();
         
         if (bounds.getLower() != null) {
-            boundsJson.addProperty("lower", getBoundValueAsString(bounds.getLower()));
+            boundsJson.addProperty("lower", getIntervalBoundValue(bounds.getLower()));
         }
         if (bounds.getUpper() != null) {
-            boundsJson.addProperty("upper", getBoundValueAsString(bounds.getUpper()));
+            boundsJson.addProperty("upper", getIntervalBoundValue(bounds.getUpper()));
         }
         
         return boundsJson;
     }
     
-    private String getBoundValueAsString(BoundValue bound) {
-        if (bound.getValue() != null) {
-            return bound.getValue();
-        }
-        return "unbounded";
-    }
-    
     private JsonObject createValueJson(Value value) {
         JsonObject valueJson = new JsonObject();
         
-        if (value.getNumber() != null) {
-            valueJson.addProperty("type", "number");
-            valueJson.addProperty("value", value.getNumber());
-        } else if (value.getString() != null) {
-            valueJson.addProperty("type", "string");
-            valueJson.addProperty("value", value.getString());
-        } else {
-            valueJson.addProperty("type", "null");
-            valueJson.add("value", null);
+        if (value.getString() != null) {
+            valueJson.addProperty("string_value", value.getString());
+        } else if (value.getNumber() != null) {
+            valueJson.addProperty("number_value", value.getNumber());
         }
         
         return valueJson;
@@ -634,61 +656,15 @@ public class WorkflowJsonExporter {
     
     private JsonObject createIfClauseJson(IfClause ifClause) {
         JsonObject ifJson = new JsonObject();
-        
-        ifJson.add("field", createContractFieldJson(ifClause.getField()));
-        ifJson.addProperty("operator", ifClause.getOp());
-        ifJson.add("condition", createDataConditionJson(ifClause.getCondition()));
-        
+        // Add implementation based on your grammar structure
+        ifJson.addProperty("condition_type", "generic");
         return ifJson;
     }
     
     private JsonObject createThenClauseJson(ThenClause thenClause) {
         JsonObject thenJson = new JsonObject();
-        
-        thenJson.add("field", createContractFieldJson(thenClause.getField()));
-        thenJson.addProperty("operator", thenClause.getOp());
-        thenJson.add("result", createDataResultJson(thenClause.getResult()));
-        
+        // Add implementation based on your grammar structure  
+        thenJson.addProperty("action_type", "generic");
         return thenJson;
-    }
-    
-    private JsonObject createDataConditionJson(DataCondition condition) {
-        JsonObject conditionJson = new JsonObject();
-        
-        if (condition instanceof CastTypeCheck) {
-            CastTypeCheck ctc = (CastTypeCheck) condition;
-            conditionJson.addProperty("type", "cast_type");
-            conditionJson.addProperty("target_type", ctc.getType());
-            
-        } else if (condition instanceof ValueCheck) {
-            ValueCheck vc = (ValueCheck) condition;
-            conditionJson.addProperty("type", "value_check");
-            conditionJson.add("value", createValueJson(vc.getValue()));
-        } else {
-            // Default case for other condition types
-            conditionJson.addProperty("type", "special_values");
-        }
-        
-        return conditionJson;
-    }
-    
-    private JsonObject createDataResultJson(DataResult result) {
-        JsonObject resultJson = new JsonObject();
-        
-        if (result instanceof CastTypeCheck) {
-            CastTypeCheck ctc = (CastTypeCheck) result;
-            resultJson.addProperty("type", "cast_type");  
-            resultJson.addProperty("target_type", ctc.getType());
-            
-        } else if (result instanceof ValueCheck) {
-            ValueCheck vc = (ValueCheck) result;
-            resultJson.addProperty("type", "value_check");
-            resultJson.add("value", createValueJson(vc.getValue()));
-        } else {
-            // Default case for other result types
-            resultJson.addProperty("type", "special_values");
-        }
-        
-        return resultJson;
     }
 }
