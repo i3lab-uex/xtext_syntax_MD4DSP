@@ -1,0 +1,1502 @@
+{
+  "type": "workflow",
+  "name": "ModelDataSet",
+  "source": {
+    "type": "data_source",
+    "name": "data",
+    "reader": {
+      "type": "csv_reader",
+      "file_path": {
+        "path": "/data/students.csv"
+      },
+      "delimiter": {
+        "value": ","
+      }
+    }
+  },
+  "body": {
+    "steps": [
+      {
+        "type": "step",
+        "name": "missing_val_sex_ethnicity_irschool",
+        "transformation": {
+          "type": "imputation",
+          "columns": {
+            "columns": [
+              {
+                "name": "sex"
+              },
+              {
+                "name": "ETHNICITY"
+              },
+              {
+                "name": "IRSCHOOL"
+              }
+            ]
+          },
+          "method": {
+            "type": "unknown_method"
+          }
+        },
+        "target": "data",
+        "contracts": {
+          "contracts": [
+            {
+              "type": "precondition",
+              "name": {
+                "name": "imputeMissingByMostFrequent(sex)_PRE_value_range"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "special_value",
+                  "operation": "has_special_values",
+                  "field": {
+                    "direction": "output",
+                    "column": {
+                      "name": "sex"
+                    }
+                  },
+                  "quantifier": {
+                    "type": "unknown",
+                    "value": {
+                      "type": "percentage",
+                      "value": 60
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "precondition",
+              "name": {
+                "name": "imputeMissingByMostFrequent(IRSCHOOL)_PRE_value_range"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "special_value",
+                  "operation": "has_special_values",
+                  "field": {
+                    "direction": "output",
+                    "column": {
+                      "name": "IRSCHOOL"
+                    }
+                  },
+                  "quantifier": {
+                    "type": "unknown",
+                    "value": {
+                      "type": "percentage",
+                      "value": 60
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "precondition",
+              "name": {
+                "name": "imputeMissingByMostFrequent(ETHNICITY)_PRE_value_range"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "special_value",
+                  "operation": "has_special_values",
+                  "field": {
+                    "direction": "output",
+                    "column": {
+                      "name": "ETHNICITY"
+                    }
+                  },
+                  "quantifier": {
+                    "type": "unknown",
+                    "value": {
+                      "type": "percentage",
+                      "value": 60
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "postcondition",
+              "name": {
+                "name": "imputeMissingByMostFrequent(sex)_POST_value_range"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "special_value",
+                  "operation": "no_special_values",
+                  "field": {
+                    "direction": "output",
+                    "column": {
+                      "name": "sex"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "postcondition",
+              "name": {
+                "name": "imputeMissingByMostFrequent(IRSCHOOL)_Post_value_range"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "special_value",
+                  "operation": "no_special_values",
+                  "field": {
+                    "direction": "output",
+                    "column": {
+                      "name": "IRSCHOOL"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "postcondition",
+              "name": {
+                "name": "imputeMissingByMostFrequent(ETHNICITY)_POST_value_range"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "special_value",
+                  "operation": "no_special_values",
+                  "field": {
+                    "direction": "output",
+                    "column": {
+                      "name": "ETHNICITY"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "imputeMissingByMostFrequent(sex)_INVARIANT"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "field": {
+                      "direction": "output",
+                      "column": {
+                        "name": "sex"
+                      }
+                    },
+                    "operator": "belongs_to",
+                    "condition": {
+                      "type": "special_values"
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "field": {
+                      "direction": "output",
+                      "column": {
+                        "name": "sex"
+                      }
+                    },
+                    "operator": "belongs_to",
+                    "result": {
+                      "type": "most_frequent"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "imputeMissingByMostFrequent(ETHNICITY)_INVARIANT"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "field": {
+                      "direction": "output",
+                      "column": {
+                        "name": "ETHNICITY"
+                      }
+                    },
+                    "operator": "belongs_to",
+                    "condition": {
+                      "type": "special_values"
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "field": {
+                      "direction": "output",
+                      "column": {
+                        "name": "ETHNICITY"
+                      }
+                    },
+                    "operator": "belongs_to",
+                    "result": {
+                      "type": "most_frequent"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "imputeMissingByMostFrequent(IRSCHOOL)_INVARIANT"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "field": {
+                      "direction": "output",
+                      "column": {
+                        "name": "IRSCHOOL"
+                      }
+                    },
+                    "operator": "belongs_to",
+                    "condition": {
+                      "type": "special_values"
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "field": {
+                      "direction": "output",
+                      "column": {
+                        "name": "IRSCHOOL"
+                      }
+                    },
+                    "operator": "belongs_to",
+                    "result": {
+                      "type": "most_frequent"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "step",
+        "name": "missing_val_academic",
+        "transformation": {
+          "type": "imputation",
+          "columns": {
+            "columns": [
+              {
+                "name": "ACADEMIC_INTEREST_1"
+              },
+              {
+                "name": "ACADEMIC_INTEREST_2"
+              }
+            ]
+          },
+          "method": {
+            "type": "transform_special_to_fixed",
+            "replacement_value": {
+      "type": "string",
+      "value": "Unknown"
+    }
+          }
+        },
+        "target": "missing_val_sex_ethnicity_irschool",
+        "contracts": {
+          "contracts": [
+            {
+              "type": "precondition",
+              "name": {
+                "name": "imputeMissingByFixValue(ACADEMIC_INTEREST_2)_PRE_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "special_value",
+                  "operation": "has_special_values",
+                  "field": {
+                    "direction": "output",
+                    "column": {
+                      "name": "ACADEMIC_INTEREST_2"
+                    }
+                  },
+                  "quantifier": {
+                    "type": "unknown",
+                    "value": {
+                      "type": "percentage",
+                      "value": 60
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "postcondition",
+              "name": {
+                "name": "imputeMissingByFixValue(ACADEMIC_INTEREST_2)_POST_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "special_value",
+                  "operation": "no_special_values",
+                  "field": {
+                    "direction": "output",
+                    "column": {
+                      "name": "ACADEMIC_INTEREST_2"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "imputeMissingByFixValue(ACADEMIC_INTEREST_2)_INV_condition"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "field": {
+                      "direction": "output",
+                      "column": {
+                        "name": "ACADEMIC_INTEREST_2"
+                      }
+                    },
+                    "operator": "belongs_to",
+                    "condition": {
+                      "type": "special_values"
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "field": {
+                      "direction": "output",
+                      "column": {
+                        "name": "ACADEMIC_INTEREST_2"
+                      }
+                    },
+                    "operator": "belongs_to",
+                    "result": {
+                      "type": "fixed",
+                      "values": {
+                        "values": [
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "precondition",
+              "name": {
+                "name": "imputeMissingByFixValue(ACADEMIC_INTEREST_1)_PRE_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "special_value",
+                  "operation": "has_special_values",
+                  "field": {
+                    "direction": "output",
+                    "column": {
+                      "name": "ACADEMIC_INTEREST_1"
+                    }
+                  },
+                  "quantifier": {
+                    "type": "unknown",
+                    "value": {
+                      "type": "percentage",
+                      "value": 60
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "postcondition",
+              "name": {
+                "name": "imputeMissingByFixValue(ACADEMIC_INTEREST_1)_POST_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "special_value",
+                  "operation": "no_special_values",
+                  "field": {
+                    "direction": "output",
+                    "column": {
+                      "name": "ACADEMIC_INTEREST_1"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "imputeMissingByFixValue(ACADEMIC_INTEREST_1)_INV_condition"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "field": {
+                      "direction": "output",
+                      "column": {
+                        "name": "ACADEMIC_INTEREST_1"
+                      }
+                    },
+                    "operator": "belongs_to",
+                    "condition": {
+                      "type": "special_values"
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "field": {
+                      "direction": "output",
+                      "column": {
+                        "name": "ACADEMIC_INTEREST_1"
+                      }
+                    },
+                    "operator": "belongs_to",
+                    "result": {
+                      "type": "fixed",
+                      "values": {
+                        "values": [
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "step",
+        "name": "missing_val_avg_distance",
+        "transformation": {
+          "type": "imputation",
+          "columns": {
+            "columns": [
+              {
+                "name": "avg_income"
+              },
+              {
+                "name": "distance"
+              }
+            ]
+          },
+          "method": {
+            "type": "unknown_method"
+          }
+        },
+        "target": "missing_val_academic",
+        "contracts": {
+          "contracts": [
+            {
+              "type": "precondition",
+              "name": {
+                "name": "imputeMissingByMean(avg_income)_PRE_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "special_value",
+                  "operation": "has_special_values",
+                  "field": {
+                    "direction": "output",
+                    "column": {
+                      "name": "avg_income"
+                    }
+                  },
+                  "quantifier": {
+                    "type": "unknown",
+                    "value": {
+                      "type": "percentage",
+                      "value": 60
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "postcondition",
+              "name": {
+                "name": "imputeMissingByMean(avg_income)_POST_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "special_value",
+                  "operation": "no_special_values",
+                  "field": {
+                    "direction": "output",
+                    "column": {
+                      "name": "avg_income"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "imputeMissingByMean(avg_income)_INV_condition"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "field": {
+                      "direction": "output",
+                      "column": {
+                        "name": "avg_income"
+                      }
+                    },
+                    "operator": "belongs_to",
+                    "condition": {
+                      "type": "special_values"
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "field": {
+                      "direction": "output",
+                      "column": {
+                        "name": "avg_income"
+                      }
+                    },
+                    "operator": "belongs_to",
+                    "result": {
+                      "type": "mean"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "precondition",
+              "name": {
+                "name": "imputeMissingByMean(distance)_PRE_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "special_value",
+                  "operation": "has_special_values",
+                  "field": {
+                    "direction": "output",
+                    "column": {
+                      "name": "distance"
+                    }
+                  },
+                  "quantifier": {
+                    "type": "unknown",
+                    "value": {
+                      "type": "percentage",
+                      "value": 60
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "postcondition",
+              "name": {
+                "name": "imputeMissingByMean(distance)_POST_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "special_value",
+                  "operation": "no_special_values",
+                  "field": {
+                    "direction": "output",
+                    "column": {
+                      "name": "distance"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "imputeMissingByMean(distance)_INV_condition"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "field": {
+                      "direction": "output",
+                      "column": {
+                        "name": "distance"
+                      }
+                    },
+                    "operator": "belongs_to",
+                    "condition": {
+                      "type": "special_values"
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "field": {
+                      "direction": "output",
+                      "column": {
+                        "name": "distance"
+                      }
+                    },
+                    "operator": "belongs_to",
+                    "result": {
+                      "type": "mean"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "step",
+        "name": "missing_val_satscore",
+        "transformation": {
+          "type": "imputation",
+          "columns": {
+            "columns": [
+              {
+                "name": "satscore"
+              }
+            ]
+          },
+          "method": {
+            "type": "unknown_method"
+          }
+        },
+        "target": "missing_val_avg_distance",
+        "contracts": {
+          "contracts": [
+            {
+              "type": "precondition",
+              "name": {
+                "name": "imputeMissingByLinearInterpolation(satscore)_PRE_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "special_value",
+                  "operation": "has_special_values",
+                  "field": {
+                    "direction": "output",
+                    "column": {
+                      "name": "satscore"
+                    }
+                  },
+                  "quantifier": {
+                    "type": "unknown",
+                    "value": {
+                      "type": "percentage",
+                      "value": 60
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "postcondition",
+              "name": {
+                "name": "imputeMissingByLinearInterpolation(satscore)_POST_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "special_value",
+                  "operation": "no_special_values",
+                  "field": {
+                    "direction": "output",
+                    "column": {
+                      "name": "satscore"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "imputeMissingByLinearInterpolation(satscore)_INVARIANT"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "field": {
+                      "direction": "output",
+                      "column": {
+                        "name": "satscore"
+                      }
+                    },
+                    "operator": "belongs_to",
+                    "condition": {
+                      "type": "special_values"
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "field": {
+                      "direction": "output",
+                      "column": {
+                        "name": "satscore"
+                      }
+                    },
+                    "operator": "belongs_to",
+                    "result": {
+                      "type": "interpolation"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "step",
+        "name": "filter_row_init_span",
+        "transformation": {
+          "type": "row_filter",
+          "condition": {
+            "type": "range",
+            "column": {
+              "name": "init_span"
+            },
+            "bounds": {
+              "lower": null,
+              "upper": {
+                "type": "value",
+                "value": "0.0"
+              }
+            },
+            "include_exclude": "include"
+          }
+        },
+        "target": "missing_val_satscore",
+        "contracts": {
+          "contracts": [
+            {
+              "type": "precondition",
+              "name": {
+                "name": "rowFilterRange(init_span)_PRE_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "special_value",
+                  "operation": "has_special_values",
+                  "field": {
+                    "direction": "output",
+                    "column": {
+                      "name": "init_span"
+                    }
+                  },
+                  "quantifier": {
+                    "type": "unknown",
+                    "value": {
+                      "type": "percentage",
+                      "value": 60
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "postcondition",
+              "name": {
+                "name": "rowFilterRange(init_span)_POST_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "special_value",
+                  "operation": "no_special_values",
+                  "field": {
+                    "direction": "output",
+                    "column": {
+                      "name": "init_span"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "rowFilterRange(init_span)_INV_condition"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "field": {
+                      "direction": "output",
+                      "column": {
+                        "name": "init_span"
+                      }
+                    },
+                    "operator": "belongs_to",
+                    "condition": {
+                      "type": "in_range",
+                      "bounds": {
+                        "lower": null,
+                        "upper": {
+                          "type": "value",
+                          "value": "0"
+                        }
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "field": {
+                      "direction": "output",
+                      "column": {
+                        "name": "init_span"
+                      }
+                    },
+                    "operator": "not_belongs_to",
+                    "result": {
+                      "type": "in_range",
+                      "bounds": {
+                        "lower": null,
+                        "upper": {
+                          "type": "value",
+                          "value": "0"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "step",
+        "name": "column_filter",
+        "transformation": {
+          "type": "column_filter",
+          "operation": "remove",
+          "columns": {
+            "columns": [
+              {
+                "name": "TRAVEL_INIT_CNTCTS"
+              },
+              {
+                "name": "REFERRAL_CNTCTS"
+              },
+              {
+                "name": "CONTACT_CODE1"
+              },
+              {
+                "name": "telecq"
+              },
+              {
+                "name": "interest"
+              },
+              {
+                "name": "stuemail"
+              }
+            ]
+          }
+        },
+        "target": "filter_row_init_span"
+      },
+      {
+        "type": "step",
+        "name": "rule_engine_territory",
+        "transformation": {
+          "type": "value_mapping",
+          "column": {
+            "name": "TERRITORY"
+          },
+          "rules": {
+            "rules": [
+              {
+                "pattern": {
+                  "type": "string",
+                  "value": "*N*"
+                },
+                "to": "0"
+              },
+              {
+                "pattern": {
+                  "type": "string",
+                  "value": "*A*"
+                },
+                "to": "0"
+              },
+              {
+                "pattern": {
+                  "type": "string",
+                  "value": "TRUE"
+                },
+                "to": "TERRITORY"
+              }
+            ]
+          },
+          "mode": {
+            "type": "as",
+            "new_name": "TERRITORY"
+          }
+        },
+        "target": "column_filter"
+      },
+      {
+        "type": "step",
+        "name": "rule_engine_instate",
+        "transformation": {
+          "type": "value_mapping",
+          "column": {
+            "name": "Instate"
+          },
+          "rules": {
+            "rules": [
+              {
+                "pattern": {
+                  "type": "string",
+                  "value": "*Y*"
+                },
+                "to": "1"
+              },
+              {
+                "pattern": {
+                  "type": "string",
+                  "value": "*N*"
+                },
+                "to": "0"
+              },
+              {
+                "pattern": {
+                  "type": "string",
+                  "value": "TRUE"
+                },
+                "to": "Instate"
+              }
+            ]
+          },
+          "mode": {
+            "type": "as",
+            "new_name": "Instate"
+          }
+        },
+        "target": "rule_engine_territory"
+      },
+      {
+        "type": "step",
+        "name": "string_to_number",
+        "transformation": {
+          "type": "type_conversion",
+          "conversion_type": "to_numeric",
+          "columns": {
+            "columns": [
+              {
+                "name": "TERRITORY"
+              },
+              {
+                "name": "Instate"
+              }
+            ]
+          }
+        },
+        "target": "rule_engine_instate"
+      },
+      {
+        "type": "step",
+        "name": "numeric_outliers",
+        "transformation": {
+          "type": "outlier_treatment",
+          "columns": {
+            "columns": [
+              {
+                "name": "avg_income"
+              },
+              {
+                "name": "distance"
+              },
+              {
+                "name": "Instate"
+              }
+            ]
+          },
+          "strategy": {
+            "type": "replace_by_closest"
+          }
+        },
+        "target": "string_to_number"
+      },
+      {
+        "type": "step",
+        "name": "binner_total_contacts",
+        "transformation": {
+          "type": "binner",
+          "column": {
+            "name": "TOTAL_CONTACTS"
+          },
+          "definitions": {
+            "bins": [
+              {
+                "name": "Low",
+                "interval": {
+                  "type": "interval",
+                  "left_bracket": "[",
+                  "right_bracket": ")",
+                  "lower": {"type": "null"},
+                  "upper": {
+                    "type": "value",
+                    "value": 1.0
+                  }
+                }
+              },
+              {
+                "name": "Moderate",
+                "interval": {
+                  "type": "interval",
+                  "left_bracket": "[",
+                  "right_bracket": ")",
+                  "lower": {
+                    "type": "value",
+                    "value": 1.0
+                  },
+                  "upper": {
+                    "type": "value",
+                    "value": 4.0
+                  }
+                }
+              },
+              {
+                "name": "High",
+                "interval": {
+                  "type": "interval",
+                  "left_bracket": "[",
+                  "right_bracket": ")",
+                  "lower": {
+                    "type": "value",
+                    "value": 4.0
+                  },
+                  "upper": {"type": "null"}
+                }
+              }
+            ]
+          },
+          "mode": {
+            "type": "as",
+            "new_name": "TOTAL_CONTACTS_binned"
+          }
+        },
+        "target": "numeric_outliers"
+      },
+      {
+        "type": "step",
+        "name": "binner_self_init_contacts",
+        "transformation": {
+          "type": "binner",
+          "column": {
+            "name": "SELF_INIT_CNTCTS"
+          },
+          "definitions": {
+            "bins": [
+              {
+                "name": "Low",
+                "interval": {
+                  "type": "interval",
+                  "left_bracket": "[",
+                  "right_bracket": ")",
+                  "lower": {"type": "null"},
+                  "upper": {
+                    "type": "value",
+                    "value": 1.0
+                  }
+                }
+              },
+              {
+                "name": "Moderate",
+                "interval": {
+                  "type": "interval",
+                  "left_bracket": "[",
+                  "right_bracket": ")",
+                  "lower": {
+                    "type": "value",
+                    "value": 1.0
+                  },
+                  "upper": {
+                    "type": "value",
+                    "value": 4.0
+                  }
+                }
+              },
+              {
+                "name": "High",
+                "interval": {
+                  "type": "interval",
+                  "left_bracket": "[",
+                  "right_bracket": ")",
+                  "lower": {
+                    "type": "value",
+                    "value": 4.0
+                  },
+                  "upper": {"type": "null"}
+                }
+              }
+            ]
+          },
+          "mode": {
+            "type": "as",
+            "new_name": "SELF_INIT_CNTCTS_binned"
+          }
+        },
+        "target": "binner_total_contacts",
+        "contracts": {
+          "contracts": [
+            {
+              "type": "invariant",
+              "name": {
+                "name": "SELF_INIT_CNTCTS_binned_invariant"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "field": {
+                      "direction": "output",
+                      "column": {
+                        "name": "SELF_INIT_CNTCTS"
+                      }
+                    },
+                    "operator": "belongs_to",
+                    "condition": {
+                      "type": "special_values"
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "field": {
+                      "direction": "output",
+                      "column": {
+                        "name": "SELF_INIT_CNTCTS"
+                      }
+                    },
+                    "operator": "not_belongs_to",
+                    "result": {
+                      "type": "special_values"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "step",
+        "name": "binner_solicited_contacts",
+        "transformation": {
+          "type": "binner",
+          "column": {
+            "name": "SOLICITED_CNTCTS"
+          },
+          "definitions": {
+            "bins": [
+              {
+                "name": "Low",
+                "interval": {
+                  "type": "interval",
+                  "left_bracket": "[",
+                  "right_bracket": ")",
+                  "lower": {"type": "null"},
+                  "upper": {
+                    "type": "value",
+                    "value": 1.0
+                  }
+                }
+              },
+              {
+                "name": "Moderate",
+                "interval": {
+                  "type": "interval",
+                  "left_bracket": "[",
+                  "right_bracket": ")",
+                  "lower": {
+                    "type": "value",
+                    "value": 1.0
+                  },
+                  "upper": {
+                    "type": "value",
+                    "value": 4.0
+                  }
+                }
+              },
+              {
+                "name": "High",
+                "interval": {
+                  "type": "interval",
+                  "left_bracket": "[",
+                  "right_bracket": ")",
+                  "lower": {
+                    "type": "value",
+                    "value": 4.0
+                  },
+                  "upper": {"type": "null"}
+                }
+              }
+            ]
+          },
+          "mode": {
+            "type": "as",
+            "new_name": "SOLICITED_CNTCTS_binned"
+          }
+        },
+        "target": "binner_self_init_contacts"
+      },
+      {
+        "type": "step",
+        "name": "binner_territory",
+        "transformation": {
+          "type": "binner",
+          "column": {
+            "name": "TERRITORY"
+          },
+          "definitions": {
+            "bins": [
+              {
+                "name": "Unknown",
+                "interval": {
+                  "type": "interval",
+                  "left_bracket": "[",
+                  "right_bracket": ")",
+                  "lower": {"type": "null"},
+                  "upper": {
+                    "type": "value",
+                    "value": 1.0
+                  }
+                }
+              },
+              {
+                "name": "Zone 1",
+                "interval": {
+                  "type": "interval",
+                  "left_bracket": "[",
+                  "right_bracket": ")",
+                  "lower": {
+                    "type": "value",
+                    "value": 1.0
+                  },
+                  "upper": {
+                    "type": "value",
+                    "value": 3.0
+                  }
+                }
+              },
+              {
+                "name": "Zone 2",
+                "interval": {
+                  "type": "interval",
+                  "left_bracket": "[",
+                  "right_bracket": ")",
+                  "lower": {
+                    "type": "value",
+                    "value": 3.0
+                  },
+                  "upper": {
+                    "type": "value",
+                    "value": 5.0
+                  }
+                }
+              },
+              {
+                "name": "Zone 3",
+                "interval": {
+                  "type": "interval",
+                  "left_bracket": "[",
+                  "right_bracket": ")",
+                  "lower": {
+                    "type": "value",
+                    "value": 5.0
+                  },
+                  "upper": {
+                    "type": "value",
+                    "value": 7.0
+                  }
+                }
+              },
+              {
+                "name": "Zone 4",
+                "interval": {
+                  "type": "interval",
+                  "left_bracket": "[",
+                  "right_bracket": ")",
+                  "lower": {
+                    "type": "value",
+                    "value": 7.0
+                  },
+                  "upper": {"type": "null"}
+                }
+              }
+            ]
+          },
+          "mode": {
+            "type": "as",
+            "new_name": "TERRITORY_binned"
+          }
+        },
+        "target": "binner_solicited_contacts"
+      },
+      {
+        "type": "step",
+        "name": "binner_satscore",
+        "transformation": {
+          "type": "binner",
+          "column": {
+            "name": "satscore"
+          },
+          "definitions": {
+            "bins": [
+              {
+                "name": "54 Percentile and Under",
+                "interval": {
+                  "type": "interval",
+                  "left_bracket": "[",
+                  "right_bracket": ")",
+                  "lower": {"type": "null"},
+                  "upper": {
+                    "type": "value",
+                    "value": 1040.0
+                  }
+                }
+              },
+              {
+                "name": "55-75 Percentile",
+                "interval": {
+                  "type": "interval",
+                  "left_bracket": "[",
+                  "right_bracket": ")",
+                  "lower": {
+                    "type": "value",
+                    "value": 1040.0
+                  },
+                  "upper": {
+                    "type": "value",
+                    "value": 1160.0
+                  }
+                }
+              },
+              {
+                "name": "76-93 Percentile",
+                "interval": {
+                  "type": "interval",
+                  "left_bracket": "[",
+                  "right_bracket": ")",
+                  "lower": {
+                    "type": "value",
+                    "value": 1160.0
+                  },
+                  "upper": {
+                    "type": "value",
+                    "value": 1340.0
+                  }
+                }
+              },
+              {
+                "name": "94+ percentile",
+                "interval": {
+                  "type": "interval",
+                  "left_bracket": "[",
+                  "right_bracket": ")",
+                  "lower": {
+                    "type": "value",
+                    "value": 1340.0
+                  },
+                  "upper": {"type": "null"}
+                }
+              }
+            ]
+          },
+          "mode": {
+            "type": "as",
+            "new_name": "satscore_binned"
+          }
+        },
+        "target": "binner_territory"
+      },
+      {
+        "type": "step",
+        "name": "binner_avg_income",
+        "transformation": {
+          "type": "binner",
+          "column": {
+            "name": "avg_income"
+          },
+          "definitions": {
+            "bins": [
+              {
+                "name": "low",
+                "interval": {
+                  "type": "interval",
+                  "left_bracket": "[",
+                  "right_bracket": ")",
+                  "lower": {"type": "null"},
+                  "upper": {
+                    "type": "value",
+                    "value": 42830.0
+                  }
+                }
+              },
+              {
+                "name": "Moderate",
+                "interval": {
+                  "type": "interval",
+                  "left_bracket": "[",
+                  "right_bracket": ")",
+                  "lower": {
+                    "type": "value",
+                    "value": 42830.0
+                  },
+                  "upper": {
+                    "type": "value",
+                    "value": 55559.0
+                  }
+                }
+              },
+              {
+                "name": "High",
+                "interval": {
+                  "type": "interval",
+                  "left_bracket": "[",
+                  "right_bracket": ")",
+                  "lower": {
+                    "type": "value",
+                    "value": 55559.0
+                  },
+                  "upper": {"type": "null"}
+                }
+              }
+            ]
+          },
+          "mode": {
+            "type": "as",
+            "new_name": "avg_income_binned"
+          }
+        },
+        "target": "binner_satscore"
+      }
+    ]
+  }
+}

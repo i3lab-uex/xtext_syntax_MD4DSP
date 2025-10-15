@@ -1,25 +1,143 @@
-workflow "Model Data Set" {
-    source data = read_file("/Users/paulschwal/Documents/School Work/Fall 2021/ITSCM 774 (data analytics)/Term project/Data_model(1).csv")
+workflow "ModelDataSet"{
+    source data = read_csv("/data/students.csv", ",")
 
     missing_val_sex_ethnicity_irschool = impute(sex, ETHNICITY, IRSCHOOL) {
-        most_frequent
+        transform_special_to_most_frequent
     } |> data
-
-    missing_val_satscore = impute(satscore) {
-        interpolation
-    } |> missing_val_sex_ethnicity_irschool
-
-    missing_val_avg_distance = impute(avg_income, distance) {
-        mean
-    } |> missing_val_satscore
+    	contracts{
+    		precondition "imputeMissingByMostFrequent(sex)_PRE_value_range"{
+    			has_special_values (input.sex, max 60%)
+    		}
+    		precondition "imputeMissingByMostFrequent(IRSCHOOL)_PRE_value_range"{
+    			has_special_values (input.IRSCHOOL, max 60%)
+    		}
+    		precondition "imputeMissingByMostFrequent(ETHNICITY)_PRE_value_range"{
+    			has_special_values (input.ETHNICITY, max 60%)
+    		}
+    		postcondition "imputeMissingByMostFrequent(sex)_POST_value_range"{
+    			no_special_values (input.sex)
+    		}
+    		postcondition "imputeMissingByMostFrequent(IRSCHOOL)_Post_value_range"{
+    			no_special_values (input.IRSCHOOL)
+    		}
+    		postcondition "imputeMissingByMostFrequent(ETHNICITY)_POST_value_range"{
+    			no_special_values (input.ETHNICITY)
+    		}
+    		invariant "imputeMissingByMostFrequent(sex)_INVARIANT"{
+    			condition{
+    				if { expression: input.sex belongs_to special_values }
+    				then{ expression: input.sex belongs_to most_frequent }
+    			}
+    		}
+    		invariant "imputeMissingByMostFrequent(ETHNICITY)_INVARIANT"{
+    			condition{
+    				if { expression: input.ETHNICITY belongs_to special_values }
+    				then{ expression: input.ETHNICITY belongs_to most_frequent }
+    			}
+    		}
+    		invariant "imputeMissingByMostFrequent(IRSCHOOL)_INVARIANT"{
+    			condition{
+    				if { expression: input.IRSCHOOL belongs_to special_values }
+    				then{ expression: input.IRSCHOOL belongs_to most_frequent }
+    			}
+    		}
+    	}
 
     missing_val_academic = impute(ACADEMIC_INTEREST_1, ACADEMIC_INTEREST_2) {
-        fixed = ["Unknown", "Unknown"]
+        transform_special_to_fixed("Unknown")
+    } |> missing_val_sex_ethnicity_irschool
+    	contracts{
+    		precondition "imputeMissingByFixValue(ACADEMIC_INTEREST_2)_PRE_valueRange"{
+    			has_special_values (input.ACADEMIC_INTEREST_2, max 60%)
+    		}
+    		postcondition "imputeMissingByFixValue(ACADEMIC_INTEREST_2)_POST_valueRange"{
+    			no_special_values (input.ACADEMIC_INTEREST_2)
+    		}
+    		invariant "imputeMissingByFixValue(ACADEMIC_INTEREST_2)_INV_condition"{
+    			condition{
+    				if { expression: input.ACADEMIC_INTEREST_2 belongs_to special_values }
+    				then{ expression: input.ACADEMIC_INTEREST_2 belongs_to fixed="Unknown" }
+    			}
+    		}
+    		precondition "imputeMissingByFixValue(ACADEMIC_INTEREST_1)_PRE_valueRange"{
+    			has_special_values (input.ACADEMIC_INTEREST_1, max 60%)
+    		}
+    		postcondition "imputeMissingByFixValue(ACADEMIC_INTEREST_1)_POST_valueRange"{
+    			no_special_values (input.ACADEMIC_INTEREST_1)
+    		}
+    		invariant "imputeMissingByFixValue(ACADEMIC_INTEREST_1)_INV_condition"{
+    			condition{
+    				if { expression: input.ACADEMIC_INTEREST_1 belongs_to special_values }
+    				then{ expression: input.ACADEMIC_INTEREST_1 belongs_to fixed="Unknown" }
+    			}
+    		}
+    	}
+
+    missing_val_avg_distance = impute(avg_income, distance) {
+        transform_special_to_mean
+    } |> missing_val_academic
+    	contracts{
+    		precondition "imputeMissingByMean(avg_income)_PRE_valueRange"{
+    			has_special_values (input.avg_income, max 60%)
+    		}
+    		postcondition "imputeMissingByMean(avg_income)_POST_valueRange"{
+    			no_special_values (input.avg_income)
+    		}
+    		invariant "imputeMissingByMean(avg_income)_INV_condition"{
+    			condition{
+    				if { expression: input.avg_income belongs_to special_values }
+    				then{ expression: input.avg_income belongs_to mean }
+    			}
+    		}
+    		precondition "imputeMissingByMean(distance)_PRE_valueRange"{
+    			has_special_values (input.distance, max 60%)
+    		}
+    		postcondition "imputeMissingByMean(distance)_POST_valueRange"{
+    			no_special_values (input.distance)
+    		}
+    		invariant "imputeMissingByMean(distance)_INV_condition"{
+    			condition{
+    				if { expression: input.distance belongs_to special_values }
+    				then{ expression: input.distance belongs_to mean }
+    			}
+    		}
+    	}
+
+    missing_val_satscore = impute(satscore) {
+        transform_special_to_interpolation ()
     } |> missing_val_avg_distance
+    	contracts{
+    		precondition "imputeMissingByLinearInterpolation(satscore)_PRE_valueRange"{
+    			has_special_values (input.satscore, max 60%)
+    		}
+    		postcondition "imputeMissingByLinearInterpolation(satscore)_POST_valueRange"{
+    			no_special_values (input.satscore)
+    		}
+    		invariant "imputeMissingByLinearInterpolation(satscore)_INVARIANT"{
+    			condition{
+    				if { expression: input.satscore belongs_to special_values }
+    				then{ expression: input.satscore belongs_to interpolation }
+    			}
+    		}
+    	}
 
     filter_row_init_span = filter_rows {
-        range(init_span, [0.0, *), include)
-    } |> missing_val_academic
+        range(init_span, [-inf, 0.0), include)
+    } |> missing_val_satscore
+    	contracts{
+    		precondition "rowFilterRange(init_span)_PRE_valueRange"{
+    			has_special_values (input.init_span, max 60%)
+    		}
+    		postcondition "rowFilterRange(init_span)_POST_valueRange"{
+    			no_special_values (input.init_span)
+    		}
+    		invariant "rowFilterRange(init_span)_INV_condition"{
+    			condition{
+    				if { expression: input.init_span belongs_to in_range(-inf, 0) }
+    				then{ expression: input.init_span not_belongs_to in_range(-inf, 0) }
+    			}
+    		}
+    	}
 
     column_filter = remove {
         TRAVEL_INIT_CNTCTS, REFERRAL_CNTCTS, CONTACT_CODE1, telecq, interest, stuemail
@@ -37,18 +155,37 @@ workflow "Model Data Set" {
         "TRUE" => "Instate"
     } as Instate |> rule_engine_territory
 
-    string_to_number = to_numeric(TERRITORY, Instate, ETHNICITY, ACADEMIC_INTEREST_1, ACADEMIC_INTEREST_2, Enroll, IRSCHOOL, sex, premiere, CONTACT_CODE1, stuemail, prediction) |> rule_engine_instate
+    string_to_number = to_numeric(TERRITORY, Instate) |> rule_engine_instate
 
     numeric_outliers = outliers(avg_income, distance, Instate) {
-    replace_by_closest iqr scalar = 1.5 estimation = R_4 scope = all_outliers
-	} |> string_to_number
+        replace_by_closest
+    } |> string_to_number
 
-    binner_satscore = bin(satscore) {
-        "54 Percentile and Under" : [-Infinity, 1040.0),
-        "55-75 Percentile" : [1040.0, 1160.0),
-        "76-93 Percentile" : [1160.0, 1340.0),
-        "94+ percentile" : [1340.0, Infinity)
-    } as satscore_binned |> numeric_outliers
+    binner_total_contacts = bin(TOTAL_CONTACTS) {
+        "Low" : [-Infinity, 1.0),
+        "Moderate" : [1.0, 4.0),
+        "High" : [4.0, Infinity)
+    } as TOTAL_CONTACTS_binned |> numeric_outliers
+
+    binner_self_init_contacts = bin(SELF_INIT_CNTCTS) {
+        "Low" : [-Infinity, 1.0),
+        "Moderate" : [1.0, 4.0),
+        "High" : [4.0, Infinity)
+    } as SELF_INIT_CNTCTS_binned |> binner_total_contacts
+    	contracts{
+    		invariant "SELF_INIT_CNTCTS_binned_invariant"{
+    			condition {
+					if { expression: input.SELF_INIT_CNTCTS belongs_to special_values }
+				    then { expression: output.SELF_INIT_CNTCTS not_belongs_to special_values }
+				}
+    		}
+    	}
+
+    binner_solicited_contacts = bin(SOLICITED_CNTCTS) {
+        "Low" : [-Infinity, 1.0),
+        "Moderate" : [1.0, 4.0),
+        "High" : [4.0, Infinity)
+    } as SOLICITED_CNTCTS_binned |> binner_self_init_contacts	
 
     binner_territory = bin(TERRITORY) {
         "Unknown" : [-Infinity, 1.0),
@@ -56,29 +193,35 @@ workflow "Model Data Set" {
         "Zone 2" : [3.0, 5.0),
         "Zone 3" : [5.0, 7.0),
         "Zone 4" : [7.0, Infinity)
-    } as TERRITORY_binned |> binner_satscore
+    } as TERRITORY_binned |> binner_solicited_contacts
+
+    binner_satscore = bin(satscore) {
+        "54 Percentile and Under" : [-Infinity, 1040.0),
+        "55-75 Percentile" : [1040.0, 1160.0),
+        "76-93 Percentile" : [1160.0, 1340.0),
+        "94+ percentile" : [1340.0, Infinity)
+    } as satscore_binned |> binner_territory
 
     binner_avg_income = bin(avg_income) {
         "low" : [-Infinity, 42830.0),
         "Moderate" : [42830.0, 55559.0),
         "High" : [55559.0, Infinity)
-    } as avg_income_binned |> binner_territory
-
-    binner_total_contacts = bin(TOTAL_CONTACTS) {
-        "Low" : [-Infinity, 1.0),
-        "Moderate" : [1.0, 4.0),
-        "High" : [4.0, Infinity)
-    } as TOTAL_CONTACTS_binned |> binner_avg_income
-
-    binner_solicited_contacts = bin(SOLICITED_CNTCTS) {
-        "Low" : [-Infinity, 1.0),
-        "Moderate" : [1.0, 4.0),
-        "High" : [4.0, Infinity)
-    } as SOLICITED_CNTCTS_binned |> binner_total_contacts
-
-    binner_self_init_contacts = bin(SELF_INIT_CNTCTS) {
-        "Low" : [-Infinity, 1.0),
-        "Moderate" : [1.0, 4.0),
-        "High" : [4.0, Infinity)
-    } as SELF_INIT_CNTCTS_binned |> binner_solicited_contacts
+    } as avg_income_binned |> binner_satscore
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
