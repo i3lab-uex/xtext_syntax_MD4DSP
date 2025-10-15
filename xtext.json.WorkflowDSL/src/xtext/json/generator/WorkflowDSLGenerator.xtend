@@ -185,10 +185,24 @@ class WorkflowDSLGenerator extends AbstractGenerator {
 			}
 			SpecialValueContract: {
 				sb.append(spaces(indent + 2) + "\"type\": \"special_value\",\n")
+				// Detectar si es no_special_values o has_special_values basado en el texto del nodo
+				val node = org.eclipse.xtext.nodemodel.util.NodeModelUtils.getNode(contractType)
+				val contractText = if (node !== null) node.text.trim else ""
+				val isNoSpecial = contractText.startsWith("no_special_values")
+				sb.append(spaces(indent + 2) + "\"operation\": \"" + (if (isNoSpecial) "no_special_values" else "has_special_values") + "\",\n")
 				sb.append(spaces(indent + 2) + "\"field\": " + contractType.field.convertToJson(indent + 2))
+				if (contractType.quantifier !== null) {
+					sb.append(",\n")
+					sb.append(spaces(indent + 2) + "\"quantifier\": " + contractType.quantifier.convertToJson(indent + 2))
+				}
 			}
 			CastTypeContract: {
 				sb.append(spaces(indent + 2) + "\"type\": \"cast_type\",\n")
+				// Detectar si es castable_to o is_type basado en el texto del nodo
+				val node = org.eclipse.xtext.nodemodel.util.NodeModelUtils.getNode(contractType)
+				val contractText = if (node !== null) node.text.trim else ""
+				val isCastable = contractText.startsWith("castable_to")
+				sb.append(spaces(indent + 2) + "\"operation\": \"" + (if (isCastable) "castable_to" else "is_type") + "\",\n")
 				sb.append(spaces(indent + 2) + "\"cast_type_name\": \"" + contractType.type + "\",\n")
 				sb.append(spaces(indent + 2) + "\"field\": " + contractType.field.convertToJson(indent + 2))
 			}
@@ -199,7 +213,12 @@ class WorkflowDSLGenerator extends AbstractGenerator {
 	}
 	
 	def String convertToJson(ContractField field, int indent) {
-		return "{\n" + spaces(indent + 2) + "\"column\": " + field.column.convertToJson(indent + 2) + "\n" + spaces(indent) + "}"
+		val sb = new StringBuilder
+		sb.append("{\n")
+		sb.append(spaces(indent + 2) + "\"direction\": \"" + (if (field.toString.contains("input")) "input" else "output") + "\",\n")
+		sb.append(spaces(indent + 2) + "\"column\": " + field.column.convertToJson(indent + 2) + "\n")
+		sb.append(spaces(indent) + "}")
+		return sb.toString
 	}
 	
 	def String convertToJson(Transformation transformation, int indent) {
@@ -211,7 +230,22 @@ class WorkflowDSLGenerator extends AbstractGenerator {
 				sb.append(spaces(indent + 2) + "\"condition\": " + transformation.condition.convertToJson(indent + 2))
 			}
 			ColumnFilter: {
+				// Detectar el tipo específico de ColumnFilter
+				val node = org.eclipse.xtext.nodemodel.util.NodeModelUtils.getNode(transformation)
+				val filterText = if (node !== null) node.text.trim else ""
+				val operationType = if (filterText.contains("select_columns")) {
+					"select_columns"
+				} else if (filterText.contains("drop_columns")) {
+					"drop_columns"
+				} else if (filterText.contains("keep")) {
+					"keep"
+				} else if (filterText.contains("remove")) {
+					"remove"
+				} else {
+					"column_filter"
+				}
 				sb.append(spaces(indent + 2) + "\"type\": \"column_filter\",\n")
+				sb.append(spaces(indent + 2) + "\"operation\": \"" + operationType + "\",\n")
 				sb.append(spaces(indent + 2) + "\"columns\": " + transformation.columns.convertToJson(indent + 2))
 			}
 			ValueMapping: {
@@ -220,19 +254,64 @@ class WorkflowDSLGenerator extends AbstractGenerator {
 				sb.append(spaces(indent + 2) + "\"rules\": " + transformation.rules.convertToJson(indent + 2) + ",\n")
 				sb.append(spaces(indent + 2) + "\"mode\": " + transformation.mode.convertToJson(indent + 2))
 			}
+			SubstringMapping: {
+				sb.append(spaces(indent + 2) + "\"type\": \"substring_mapping\",\n")
+				sb.append(spaces(indent + 2) + "\"column\": " + transformation.column.convertToJson(indent + 2) + ",\n")
+				sb.append(spaces(indent + 2) + "\"from\": \"" + transformation.from.replaceAll('"', '') + "\",\n")
+				sb.append(spaces(indent + 2) + "\"to\": \"" + transformation.to.replaceAll('"', '') + "\",\n")
+				sb.append(spaces(indent + 2) + "\"mode\": " + transformation.mode.convertToJson(indent + 2))
+			}
 			MathOp: {
 				sb.append(spaces(indent + 2) + "\"type\": \"math_operation\",\n")
 				sb.append(spaces(indent + 2) + "\"expression\": " + transformation.expression.convertToJson(indent + 2) + ",\n")
 				sb.append(spaces(indent + 2) + "\"new_name\": \"" + transformation.newName + "\"")
 			}
+			Binner: {
+				sb.append(spaces(indent + 2) + "\"type\": \"binner\",\n")
+				sb.append(spaces(indent + 2) + "\"column\": " + transformation.column.convertToJson(indent + 2) + ",\n")
+				sb.append(spaces(indent + 2) + "\"definitions\": " + transformation.definitions.convertToJson(indent + 2) + ",\n")
+				sb.append(spaces(indent + 2) + "\"mode\": " + transformation.mode.convertToJson(indent + 2))
+			}
 			TypeConversion: {
+				// Detectar el tipo específico de conversión
+				val node = org.eclipse.xtext.nodemodel.util.NodeModelUtils.getNode(transformation)
+				val conversionText = if (node !== null) node.text.trim else ""
+				val conversionType = if (conversionText.contains("to_numeric")) {
+					"to_numeric"
+				} else if (conversionText.contains("to_string")) {
+					"to_string"
+				} else if (conversionText.contains("to_categorical")) {
+					"to_categorical"
+				} else if (conversionText.contains("to_boolean")) {
+					"to_boolean"
+				} else if (conversionText.contains("to_date")) {
+					"to_date"
+				} else {
+					"type_conversion"
+				}
 				sb.append(spaces(indent + 2) + "\"type\": \"type_conversion\",\n")
+				sb.append(spaces(indent + 2) + "\"conversion_type\": \"" + conversionType + "\",\n")
 				sb.append(spaces(indent + 2) + "\"columns\": " + transformation.columns.convertToJson(indent + 2))
+				// Agregar separator si existe (para to_numeric)
+				if (transformation.separator !== null) {
+					sb.append(",\n")
+					sb.append(spaces(indent + 2) + "\"separator\": " + transformation.separator.convertToJson(indent + 2))
+				}
+				// Agregar format si existe (para to_date)
+				if (transformation.format !== null) {
+					sb.append(",\n")
+					sb.append(spaces(indent + 2) + "\"format\": " + transformation.format.convertToJson(indent + 2))
+				}
 			}
 			Imputation: {
 				sb.append(spaces(indent + 2) + "\"type\": \"imputation\",\n")
 				sb.append(spaces(indent + 2) + "\"columns\": " + transformation.columns.convertToJson(indent + 2) + ",\n")
 				sb.append(spaces(indent + 2) + "\"method\": " + transformation.method.convertToJson(indent + 2))
+			}
+			OutlierTreatment: {
+				sb.append(spaces(indent + 2) + "\"type\": \"outlier_treatment\",\n")
+				sb.append(spaces(indent + 2) + "\"columns\": " + transformation.columns.convertToJson(indent + 2) + ",\n")
+				sb.append(spaces(indent + 2) + "\"strategy\": " + transformation.strategy.convertToJson(indent + 2))
 			}
 			Join: {
 				sb.append(spaces(indent + 2) + "\"type\": \"join\",\n")
@@ -281,32 +360,116 @@ class WorkflowDSLGenerator extends AbstractGenerator {
 	
 	// Helper methods for basic types
 	def String convertToJson(FilterCondition condition, int indent) {
-		return "{\n" + spaces(indent + 2) + "\"type\": \"filter_condition\"\n" + spaces(indent) + "}"
+		val sb = new StringBuilder
+		sb.append("{\n")
+		switch condition {
+			MissingFilter: {
+				sb.append(spaces(indent + 2) + "\"type\": \"missing\",\n")
+				sb.append(spaces(indent + 2) + "\"columns\": " + condition.columns.convertToJson(indent + 2) + ",\n")
+				sb.append(spaces(indent + 2) + "\"include_exclude\": \"" + condition.includeExclude + "\"")
+				if (condition.quantifier !== null) {
+					sb.append(",\n")
+					sb.append(spaces(indent + 2) + "\"quantifier\": " + condition.quantifier.convertToJson(indent + 2))
+				}
+			}
+			RangeFilter: {
+				sb.append(spaces(indent + 2) + "\"type\": \"range\",\n")
+				sb.append(spaces(indent + 2) + "\"column\": " + condition.column.convertToJson(indent + 2) + ",\n")
+				sb.append(spaces(indent + 2) + "\"bounds\": " + condition.bounds.convertToJson(indent + 2) + ",\n")
+				sb.append(spaces(indent + 2) + "\"include_exclude\": \"" + condition.includeExclude + "\"")
+			}
+			StringFilter: {
+				sb.append(spaces(indent + 2) + "\"type\": \"string_filter\",\n")
+				sb.append(spaces(indent + 2) + "\"column\": " + condition.column.convertToJson(indent + 2) + ",\n")
+				sb.append(spaces(indent + 2) + "\"pattern\": " + condition.pattern.convertToJson(indent + 2) + ",\n")
+				sb.append(spaces(indent + 2) + "\"include_exclude\": \"" + condition.includeExclude + "\"")
+			}
+		}
+		sb.append("\n")
+		sb.append(spaces(indent) + "}")
+		return sb.toString
 	}
 	
 	def String convertToJson(MappingRules rules, int indent) {
-		return "{\n" + spaces(indent + 2) + "\"type\": \"mapping_rules\"\n" + spaces(indent) + "}"
+		val sb = new StringBuilder
+		sb.append("{\n")
+		sb.append(spaces(indent + 2) + "\"rules\": [\n")
+		for (var i = 0; i < rules.rules.size; i++) {
+			sb.append(spaces(indent + 4) + rules.rules.get(i).convertToJson(indent + 4))
+			if (i < rules.rules.size - 1) {
+				sb.append(",")
+			}
+			sb.append("\n")
+		}
+		sb.append(spaces(indent + 2) + "]\n")
+		sb.append(spaces(indent) + "}")
+		return sb.toString
+	}
+	
+	def String convertToJson(MappingRule rule, int indent) {
+		val sb = new StringBuilder
+		sb.append("{\n")
+		if (rule.from !== null) {
+			sb.append(spaces(indent + 2) + "\"from\": \"" + rule.from.replaceAll('"', '') + "\",\n")
+			sb.append(spaces(indent + 2) + "\"to\": \"" + rule.to.replaceAll('"', '') + "\"")
+		} else if (rule.pattern !== null) {
+			sb.append(spaces(indent + 2) + "\"pattern\": " + rule.pattern.convertToJson(indent + 2) + ",\n")
+			sb.append(spaces(indent + 2) + "\"to\": \"" + rule.to.replaceAll('"', '') + "\"")
+		}
+		sb.append("\n")
+		sb.append(spaces(indent) + "}")
+		return sb.toString
+	}
+	
+	def String convertToJson(Pattern pattern, int indent) {
+		val sb = new StringBuilder
+		sb.append("{\n")
+		if (pattern.value !== null) {
+			sb.append(spaces(indent + 2) + "\"type\": \"string\",\n")
+			sb.append(spaces(indent + 2) + "\"value\": \"" + pattern.value.replaceAll('"', '') + "\"")
+		} else if (pattern.regex !== null) {
+			sb.append(spaces(indent + 2) + "\"type\": \"regex\",\n")
+			sb.append(spaces(indent + 2) + "\"regex\": " + pattern.regex.convertToJson(indent + 2))
+		}
+		sb.append("\n")
+		sb.append(spaces(indent) + "}")
+		return sb.toString
+	}
+	
+	def String convertToJson(Regex regex, int indent) {
+		val sb = new StringBuilder
+		sb.append("{\n")
+		sb.append(spaces(indent + 2) + "\"pattern\": \"" + (regex.pattern?.replaceAll('"', '') ?: "") + "\"")
+		if (regex.flags !== null) {
+			sb.append(",\n")
+			sb.append(spaces(indent + 2) + "\"flags\": \"" + regex.flags + "\"")
+		}
+		sb.append("\n")
+		sb.append(spaces(indent) + "}")
+		return sb.toString
 	}
 	
 	def String convertToJson(MappingMode mode, int indent) {
-		return "{\n" + spaces(indent + 2) + "\"type\": \"mapping_mode\"\n" + spaces(indent) + "}"
-	}
-	
-	def String convertToJson(MathExpression expression, int indent) {
-		return "{\n" + spaces(indent + 2) + "\"type\": \"math_expression\"\n" + spaces(indent) + "}"
-	}
-	
-	def String convertToJson(ImputeMethod method, int indent) {
 		val sb = new StringBuilder
 		sb.append("{\n")
-		switch method {
-			FixedImpute: {
-				sb.append(spaces(indent + 2) + "\"type\": \"fixed\"")
-			}
-			default: {
-				sb.append(spaces(indent + 2) + "\"type\": \"other\"")
-			}
+		if (mode.newName !== null) {
+			sb.append(spaces(indent + 2) + "\"type\": \"as\",\n")
+			sb.append(spaces(indent + 2) + "\"new_name\": \"" + mode.newName + "\"")
+		} else {
+			sb.append(spaces(indent + 2) + "\"type\": \"replace\"")
 		}
+		sb.append("\n")
+		sb.append(spaces(indent) + "}")
+		return sb.toString
+	}
+	
+	def String convertToJson(Join join, int indent) {
+		val sb = new StringBuilder
+		sb.append("{\n")
+		sb.append(spaces(indent + 2) + "\"type\": \"join\",\n")
+		sb.append(spaces(indent + 2) + "\"left\": \"" + join.left + "\",\n")
+		sb.append(spaces(indent + 2) + "\"right\": \"" + join.right + "\",\n")
+		sb.append(spaces(indent + 2) + "\"spec\": " + join.spec.convertToJson(indent + 2))
 		sb.append("\n")
 		sb.append(spaces(indent) + "}")
 		return sb.toString
@@ -364,22 +527,764 @@ class WorkflowDSLGenerator extends AbstractGenerator {
 	
 	// Helper methods
 	def String convertToJson(ContractValue value, int indent) {
-		return "{\n" + spaces(indent + 2) + "\"type\": \"contract_value\"\n" + spaces(indent) + "}"
+		val sb = new StringBuilder
+		sb.append("{\n")
+		switch value {
+			case value.type !== null: {
+				sb.append(spaces(indent + 2) + "\"type\": \"castable_to\",\n")
+				sb.append(spaces(indent + 2) + "\"cast_type\": \"" + value.type + "\"")
+			}
+			case value.bounds !== null: {
+				sb.append(spaces(indent + 2) + "\"type\": \"in_range\",\n")
+				sb.append(spaces(indent + 2) + "\"bounds\": " + value.bounds.convertToJson(indent + 2))
+			}
+			case value.value !== null: {
+				sb.append(spaces(indent + 2) + "\"type\": \"matches\",\n")
+				sb.append(spaces(indent + 2) + "\"value\": " + value.value.convertToJson(indent + 2))
+			}
+			default: {
+				sb.append(spaces(indent + 2) + "\"type\": \"unknown_contract_value\"")
+			}
+		}
+		sb.append("\n")
+		sb.append(spaces(indent) + "}")
+		return sb.toString
 	}
 	
 	def String convertToJson(IfClause clause, int indent) {
-		return "{\n" + spaces(indent + 2) + "\"type\": \"if_clause\"\n" + spaces(indent) + "}"
+		val sb = new StringBuilder
+		sb.append("{\n")
+		sb.append(spaces(indent + 2) + "\"type\": \"if_clause\",\n")
+		if (clause.field !== null) {
+			sb.append(spaces(indent + 2) + "\"field\": " + clause.field.convertToJson(indent + 2) + ",\n")
+		}
+		if (clause.op !== null) {
+			sb.append(spaces(indent + 2) + "\"operator\": \"" + clause.op + "\",\n")
+		}
+		if (clause.condition !== null) {
+			sb.append(spaces(indent + 2) + "\"condition\": " + clause.condition.convertToJson(indent + 2) + "\n")
+		}
+		sb.append(spaces(indent) + "}")
+		return sb.toString
 	}
 	
 	def String convertToJson(ThenClause clause, int indent) {
-		return "{\n" + spaces(indent + 2) + "\"type\": \"then_clause\"\n" + spaces(indent) + "}"
+		val sb = new StringBuilder
+		sb.append("{\n")
+		sb.append(spaces(indent + 2) + "\"type\": \"then_clause\",\n")
+		if (clause.field !== null) {
+			sb.append(spaces(indent + 2) + "\"field\": " + clause.field.convertToJson(indent + 2) + ",\n")
+		}
+		if (clause.op !== null) {
+			sb.append(spaces(indent + 2) + "\"operator\": \"" + clause.op + "\",\n")
+		}
+		if (clause.result !== null) {
+			sb.append(spaces(indent + 2) + "\"result\": " + clause.result.convertToJson(indent + 2) + "\n")
+		}
+		sb.append(spaces(indent) + "}")
+		return sb.toString
 	}
 	
-	def String spaces(int count) {
+	def String convertToJson(DataCondition condition, int indent) {
 		val sb = new StringBuilder
-		for (var i = 0; i < count; i++) {
-			sb.append(" ")
+		sb.append("{\n")
+		if (condition.eClass.name == "SpecialValueCheck") {
+			sb.append(spaces(indent + 2) + "\"type\": \"special_values\"")
+			if (condition instanceof SpecialValueCheck) {
+				val svc = condition as SpecialValueCheck
+				if (svc.quantifier !== null) {
+					sb.append(",\n")
+					sb.append(spaces(indent + 2) + "\"quantifier\": " + svc.quantifier.convertToJson(indent + 2))
+				}
+			}
+		} else if (condition instanceof CastTypeCheck) {
+			sb.append(spaces(indent + 2) + "\"type\": \"cast_type_check\",\n")
+			sb.append(spaces(indent + 2) + "\"cast_type\": \"" + (condition as CastTypeCheck).type + "\"")
+		} else if (condition instanceof ValueCheck) {
+			sb.append(spaces(indent + 2) + "\"type\": \"value_check\",\n")
+			sb.append(spaces(indent + 2) + "\"value\": " + (condition as ValueCheck).value.convertToJson(indent + 2))
+		} else if (condition instanceof StatisticalImputeCheck) {
+			val statCheck = condition as StatisticalImputeCheck
+			val node = org.eclipse.xtext.nodemodel.util.NodeModelUtils.getNode(condition)
+			val methodText = if (node !== null) node.text.trim else ""
+			
+			if (statCheck.type !== null) {
+				sb.append(spaces(indent + 2) + "\"type\": \"interpolation\",\n")
+				sb.append(spaces(indent + 2) + "\"interpolation_type\": \"" + statCheck.type + "\"")
+			} else if (methodText.equals("mean")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"mean\"")
+			} else if (methodText.equals("median")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"median\"")
+			} else if (methodText.equals("most_frequent")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"most_frequent\"")
+			} else if (methodText.startsWith("interpolation")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"interpolation\"")
+				// Extraer el tipo de interpolación si existe
+				val interpolationType = extractInterpolationType(methodText)
+				if (interpolationType !== null) {
+					sb.append(",\n")
+					sb.append(spaces(indent + 2) + "\"interpolation_type\": \"" + interpolationType + "\"")
+				}
+			} else {
+				sb.append(spaces(indent + 2) + "\"type\": \"statistical_impute\"")
+			}
+		} else if (condition instanceof FixedImputeCheck) {
+			val fixedCheck = condition as FixedImputeCheck
+			val node = org.eclipse.xtext.nodemodel.util.NodeModelUtils.getNode(condition)
+			val checkText = if (node !== null) node.text.trim else ""
+			
+			if (checkText.contains("fixed_value")) {
+				// fixed_value("special_value_name") - transformación de special a fixed
+				sb.append(spaces(indent + 2) + "\"type\": \"fixed_from_special\",\n")
+				sb.append(spaces(indent + 2) + "\"special_value\": \"" + (fixedCheck.specialValue?.replaceAll('"', '') ?: "") + "\"")
+			} else if (fixedCheck.values !== null) {
+				sb.append(spaces(indent + 2) + "\"type\": \"fixed\",\n")
+				sb.append(spaces(indent + 2) + "\"values\": " + fixedCheck.values.convertToJson(indent + 2))
+			} else {
+				sb.append(spaces(indent + 2) + "\"type\": \"fixed\"")
+			}
+		} else if (condition instanceof OutlierCheck) {
+			val node = org.eclipse.xtext.nodemodel.util.NodeModelUtils.getNode(condition)
+			val outlierText = if (node !== null) node.text.trim else ""
+			
+			if (outlierText.equals("outlier")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"outlier\"")
+			} else if (outlierText.equals("replace_closest") || outlierText.equals("replace_by_closest")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"replace_closest\"")
+			} else {
+				sb.append(spaces(indent + 2) + "\"type\": \"outlier_check\"")
+			}
+		} else if (condition instanceof IntervalCheck) {
+			sb.append(spaces(indent + 2) + "\"type\": \"in_range\",\n")
+			sb.append(spaces(indent + 2) + "\"bounds\": " + (condition as IntervalCheck).bounds.convertToJson(indent + 2))
+		} else if (condition instanceof MappingCheck) {
+			sb.append(spaces(indent + 2) + "\"type\": \"mapping\",\n")
+			sb.append(spaces(indent + 2) + "\"rules\": " + (condition as MappingCheck).rules.convertToJson(indent + 2))
+		} else if (condition instanceof DerivedValueCheck) {
+			sb.append(spaces(indent + 2) + "\"type\": \"derived\",\n")
+			sb.append(spaces(indent + 2) + "\"expression\": " + (condition as DerivedValueCheck).expression.convertToJson(indent + 2))
 		}
+		sb.append("\n")
+		sb.append(spaces(indent) + "}")
+		return sb.toString
+	}
+	
+	def String convertToJson(DataResult result, int indent) {
+		val sb = new StringBuilder
+		sb.append("{\n")
+		if (result.eClass.name == "SpecialValueCheck") {
+			sb.append(spaces(indent + 2) + "\"type\": \"special_values\"")
+			if (result instanceof SpecialValueCheck) {
+				val svc = result as SpecialValueCheck
+				if (svc.quantifier !== null) {
+					sb.append(",\n")
+					sb.append(spaces(indent + 2) + "\"quantifier\": " + svc.quantifier.convertToJson(indent + 2))
+				}
+			}
+		} else if (result instanceof CastTypeCheck) {
+			sb.append(spaces(indent + 2) + "\"type\": \"cast_type_check\",\n")
+			sb.append(spaces(indent + 2) + "\"cast_type\": \"" + (result as CastTypeCheck).type + "\"")
+		} else if (result instanceof ValueCheck) {
+			sb.append(spaces(indent + 2) + "\"type\": \"value_check\",\n")
+			sb.append(spaces(indent + 2) + "\"value\": " + (result as ValueCheck).value.convertToJson(indent + 2))
+		} else if (result instanceof StatisticalImputeCheck) {
+			val statCheck = result as StatisticalImputeCheck
+			val node = org.eclipse.xtext.nodemodel.util.NodeModelUtils.getNode(result)
+			val methodText = if (node !== null) node.text.trim else ""
+			
+			if (statCheck.type !== null) {
+				sb.append(spaces(indent + 2) + "\"type\": \"interpolation\",\n")
+				sb.append(spaces(indent + 2) + "\"interpolation_type\": \"" + statCheck.type + "\"")
+			} else if (methodText.equals("mean")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"mean\"")
+			} else if (methodText.equals("median")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"median\"")
+			} else if (methodText.equals("most_frequent")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"most_frequent\"")
+			} else if (methodText.startsWith("interpolation")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"interpolation\"")
+				// Extraer el tipo de interpolación si existe
+				val interpolationType = extractInterpolationType(methodText)
+				if (interpolationType !== null) {
+					sb.append(",\n")
+					sb.append(spaces(indent + 2) + "\"interpolation_type\": \"" + interpolationType + "\"")
+				}
+			} else {
+				sb.append(spaces(indent + 2) + "\"type\": \"statistical_impute\"")
+			}
+		} else if (result instanceof FixedImputeCheck) {
+			val fixedCheck = result as FixedImputeCheck
+			val node = org.eclipse.xtext.nodemodel.util.NodeModelUtils.getNode(result)
+			val checkText = if (node !== null) node.text.trim else ""
+			
+			if (checkText.contains("fixed_value")) {
+				// fixed_value("special_value_name") - transformación de special a fixed
+				sb.append(spaces(indent + 2) + "\"type\": \"fixed_from_special\",\n")
+				sb.append(spaces(indent + 2) + "\"special_value\": \"" + (fixedCheck.specialValue?.replaceAll('"', '') ?: "") + "\"")
+			} else if (fixedCheck.values !== null) {
+				sb.append(spaces(indent + 2) + "\"type\": \"fixed\",\n")
+				sb.append(spaces(indent + 2) + "\"values\": " + fixedCheck.values.convertToJson(indent + 2))
+			} else {
+				sb.append(spaces(indent + 2) + "\"type\": \"fixed\"")
+			}
+		} else if (result instanceof OutlierCheck) {
+			val node = org.eclipse.xtext.nodemodel.util.NodeModelUtils.getNode(result)
+			val outlierText = if (node !== null) node.text.trim else ""
+			
+			if (outlierText.equals("outlier")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"outlier\"")
+			} else if (outlierText.equals("replace_closest") || outlierText.equals("replace_by_closest")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"replace_closest\"")
+			} else {
+				sb.append(spaces(indent + 2) + "\"type\": \"outlier_check\"")
+			}
+		} else if (result instanceof IntervalCheck) {
+			sb.append(spaces(indent + 2) + "\"type\": \"in_range\",\n")
+			sb.append(spaces(indent + 2) + "\"bounds\": " + (result as IntervalCheck).bounds.convertToJson(indent + 2))
+		} else if (result instanceof MappingCheck) {
+			sb.append(spaces(indent + 2) + "\"type\": \"mapping\",\n")
+			sb.append(spaces(indent + 2) + "\"rules\": " + (result as MappingCheck).rules.convertToJson(indent + 2))
+		} else if (result instanceof DerivedValueCheck) {
+			sb.append(spaces(indent + 2) + "\"type\": \"derived\",\n")
+			sb.append(spaces(indent + 2) + "\"expression\": " + (result as DerivedValueCheck).expression.convertToJson(indent + 2))
+		}
+		sb.append("\n")
+		sb.append(spaces(indent) + "}")
+		return sb.toString
+	}
+	
+	def String convertToJson(Quantifier quantifier, int indent) {
+		val sb = new StringBuilder
+		sb.append("{\n")
+		// Determinar el tipo de cuantificador
+		val quantifierType = if (quantifier.toString.contains("max")) {
+			"max"
+		} else if (quantifier.toString.contains("min")) {
+			"min"
+		} else if (quantifier.toString.contains("exactly")) {
+			"exactly"
+		} else if (quantifier.toString.contains("at_most")) {
+			"at_most"
+		} else if (quantifier.toString.contains("at_least")) {
+			"at_least"
+		} else {
+			"unknown"
+		}
+		sb.append(spaces(indent + 2) + "\"type\": \"" + quantifierType + "\",\n")
+		if (quantifier.value !== null) {
+			sb.append(spaces(indent + 2) + "\"value\": " + quantifier.value.convertToJson(indent + 2) + "\n")
+		}
+		sb.append(spaces(indent) + "}")
+		return sb.toString
+	}
+	
+	def String convertToJson(QuantifierValue value, int indent) {
+		val sb = new StringBuilder
+		sb.append("{\n")
+		if (value.percentage !== null) {
+			sb.append(spaces(indent + 2) + "\"type\": \"percentage\",\n")
+			sb.append(spaces(indent + 2) + "\"value\": " + value.percentage + "\n")
+		} else if (value.absolute !== null) {
+			sb.append(spaces(indent + 2) + "\"type\": \"absolute\",\n")
+			sb.append(spaces(indent + 2) + "\"value\": " + value.absolute + "\n")
+		}
+		sb.append(spaces(indent) + "}")
+		return sb.toString
+	}
+	
+	def String convertToJson(Value value, int indent) {
+		val sb = new StringBuilder
+		sb.append("{\n")
+		if (value.number !== null) {
+			sb.append(spaces(indent + 2) + "\"type\": \"number\",\n")
+			sb.append(spaces(indent + 2) + "\"value\": \"" + value.number + "\"")
+		} else if (value.string !== null) {
+			sb.append(spaces(indent + 2) + "\"type\": \"string\",\n")
+			sb.append(spaces(indent + 2) + "\"value\": \"" + value.string.replaceAll('"', '') + "\"")
+		} else {
+			sb.append(spaces(indent + 2) + "\"type\": \"null\",\n")
+			sb.append(spaces(indent + 2) + "\"value\": null")
+		}
+		sb.append("\n")
+		sb.append(spaces(indent) + "}")
+		return sb.toString
+	}
+	
+	def String convertToJson(RangeBounds bounds, int indent) {
+		val sb = new StringBuilder
+		sb.append("{\n")
+		if (bounds.lower !== null) {
+			sb.append(spaces(indent + 2) + "\"lower\": " + bounds.lower.convertToJson(indent + 2))
+		} else {
+			sb.append(spaces(indent + 2) + "\"lower\": null")
+		}
+		sb.append(",\n")
+		if (bounds.upper !== null) {
+			sb.append(spaces(indent + 2) + "\"upper\": " + bounds.upper.convertToJson(indent + 2))
+		} else {
+			sb.append(spaces(indent + 2) + "\"upper\": null")
+		}
+		sb.append("\n")
+		sb.append(spaces(indent) + "}")
+		return sb.toString
+	}
+	
+	def String convertToJson(BoundValue bound, int indent) {
+		if (bound === null) {
+			return "null"
+		}
+		
+		val sb = new StringBuilder
+		sb.append("{\n")
+		
+		// Usar el nodo del parser para obtener el texto real
+		val node = org.eclipse.xtext.nodemodel.util.NodeModelUtils.getNode(bound)
+		val boundText = if (node !== null) node.text.trim else ""
+		
+		// Detectar valores especiales primero
+		if (boundText.equals("*") || boundText.equals("inf") || boundText.equals("-inf")) {
+			sb.append(spaces(indent + 2) + "\"type\": \"special\",\n")
+			sb.append(spaces(indent + 2) + "\"value\": \"" + boundText + "\"")
+		} else if (bound.value !== null && !bound.value.toString.isEmpty) {
+			sb.append(spaces(indent + 2) + "\"type\": \"value\",\n")
+			sb.append(spaces(indent + 2) + "\"value\": \"" + bound.value + "\"")
+		} else {
+			sb.append(spaces(indent + 2) + "\"type\": \"infinity\"")
+		}
+		
+		sb.append("\n")
+		sb.append(spaces(indent) + "}")
+		return sb.toString
+	}
+	
+	// Binner related methods
+	def String convertToJson(BinDefinitions definitions, int indent) {
+		val sb = new StringBuilder
+		sb.append("{\n")
+		sb.append(spaces(indent + 2) + "\"bins\": [\n")
+		for (var i = 0; i < definitions.definitions.size; i++) {
+			sb.append(spaces(indent + 4) + definitions.definitions.get(i).convertToJson(indent + 4))
+			if (i < definitions.definitions.size - 1) {
+				sb.append(",")
+			}
+			sb.append("\n")
+		}
+		sb.append(spaces(indent + 2) + "]\n")
+		sb.append(spaces(indent) + "}")
+		return sb.toString
+	}
+	
+	def String convertToJson(BinDef binDef, int indent) {
+		val sb = new StringBuilder
+		sb.append("{\n")
+		sb.append(spaces(indent + 2) + "\"name\": \"" + binDef.name.name.replaceAll('"', '') + "\",\n")
+		sb.append(spaces(indent + 2) + "\"interval\": " + binDef.interval.convertToJson(indent + 2) + "\n")
+		sb.append(spaces(indent) + "}")
+		return sb.toString
+	}
+	
+	def String convertToJson(Interval interval, int indent) {
+		if (interval === null) {
+			return "{\n" + spaces(indent + 2) + "\"type\": \"null\"\n" + spaces(indent) + "}"
+		}
+		
+		val sb = new StringBuilder
+		sb.append("{\n")
+		// Usar el nodo del parser para obtener los brackets reales
+		val node = org.eclipse.xtext.nodemodel.util.NodeModelUtils.getNode(interval)
+		val intervalText = if (node !== null) node.text.trim else ""
+		val leftBracket = if (intervalText.startsWith("[")) "[" else "("
+		val rightBracket = if (intervalText.endsWith("]")) "]" else ")"
+		
+		sb.append(spaces(indent + 2) + "\"type\": \"interval\",\n")
+		sb.append(spaces(indent + 2) + "\"left_bracket\": \"" + leftBracket + "\",\n")
+		sb.append(spaces(indent + 2) + "\"right_bracket\": \"" + rightBracket + "\",\n")
+		
+		// Verificar que lower no sea null
+		if (interval.lower !== null) {
+			sb.append(spaces(indent + 2) + "\"lower\": " + interval.lower.convertToJson(indent + 2))
+		} else {
+			sb.append(spaces(indent + 2) + "\"lower\": {\"type\": \"null\"}")
+		}
+		
+		sb.append(",\n")
+		
+		// Verificar que upper no sea null
+		if (interval.upper !== null) {
+			sb.append(spaces(indent + 2) + "\"upper\": " + interval.upper.convertToJson(indent + 2))
+		} else {
+			sb.append(spaces(indent + 2) + "\"upper\": {\"type\": \"null\"}")
+		}
+		
+		sb.append("\n")
+		sb.append(spaces(indent) + "}")
+		return sb.toString
+	}
+	
+	def String convertToJson(IntervalBound bound, int indent) {
+		if (bound === null) {
+			return "{\n" + spaces(indent + 2) + "\"type\": \"null\"\n" + spaces(indent) + "}"
+		}
+		
+		val sb = new StringBuilder
+		sb.append("{\n")
+		
+		// Usar el nodo del parser para obtener el texto real
+		val node = org.eclipse.xtext.nodemodel.util.NodeModelUtils.getNode(bound)
+		val boundText = if (node !== null) node.text.trim else ""
+		
+		if (bound.value !== null) {
+			sb.append(spaces(indent + 2) + "\"type\": \"value\",\n")
+			sb.append(spaces(indent + 2) + "\"value\": " + bound.value)
+		} else {
+			// Determinar el tipo de infinito basado en el texto del nodo
+			if (boundText.contains("-inf") || boundText.contains("-Infinity")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"negative_infinity\"")
+			} else if (boundText.contains("inf") || boundText.contains("Infinity")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"positive_infinity\"")
+			} else {
+				sb.append(spaces(indent + 2) + "\"type\": \"infinity\"")
+			}
+		}
+		sb.append("\n")
+		sb.append(spaces(indent) + "}")
+		return sb.toString
+	}
+	
+	def String convertToJson(BinMode mode, int indent) {
+		val sb = new StringBuilder
+		sb.append("{\n")
+		if (mode.newName !== null) {
+			sb.append(spaces(indent + 2) + "\"type\": \"as\",\n")
+			sb.append(spaces(indent + 2) + "\"new_name\": \"" + mode.newName + "\"")
+		} else {
+			sb.append(spaces(indent + 2) + "\"type\": \"replace\"")
+		}
+		sb.append("\n")
+		sb.append(spaces(indent) + "}")
+		return sb.toString
+	}
+	
+	// ImputeMethod related methods
+	def String convertToJson(ImputeMethod method, int indent) {
+		if (method === null) {
+			return "{\n" + spaces(indent + 2) + "\"type\": \"unknown_method\"\n" + spaces(indent) + "}"
+		}
+		
+		val sb = new StringBuilder
+		sb.append("{\n")
+		
+		// Obtener el texto del nodo para detectar el tipo de método
+		val node = org.eclipse.xtext.nodemodel.util.NodeModelUtils.getNode(method)
+		val methodText = if (node !== null) node.text.trim else ""
+		
+		if (method instanceof FixedImpute) {
+			sb.append(spaces(indent + 2) + "\"type\": \"fixed\",\n")
+			sb.append(spaces(indent + 2) + "\"values\": " + (method as FixedImpute).values.convertToJson(indent + 2))
+		} else if (method instanceof StatisticalImpute) {
+			val statImpute = method as StatisticalImpute
+			if (statImpute.type !== null) {
+				sb.append(spaces(indent + 2) + "\"type\": \"interpolation\",\n")
+				sb.append(spaces(indent + 2) + "\"interpolation_type\": \"" + statImpute.type + "\"")
+			} else if (methodText.contains("mean") && !methodText.contains("transform")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"mean\"")
+			} else if (methodText.contains("median") && !methodText.contains("transform")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"median\"")
+			} else if (methodText.contains("most_frequent") && !methodText.contains("transform")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"most_frequent\"")
+			} else if (methodText.startsWith("interpolation")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"interpolation\"")
+				// Extraer el tipo de interpolación si existe
+				val interpolationType = extractInterpolationType(methodText)
+				if (interpolationType !== null) {
+					sb.append(",\n")
+					sb.append(spaces(indent + 2) + "\"interpolation_type\": \"" + interpolationType + "\"")
+				}
+			} else {
+				sb.append(spaces(indent + 2) + "\"type\": \"unknown_statistical_method\"")
+			}
+		} else {
+			// Para TransformImpute - Xtext no generó clases separadas, así que usamos el texto del nodo
+			if (methodText.contains("transform_special_to_fixed")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"transform_special_to_fixed\"")
+				// Extraer el valor de reemplazo del texto
+				val replacementValue = extractValueFromParentheses(methodText)
+				if (replacementValue !== null) {
+					sb.append(",\n")
+					sb.append(spaces(indent + 2) + "\"replacement_value\": " + replacementValue)
+				}
+			} else if (methodText.contains("transform_special_to_mean")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"transform_special_to_mean\"")
+			} else if (methodText.contains("transform_special_to_median")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"transform_special_to_median\"")
+			} else if (methodText.contains("transform_special_to_most_frequent")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"transform_special_to_most_frequent\"")
+			} else if (methodText.contains("transform_special_to_interpolation")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"transform_special_to_interpolation\"")
+				// Extraer el tipo de interpolación si existe
+				val interpolationType = extractInterpolationType(methodText)
+				if (interpolationType !== null) {
+					sb.append(",\n")
+					sb.append(spaces(indent + 2) + "\"interpolation_type\": \"" + interpolationType + "\"")
+				}
+			} else if (methodText.contains("transform_special_to_previous_value")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"transform_special_to_previous_value\"")
+			} else if (methodText.contains("transform_special_to_next_value")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"transform_special_to_next_value\"")
+			} else if (methodText.contains("transform_fixed_to_fixed")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"transform_fixed_to_fixed\"")
+				// Extraer las reglas de mapeo del texto
+				val rules = extractMappingRulesFromBraces(methodText)
+				if (rules !== null) {
+					sb.append(",\n")
+					sb.append(spaces(indent + 2) + "\"rules\": " + rules)
+				}
+			} else if (methodText.contains("transform_fixed_to_derived")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"transform_fixed_to_derived\"")
+				// Extraer la expresión matemática del texto
+				val expression = extractExpressionFromParentheses(methodText)
+				if (expression !== null) {
+					sb.append(",\n")
+					sb.append(spaces(indent + 2) + "\"expression\": \"" + expression + "\"")
+				}
+			} else if (methodText.contains("transform_derived_to_fixed")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"transform_derived_to_fixed\"")
+				// Extraer la expresión derivada y el valor de reemplazo del texto
+				val params = extractTwoParamsFromParentheses(methodText)
+				if (params !== null && params.size >= 2) {
+					sb.append(",\n")
+					sb.append(spaces(indent + 2) + "\"derived_expression\": \"" + params.get(0) + "\"")
+					sb.append(",\n")
+					sb.append(spaces(indent + 2) + "\"replacement_value\": " + params.get(1))
+				}
+			} else if (methodText.contains("previous_value")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"previous_value\"")
+			} else if (methodText.contains("next_value")) {
+				sb.append(spaces(indent + 2) + "\"type\": \"next_value\"")
+			} else {
+				sb.append(spaces(indent + 2) + "\"type\": \"unknown_method\"")
+			}
+		}
+		
+		sb.append("\n")
+		sb.append(spaces(indent) + "}")
+		return sb.toString
+	}
+	
+	// Métodos auxiliares para extraer valores del texto del nodo
+	private def String extractValueFromParentheses(String text) {
+		val startIdx = text.indexOf("(")
+		val endIdx = text.lastIndexOf(")")
+		if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
+			val content = text.substring(startIdx + 1, endIdx).trim
+			return parseValue(content)
+		}
+		return null
+	}
+	
+	private def String extractExpressionFromParentheses(String text) {
+		val startIdx = text.indexOf("(")
+		val endIdx = text.lastIndexOf(")")
+		if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
+			return text.substring(startIdx + 1, endIdx).trim
+		}
+		return null
+	}
+	
+	private def java.util.List<String> extractTwoParamsFromParentheses(String text) {
+		val startIdx = text.indexOf("(")
+		val endIdx = text.lastIndexOf(")")
+		if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
+			val content = text.substring(startIdx + 1, endIdx).trim
+			// Dividir por coma, considerando que puede haber comas dentro de expresiones
+			val params = new java.util.ArrayList<String>()
+			var depth = 0
+			var currentParam = new StringBuilder()
+			for (var i = 0; i < content.length; i++) {
+				val c = content.charAt(i)
+				if (c == '(' || c == '[' || c == '{') {
+					depth++
+					currentParam.append(c)
+				} else if (c == ')' || c == ']' || c == '}') {
+					depth--
+					currentParam.append(c)
+				} else if (c == ',' && depth == 0) {
+					params.add(currentParam.toString.trim)
+					currentParam = new StringBuilder()
+				} else {
+					currentParam.append(c)
+				}
+			}
+			if (currentParam.length > 0) {
+				params.add(currentParam.toString.trim)
+			}
+			// Parsear el segundo parámetro como valor
+			if (params.size >= 2) {
+				params.set(1, parseValue(params.get(1)))
+			}
+			return params
+		}
+		return null
+	}
+	
+	private def String extractInterpolationType(String text) {
+		if (text.contains("(") && text.contains(")")) {
+			val startIdx = text.indexOf("(")
+			val endIdx = text.lastIndexOf(")")
+			if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
+				val content = text.substring(startIdx + 1, endIdx).trim
+				if (!content.isEmpty) {
+					return content
+				}
+			}
+		}
+		return null
+	}
+	
+	private def String extractMappingRulesFromBraces(String text) {
+		val startIdx = text.indexOf("{")
+		val endIdx = text.lastIndexOf("}")
+		if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
+			val content = text.substring(startIdx + 1, endIdx).trim
+			if (content.isEmpty) {
+				return "{\n" + spaces(6) + "\"rules\": []\n" + spaces(4) + "}"
+			}
+			// Parsear las reglas de mapeo
+			val rules = new java.util.ArrayList<String>()
+			val ruleParts = content.split(",")
+			for (rulePart : ruleParts) {
+				val trimmedRule = rulePart.trim
+				if (trimmedRule.contains("->")) {
+					val parts = trimmedRule.split("->")
+					if (parts.length == 2) {
+						val from = parts.get(0).trim.replaceAll('"', '')
+						val to = parts.get(1).trim.replaceAll('"', '')
+						rules.add("{\n" + spaces(8) + "\"from\": \"" + from + "\",\n" + spaces(8) + "\"to\": \"" + to + "\"\n" + spaces(6) + "}")
+					}
+				}
+			}
+			if (!rules.isEmpty) {
+				val sb = new StringBuilder()
+				sb.append("{\n")
+				sb.append(spaces(6) + "\"rules\": [\n")
+				for (var i = 0; i < rules.size; i++) {
+					sb.append(spaces(8) + rules.get(i))
+					if (i < rules.size - 1) {
+						sb.append(",")
+					}
+					sb.append("\n")
+				}
+				sb.append(spaces(6) + "]\n")
+				sb.append(spaces(4) + "}")
+				return sb.toString
+			}
+		}
+		return null
+	}
+	
+	private def String parseValue(String text) {
+		val trimmed = text.trim
+		// Verificar si es null
+		if (trimmed.equals("null")) {
+			return "{\n" + spaces(6) + "\"type\": \"null\",\n" + spaces(6) + "\"value\": null\n" + spaces(4) + "}"
+		}
+		// Verificar si es un string (entre comillas)
+		if (trimmed.startsWith("\"") && trimmed.endsWith("\"")) {
+			val value = trimmed.substring(1, trimmed.length - 1)
+			return "{\n" + spaces(6) + "\"type\": \"string\",\n" + spaces(6) + "\"value\": \"" + value + "\"\n" + spaces(4) + "}"
+		}
+		// Verificar si es un número
+		try {
+			Double.parseDouble(trimmed)
+			return "{\n" + spaces(6) + "\"type\": \"number\",\n" + spaces(6) + "\"value\": \"" + trimmed + "\"\n" + spaces(4) + "}"
+		} catch (NumberFormatException e) {
+			// No es un número
+		}
+		// Por defecto, tratarlo como string sin comillas
+		return "{\n" + spaces(6) + "\"type\": \"string\",\n" + spaces(6) + "\"value\": \"" + trimmed + "\"\n" + spaces(4) + "}"
+	}
+	
+	/**
+	 * Helper method to generate indentation spaces
+	 */
+	private def String spaces(int count) {
+		return " ".repeat(count)
+	}
+	
+	// Additional conversion methods for missing types
+	def String convertToJson(MathExpression expression, int indent) {
+		if (expression === null) {
+			return "null"
+		}
+		return "\"" + expression.toString + "\""
+	}
+	
+	def String convertToJson(DecimalSeparator separator, int indent) {
+		if (separator === null) {
+			return "null"
+		}
+		return "{\n" + spaces(indent + 2) + "\"separator\": \"" + (separator.value?.replaceAll('"', '') ?: "") + "\"\n" + spaces(indent) + "}"
+	}
+	
+	def String convertToJson(DateFormat format, int indent) {
+		if (format === null) {
+			return "null"
+		}
+		return "{\n" + spaces(indent + 2) + "\"format\": \"" + (format.format?.replaceAll('"', '') ?: "") + "\"\n" + spaces(indent) + "}"
+	}
+	
+	def String convertToJson(OutlierStrategy strategy, int indent) {
+		if (strategy === null) {
+			return "{\n" + spaces(indent + 2) + "\"type\": \"unknown_strategy\"\n" + spaces(indent) + "}"
+		}
+		
+		val sb = new StringBuilder
+		sb.append("{\n")
+		
+		// Obtener el texto del nodo para detectar el tipo de estrategia
+		val node = org.eclipse.xtext.nodemodel.util.NodeModelUtils.getNode(strategy)
+		val strategyText = if (node !== null) node.text.trim else ""
+		
+		if (strategyText.equals("remove")) {
+			sb.append(spaces(indent + 2) + "\"type\": \"remove\"")
+		} else if (strategyText.equals("cap")) {
+			sb.append(spaces(indent + 2) + "\"type\": \"cap\"")
+		} else if (strategyText.equals("replace_with_mean")) {
+			sb.append(spaces(indent + 2) + "\"type\": \"replace_with_mean\"")
+		} else if (strategyText.equals("replace_with_median")) {
+			sb.append(spaces(indent + 2) + "\"type\": \"replace_with_median\"")
+		} else if (strategyText.equals("replace_with_mode")) {
+			sb.append(spaces(indent + 2) + "\"type\": \"replace_with_mode\"")
+		} else {
+			sb.append(spaces(indent + 2) + "\"type\": \"" + strategyText + "\"")
+		}
+		
+		sb.append("\n")
+		sb.append(spaces(indent) + "}")
+		return sb.toString
+	}
+	
+	def String convertToJson(ValueList values, int indent) {
+		if (values === null) {
+			return "{\n" + spaces(indent + 2) + "\"values\": []\n" + spaces(indent) + "}"
+		}
+		
+		val sb = new StringBuilder
+		sb.append("{\n")
+		sb.append(spaces(indent + 2) + "\"values\": [\n")
+		
+		if (values.values !== null && values.values.size > 0) {
+			for (var i = 0; i < values.values.size; i++) {
+				sb.append(spaces(indent + 4) + values.values.get(i).convertToJson(indent + 4))
+				if (i < values.values.size - 1) {
+					sb.append(",")
+				}
+				sb.append("\n")
+			}
+		}
+		
+		sb.append(spaces(indent + 2) + "]\n")
+		sb.append(spaces(indent) + "}")
 		return sb.toString
 	}
 }
