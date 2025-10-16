@@ -126,10 +126,10 @@ workflow "ModelDataSet"{
     } |> missing_val_satscore
     	contracts{
     		precondition "rowFilterRange(init_span)_PRE_valueRange"{
-    			has_special_values (input.init_span, max 60%)
+    			interval_contract (input.init_span, (-1000, 1000), belongs_to )
     		}
     		postcondition "rowFilterRange(init_span)_POST_valueRange"{
-    			no_special_values (input.init_span)
+    			interval_contract (input.init_span, [-216, -216], not_belongs_to)
     		}
     		invariant "rowFilterRange(init_span)_INV_condition"{
     			condition{
@@ -142,18 +142,82 @@ workflow "ModelDataSet"{
     column_filter = remove {
         TRAVEL_INIT_CNTCTS, REFERRAL_CNTCTS, CONTACT_CODE1, telecq, interest, stuemail
     } |> filter_row_init_span
+    	contracts{
+    		precondition "columnFilter(TRAVEL_INIT_CNTCTS, REFERRAL_CNCTS, telecq, interest, stuemail, CONTACT_CODE1)_PRE_fieldRange"{
+    			field_range(TRAVEL_INIT_CNTCTS, REFERRAL_CNCTS, telecq, interest, stuemail, CONTACT_CODE1; belongs_to)
+    		}
+    		postcondition "columnFilter(TRAVEL_INIT_CNTCTS, REFERRAL_CNCTS, telecq, interest, stuemail, CONTACT_CODE1)_POST_fieldRange"{
+    			field_range(TRAVEL_INIT_CNTCTS, REFERRAL_CNCTS, telecq, interest, stuemail, CONTACT_CODE1; not_belongs_to)
+    		}
+    		invariant "columnFilter(TRAVEL_INIT_CNTCTS, REFERRAL_CNCTS, telecq, interest, stuemail, CONTACT_CODE1)_INV_condition"{
+    			condition{
+    				if { expression: field_range(TRAVEL_INIT_CNTCTS, REFERRAL_CNCTS, telecq, interest, stuemail, CONTACT_CODE1; belongs_to) }
+    				then{ expression: input.TRAVEL_INIT_CNTCTS belongs_to in_range(0, 0) }
+    			}
+    		}
+    	}
 
     rule_engine_territory = map(TERRITORY) {
-        "*N*" => "0",
-        "*A*" => "0",
-        "TRUE" => "TERRITORY"
+        "N" -> "0",
+        "A" -> "0"
     } as TERRITORY |> column_filter
+    	contracts{
+    		precondition "mapping(TERRITORY)_PRE_valueRange_A"{
+    			value_range(input.TERRITORY, matches 'A', belongs_to)
+    		}
+    		precondition "mapping(TERRITORY)_PRE_valueRange_N"{
+    			value_range(input.TERRITORY, matches 'N', belongs_to)
+    		}
+    		postcondition "mapping(TERRITORY)_POST_valueRange_A"{
+    			value_range(input.TERRITORY, matches 'A', not_belongs_to)
+    		}
+    		postcondition "mapping(TERRITORY)_POST_valueRange_N"{
+    			value_range(input.TERRITORY, matches 'N', not_belongs_to)
+    		}
+    		invariant "Mapping(TERRITORY)_INV_condition_A"{
+    			condition {
+					if { expression: input.TERRITORY belongs_to value "A" }
+				    then { expression: output.TERRITORY belongs_to value "0" }
+				}
+    		}
+    		invariant "Mapping(TERRITORY)_INV_condition_N"{
+    			condition {
+					if { expression: input.TERRITORY belongs_to value "N" }
+				    then { expression: output.TERRITORY belongs_to value "0" }
+				}
+    		}
+    	}
 
     rule_engine_instate = map(Instate) {
-        "*Y*" => "1",
-        "*N*" => "0",
-        "TRUE" => "Instate"
+        "Y" -> "1",
+        "N" -> "0"
     } as Instate |> rule_engine_territory
+    	contracts{
+    		precondition "mapping(Instate)_PRE_valueRange_Y"{
+    			value_range(input.TERRITORY, matches 'Y', belongs_to)
+    		}
+    		precondition "mapping(Instate)_PRE_valueRange_N"{
+    			value_range(input.TERRITORY, matches 'N', belongs_to)
+    		}
+    		postcondition "mapping(Instate)_POST_valueRange_Y"{
+    			value_range(input.TERRITORY, matches 'Y', not_belongs_to)
+    		}
+    		postcondition "mapping(Instate)_POST_valueRange_N"{
+    			value_range(input.TERRITORY, matches 'N', not_belongs_to)
+    		}
+    		invariant "Mapping(Instate)_INV_condition_Y"{
+    			condition {
+					if { expression: input.TERRITORY belongs_to value "Y" }
+				    then { expression: output.TERRITORY belongs_to value "1" }
+				}
+    		}
+    		invariant "Mapping(Instate)_INV_condition_N"{
+    			condition {
+					if { expression: input.TERRITORY belongs_to value "N" }
+				    then { expression: output.TERRITORY belongs_to value "0" }
+				}
+    		}
+    	}
 
     string_to_number = to_numeric(TERRITORY, Instate) |> rule_engine_instate
 

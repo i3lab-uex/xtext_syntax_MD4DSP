@@ -67,7 +67,8 @@
                 "contract_type": {
                   "type": "value_range",
                   "field": {
-                    "direction": "output",
+                    "direction": "input",
+                    "type": "column",
                     "column": {
                       "name": "Age"
                     }
@@ -91,6 +92,7 @@
                   "cast_type_name": "Integer",
                   "field": {
                     "direction": "output",
+                    "type": "column",
                     "column": {
                       "name": "Age"
                     }
@@ -108,28 +110,36 @@
                   "type": "condition",
                   "if_clause": {
                     "type": "if_clause",
-                    "field": {
-                      "direction": "output",
-                      "column": {
-                        "name": "Age"
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "Age"
+                        }
+                      },
+                      "operator": "not_belongs_to",
+                      "condition": {
+                        "type": "special_values"
                       }
-                    },
-                    "operator": "not_belongs_to",
-                    "condition": {
-                      "type": "special_values"
                     }
                   },
                   "then_clause": {
                     "type": "then_clause",
-                    "field": {
-                      "direction": "output",
-                      "column": {
-                        "name": "Age"
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "Age"
+                        }
+                      },
+                      "operator": "not_belongs_to",
+                      "condition": {
+                        "type": "special_values"
                       }
-                    },
-                    "operator": "not_belongs_to",
-                    "result": {
-                      "type": "special_values"
                     }
                   }
                 }

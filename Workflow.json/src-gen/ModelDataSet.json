@@ -51,7 +51,8 @@
                   "type": "special_value",
                   "operation": "has_special_values",
                   "field": {
-                    "direction": "output",
+                    "direction": "input",
+                    "type": "column",
                     "column": {
                       "name": "sex"
                     }
@@ -76,7 +77,8 @@
                   "type": "special_value",
                   "operation": "has_special_values",
                   "field": {
-                    "direction": "output",
+                    "direction": "input",
+                    "type": "column",
                     "column": {
                       "name": "IRSCHOOL"
                     }
@@ -101,7 +103,8 @@
                   "type": "special_value",
                   "operation": "has_special_values",
                   "field": {
-                    "direction": "output",
+                    "direction": "input",
+                    "type": "column",
                     "column": {
                       "name": "ETHNICITY"
                     }
@@ -126,7 +129,8 @@
                   "type": "special_value",
                   "operation": "no_special_values",
                   "field": {
-                    "direction": "output",
+                    "direction": "input",
+                    "type": "column",
                     "column": {
                       "name": "sex"
                     }
@@ -144,7 +148,8 @@
                   "type": "special_value",
                   "operation": "no_special_values",
                   "field": {
-                    "direction": "output",
+                    "direction": "input",
+                    "type": "column",
                     "column": {
                       "name": "IRSCHOOL"
                     }
@@ -162,7 +167,8 @@
                   "type": "special_value",
                   "operation": "no_special_values",
                   "field": {
-                    "direction": "output",
+                    "direction": "input",
+                    "type": "column",
                     "column": {
                       "name": "ETHNICITY"
                     }
@@ -180,28 +186,36 @@
                   "type": "condition",
                   "if_clause": {
                     "type": "if_clause",
-                    "field": {
-                      "direction": "output",
-                      "column": {
-                        "name": "sex"
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "sex"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "special_values"
                       }
-                    },
-                    "operator": "belongs_to",
-                    "condition": {
-                      "type": "special_values"
                     }
                   },
                   "then_clause": {
                     "type": "then_clause",
-                    "field": {
-                      "direction": "output",
-                      "column": {
-                        "name": "sex"
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "sex"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "most_frequent"
                       }
-                    },
-                    "operator": "belongs_to",
-                    "result": {
-                      "type": "most_frequent"
                     }
                   }
                 }
@@ -217,28 +231,36 @@
                   "type": "condition",
                   "if_clause": {
                     "type": "if_clause",
-                    "field": {
-                      "direction": "output",
-                      "column": {
-                        "name": "ETHNICITY"
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "ETHNICITY"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "special_values"
                       }
-                    },
-                    "operator": "belongs_to",
-                    "condition": {
-                      "type": "special_values"
                     }
                   },
                   "then_clause": {
                     "type": "then_clause",
-                    "field": {
-                      "direction": "output",
-                      "column": {
-                        "name": "ETHNICITY"
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "ETHNICITY"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "most_frequent"
                       }
-                    },
-                    "operator": "belongs_to",
-                    "result": {
-                      "type": "most_frequent"
                     }
                   }
                 }
@@ -254,28 +276,36 @@
                   "type": "condition",
                   "if_clause": {
                     "type": "if_clause",
-                    "field": {
-                      "direction": "output",
-                      "column": {
-                        "name": "IRSCHOOL"
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "IRSCHOOL"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "special_values"
                       }
-                    },
-                    "operator": "belongs_to",
-                    "condition": {
-                      "type": "special_values"
                     }
                   },
                   "then_clause": {
                     "type": "then_clause",
-                    "field": {
-                      "direction": "output",
-                      "column": {
-                        "name": "IRSCHOOL"
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "IRSCHOOL"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "most_frequent"
                       }
-                    },
-                    "operator": "belongs_to",
-                    "result": {
-                      "type": "most_frequent"
                     }
                   }
                 }
@@ -320,7 +350,8 @@
                   "type": "special_value",
                   "operation": "has_special_values",
                   "field": {
-                    "direction": "output",
+                    "direction": "input",
+                    "type": "column",
                     "column": {
                       "name": "ACADEMIC_INTEREST_2"
                     }
@@ -345,7 +376,8 @@
                   "type": "special_value",
                   "operation": "no_special_values",
                   "field": {
-                    "direction": "output",
+                    "direction": "input",
+                    "type": "column",
                     "column": {
                       "name": "ACADEMIC_INTEREST_2"
                     }
@@ -363,31 +395,39 @@
                   "type": "condition",
                   "if_clause": {
                     "type": "if_clause",
-                    "field": {
-                      "direction": "output",
-                      "column": {
-                        "name": "ACADEMIC_INTEREST_2"
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "ACADEMIC_INTEREST_2"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "special_values"
                       }
-                    },
-                    "operator": "belongs_to",
-                    "condition": {
-                      "type": "special_values"
                     }
                   },
                   "then_clause": {
                     "type": "then_clause",
-                    "field": {
-                      "direction": "output",
-                      "column": {
-                        "name": "ACADEMIC_INTEREST_2"
-                      }
-                    },
-                    "operator": "belongs_to",
-                    "result": {
-                      "type": "fixed",
-                      "values": {
-                        "values": [
-                        ]
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "ACADEMIC_INTEREST_2"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "fixed",
+                        "values": {
+                          "values": [
+                          ]
+                        }
                       }
                     }
                   }
@@ -404,7 +444,8 @@
                   "type": "special_value",
                   "operation": "has_special_values",
                   "field": {
-                    "direction": "output",
+                    "direction": "input",
+                    "type": "column",
                     "column": {
                       "name": "ACADEMIC_INTEREST_1"
                     }
@@ -429,7 +470,8 @@
                   "type": "special_value",
                   "operation": "no_special_values",
                   "field": {
-                    "direction": "output",
+                    "direction": "input",
+                    "type": "column",
                     "column": {
                       "name": "ACADEMIC_INTEREST_1"
                     }
@@ -447,31 +489,39 @@
                   "type": "condition",
                   "if_clause": {
                     "type": "if_clause",
-                    "field": {
-                      "direction": "output",
-                      "column": {
-                        "name": "ACADEMIC_INTEREST_1"
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "ACADEMIC_INTEREST_1"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "special_values"
                       }
-                    },
-                    "operator": "belongs_to",
-                    "condition": {
-                      "type": "special_values"
                     }
                   },
                   "then_clause": {
                     "type": "then_clause",
-                    "field": {
-                      "direction": "output",
-                      "column": {
-                        "name": "ACADEMIC_INTEREST_1"
-                      }
-                    },
-                    "operator": "belongs_to",
-                    "result": {
-                      "type": "fixed",
-                      "values": {
-                        "values": [
-                        ]
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "ACADEMIC_INTEREST_1"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "fixed",
+                        "values": {
+                          "values": [
+                          ]
+                        }
                       }
                     }
                   }
@@ -513,7 +563,8 @@
                   "type": "special_value",
                   "operation": "has_special_values",
                   "field": {
-                    "direction": "output",
+                    "direction": "input",
+                    "type": "column",
                     "column": {
                       "name": "avg_income"
                     }
@@ -538,7 +589,8 @@
                   "type": "special_value",
                   "operation": "no_special_values",
                   "field": {
-                    "direction": "output",
+                    "direction": "input",
+                    "type": "column",
                     "column": {
                       "name": "avg_income"
                     }
@@ -556,28 +608,36 @@
                   "type": "condition",
                   "if_clause": {
                     "type": "if_clause",
-                    "field": {
-                      "direction": "output",
-                      "column": {
-                        "name": "avg_income"
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "avg_income"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "special_values"
                       }
-                    },
-                    "operator": "belongs_to",
-                    "condition": {
-                      "type": "special_values"
                     }
                   },
                   "then_clause": {
                     "type": "then_clause",
-                    "field": {
-                      "direction": "output",
-                      "column": {
-                        "name": "avg_income"
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "avg_income"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "mean"
                       }
-                    },
-                    "operator": "belongs_to",
-                    "result": {
-                      "type": "mean"
                     }
                   }
                 }
@@ -593,7 +653,8 @@
                   "type": "special_value",
                   "operation": "has_special_values",
                   "field": {
-                    "direction": "output",
+                    "direction": "input",
+                    "type": "column",
                     "column": {
                       "name": "distance"
                     }
@@ -618,7 +679,8 @@
                   "type": "special_value",
                   "operation": "no_special_values",
                   "field": {
-                    "direction": "output",
+                    "direction": "input",
+                    "type": "column",
                     "column": {
                       "name": "distance"
                     }
@@ -636,28 +698,36 @@
                   "type": "condition",
                   "if_clause": {
                     "type": "if_clause",
-                    "field": {
-                      "direction": "output",
-                      "column": {
-                        "name": "distance"
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "distance"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "special_values"
                       }
-                    },
-                    "operator": "belongs_to",
-                    "condition": {
-                      "type": "special_values"
                     }
                   },
                   "then_clause": {
                     "type": "then_clause",
-                    "field": {
-                      "direction": "output",
-                      "column": {
-                        "name": "distance"
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "distance"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "mean"
                       }
-                    },
-                    "operator": "belongs_to",
-                    "result": {
-                      "type": "mean"
                     }
                   }
                 }
@@ -695,7 +765,8 @@
                   "type": "special_value",
                   "operation": "has_special_values",
                   "field": {
-                    "direction": "output",
+                    "direction": "input",
+                    "type": "column",
                     "column": {
                       "name": "satscore"
                     }
@@ -720,7 +791,8 @@
                   "type": "special_value",
                   "operation": "no_special_values",
                   "field": {
-                    "direction": "output",
+                    "direction": "input",
+                    "type": "column",
                     "column": {
                       "name": "satscore"
                     }
@@ -738,28 +810,36 @@
                   "type": "condition",
                   "if_clause": {
                     "type": "if_clause",
-                    "field": {
-                      "direction": "output",
-                      "column": {
-                        "name": "satscore"
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "satscore"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "special_values"
                       }
-                    },
-                    "operator": "belongs_to",
-                    "condition": {
-                      "type": "special_values"
                     }
                   },
                   "then_clause": {
                     "type": "then_clause",
-                    "field": {
-                      "direction": "output",
-                      "column": {
-                        "name": "satscore"
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "satscore"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "interpolation"
                       }
-                    },
-                    "operator": "belongs_to",
-                    "result": {
-                      "type": "interpolation"
                     }
                   }
                 }
@@ -779,6 +859,7 @@
               "name": "init_span"
             },
             "bounds": {
+              "closure_type": "closed-open",
               "lower": null,
               "upper": {
                 "type": "value",
@@ -798,21 +879,26 @@
               },
               "body": {
                 "contract_type": {
-                  "type": "special_value",
-                  "operation": "has_special_values",
+                  "type": "interval_contract",
                   "field": {
-                    "direction": "output",
+                    "direction": "input",
+                    "type": "column",
                     "column": {
                       "name": "init_span"
                     }
                   },
-                  "quantifier": {
-                    "type": "unknown",
-                    "value": {
-                      "type": "percentage",
-                      "value": 60
+                  "bounds": {
+                    "closure_type": "open-open",
+                    "lower": {
+                      "type": "value",
+                      "value": "-1000"
+                    },
+                    "upper": {
+                      "type": "value",
+                      "value": "1000"
                     }
-                  }
+                  },
+                  "belong_op": "belongs_to"
                 }
               }
             },
@@ -823,14 +909,26 @@
               },
               "body": {
                 "contract_type": {
-                  "type": "special_value",
-                  "operation": "no_special_values",
+                  "type": "interval_contract",
                   "field": {
-                    "direction": "output",
+                    "direction": "input",
+                    "type": "column",
                     "column": {
                       "name": "init_span"
                     }
-                  }
+                  },
+                  "bounds": {
+                    "closure_type": "closed-closed",
+                    "lower": {
+                      "type": "value",
+                      "value": "-216"
+                    },
+                    "upper": {
+                      "type": "value",
+                      "value": "-216"
+                    }
+                  },
+                  "belong_op": "not_belongs_to"
                 }
               }
             },
@@ -844,40 +942,50 @@
                   "type": "condition",
                   "if_clause": {
                     "type": "if_clause",
-                    "field": {
-                      "direction": "output",
-                      "column": {
-                        "name": "init_span"
-                      }
-                    },
-                    "operator": "belongs_to",
-                    "condition": {
-                      "type": "in_range",
-                      "bounds": {
-                        "lower": null,
-                        "upper": {
-                          "type": "value",
-                          "value": "0"
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "init_span"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "in_range",
+                        "bounds": {
+                          "closure_type": "open-open",
+                          "lower": null,
+                          "upper": {
+                            "type": "value",
+                            "value": "0"
+                          }
                         }
                       }
                     }
                   },
                   "then_clause": {
                     "type": "then_clause",
-                    "field": {
-                      "direction": "output",
-                      "column": {
-                        "name": "init_span"
-                      }
-                    },
-                    "operator": "not_belongs_to",
-                    "result": {
-                      "type": "in_range",
-                      "bounds": {
-                        "lower": null,
-                        "upper": {
-                          "type": "value",
-                          "value": "0"
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "init_span"
+                        }
+                      },
+                      "operator": "not_belongs_to",
+                      "condition": {
+                        "type": "in_range",
+                        "bounds": {
+                          "closure_type": "open-open",
+                          "lower": null,
+                          "upper": {
+                            "type": "value",
+                            "value": "0"
+                          }
                         }
                       }
                     }
@@ -917,7 +1025,147 @@
             ]
           }
         },
-        "target": "filter_row_init_span"
+        "target": "filter_row_init_span",
+        "contracts": {
+          "contracts": [
+            {
+              "type": "precondition",
+              "name": {
+                "name": "columnFilter(TRAVEL_INIT_CNTCTS, REFERRAL_CNCTS, telecq, interest, stuemail, CONTACT_CODE1)_PRE_fieldRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "field_range",
+                  "columns": {
+                    "columns": [
+                      {
+                        "name": "TRAVEL_INIT_CNTCTS"
+                      },
+                      {
+                        "name": "REFERRAL_CNCTS"
+                      },
+                      {
+                        "name": "telecq"
+                      },
+                      {
+                        "name": "interest"
+                      },
+                      {
+                        "name": "stuemail"
+                      },
+                      {
+                        "name": "CONTACT_CODE1"
+                      }
+                    ]
+                  },
+                  "belong_op": "belongs_to"
+                }
+              }
+            },
+            {
+              "type": "postcondition",
+              "name": {
+                "name": "columnFilter(TRAVEL_INIT_CNTCTS, REFERRAL_CNCTS, telecq, interest, stuemail, CONTACT_CODE1)_POST_fieldRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "field_range",
+                  "columns": {
+                    "columns": [
+                      {
+                        "name": "TRAVEL_INIT_CNTCTS"
+                      },
+                      {
+                        "name": "REFERRAL_CNCTS"
+                      },
+                      {
+                        "name": "telecq"
+                      },
+                      {
+                        "name": "interest"
+                      },
+                      {
+                        "name": "stuemail"
+                      },
+                      {
+                        "name": "CONTACT_CODE1"
+                      }
+                    ]
+                  },
+                  "belong_op": "not_belongs_to"
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "columnFilter(TRAVEL_INIT_CNTCTS, REFERRAL_CNCTS, telecq, interest, stuemail, CONTACT_CODE1)_INV_condition"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "field_range_contract",
+                      "columns": {
+                        "columns": [
+                          {
+                            "name": "TRAVEL_INIT_CNTCTS"
+                          },
+                          {
+                            "name": "REFERRAL_CNCTS"
+                          },
+                          {
+                            "name": "telecq"
+                          },
+                          {
+                            "name": "interest"
+                          },
+                          {
+                            "name": "stuemail"
+                          },
+                          {
+                            "name": "CONTACT_CODE1"
+                          }
+                        ]
+                      },
+                      "belong_op": "belongs_to"
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "TRAVEL_INIT_CNTCTS"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "in_range",
+                        "bounds": {
+                          "closure_type": "open-open",
+                          "lower": {
+                            "type": "value",
+                            "value": "0"
+                          },
+                          "upper": {
+                            "type": "value",
+                            "value": "0"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
       },
       {
         "type": "step",
@@ -930,25 +1178,12 @@
           "rules": {
             "rules": [
               {
-                "pattern": {
-                  "type": "string",
-                  "value": "*N*"
-                },
+                "from": "N",
                 "to": "0"
               },
               {
-                "pattern": {
-                  "type": "string",
-                  "value": "*A*"
-                },
+                "from": "A",
                 "to": "0"
-              },
-              {
-                "pattern": {
-                  "type": "string",
-                  "value": "TRUE"
-                },
-                "to": "TERRITORY"
               }
             ]
           },
@@ -957,7 +1192,221 @@
             "new_name": "TERRITORY"
           }
         },
-        "target": "column_filter"
+        "target": "column_filter",
+        "contracts": {
+          "contracts": [
+            {
+              "type": "precondition",
+              "name": {
+                "name": "mapping(TERRITORY)_PRE_valueRange_A"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "value_range",
+                  "field": {
+                    "direction": "input",
+                    "type": "column",
+                    "column": {
+                      "name": "TERRITORY"
+                    }
+                  },
+                  "value": {
+                    "type": "matches",
+                    "value": {
+                      "type": "string",
+                      "value": "A"
+                    }
+                  },
+                  "belong_op": "belongs_to"
+                }
+              }
+            },
+            {
+              "type": "precondition",
+              "name": {
+                "name": "mapping(TERRITORY)_PRE_valueRange_N"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "value_range",
+                  "field": {
+                    "direction": "input",
+                    "type": "column",
+                    "column": {
+                      "name": "TERRITORY"
+                    }
+                  },
+                  "value": {
+                    "type": "matches",
+                    "value": {
+                      "type": "string",
+                      "value": "N"
+                    }
+                  },
+                  "belong_op": "belongs_to"
+                }
+              }
+            },
+            {
+              "type": "postcondition",
+              "name": {
+                "name": "mapping(TERRITORY)_POST_valueRange_A"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "value_range",
+                  "field": {
+                    "direction": "input",
+                    "type": "column",
+                    "column": {
+                      "name": "TERRITORY"
+                    }
+                  },
+                  "value": {
+                    "type": "matches",
+                    "value": {
+                      "type": "string",
+                      "value": "A"
+                    }
+                  },
+                  "belong_op": "not_belongs_to"
+                }
+              }
+            },
+            {
+              "type": "postcondition",
+              "name": {
+                "name": "mapping(TERRITORY)_POST_valueRange_N"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "value_range",
+                  "field": {
+                    "direction": "input",
+                    "type": "column",
+                    "column": {
+                      "name": "TERRITORY"
+                    }
+                  },
+                  "value": {
+                    "type": "matches",
+                    "value": {
+                      "type": "string",
+                      "value": "N"
+                    }
+                  },
+                  "belong_op": "not_belongs_to"
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "Mapping(TERRITORY)_INV_condition_A"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "TERRITORY"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "A"
+                        }
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "TERRITORY"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "0"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "Mapping(TERRITORY)_INV_condition_N"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "TERRITORY"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "N"
+                        }
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "TERRITORY"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "0"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
       },
       {
         "type": "step",
@@ -970,25 +1419,12 @@
           "rules": {
             "rules": [
               {
-                "pattern": {
-                  "type": "string",
-                  "value": "*Y*"
-                },
+                "from": "Y",
                 "to": "1"
               },
               {
-                "pattern": {
-                  "type": "string",
-                  "value": "*N*"
-                },
+                "from": "N",
                 "to": "0"
-              },
-              {
-                "pattern": {
-                  "type": "string",
-                  "value": "TRUE"
-                },
-                "to": "Instate"
               }
             ]
           },
@@ -997,7 +1433,221 @@
             "new_name": "Instate"
           }
         },
-        "target": "rule_engine_territory"
+        "target": "rule_engine_territory",
+        "contracts": {
+          "contracts": [
+            {
+              "type": "precondition",
+              "name": {
+                "name": "mapping(Instate)_PRE_valueRange_Y"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "value_range",
+                  "field": {
+                    "direction": "input",
+                    "type": "column",
+                    "column": {
+                      "name": "TERRITORY"
+                    }
+                  },
+                  "value": {
+                    "type": "matches",
+                    "value": {
+                      "type": "string",
+                      "value": "Y"
+                    }
+                  },
+                  "belong_op": "belongs_to"
+                }
+              }
+            },
+            {
+              "type": "precondition",
+              "name": {
+                "name": "mapping(Instate)_PRE_valueRange_N"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "value_range",
+                  "field": {
+                    "direction": "input",
+                    "type": "column",
+                    "column": {
+                      "name": "TERRITORY"
+                    }
+                  },
+                  "value": {
+                    "type": "matches",
+                    "value": {
+                      "type": "string",
+                      "value": "N"
+                    }
+                  },
+                  "belong_op": "belongs_to"
+                }
+              }
+            },
+            {
+              "type": "postcondition",
+              "name": {
+                "name": "mapping(Instate)_POST_valueRange_Y"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "value_range",
+                  "field": {
+                    "direction": "input",
+                    "type": "column",
+                    "column": {
+                      "name": "TERRITORY"
+                    }
+                  },
+                  "value": {
+                    "type": "matches",
+                    "value": {
+                      "type": "string",
+                      "value": "Y"
+                    }
+                  },
+                  "belong_op": "not_belongs_to"
+                }
+              }
+            },
+            {
+              "type": "postcondition",
+              "name": {
+                "name": "mapping(Instate)_POST_valueRange_N"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "value_range",
+                  "field": {
+                    "direction": "input",
+                    "type": "column",
+                    "column": {
+                      "name": "TERRITORY"
+                    }
+                  },
+                  "value": {
+                    "type": "matches",
+                    "value": {
+                      "type": "string",
+                      "value": "N"
+                    }
+                  },
+                  "belong_op": "not_belongs_to"
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "Mapping(Instate)_INV_condition_Y"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "TERRITORY"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "Y"
+                        }
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "TERRITORY"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "1"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "Mapping(Instate)_INV_condition_N"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "TERRITORY"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "N"
+                        }
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "TERRITORY"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "0"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
       },
       {
         "type": "step",
@@ -1175,28 +1825,36 @@
                   "type": "condition",
                   "if_clause": {
                     "type": "if_clause",
-                    "field": {
-                      "direction": "output",
-                      "column": {
-                        "name": "SELF_INIT_CNTCTS"
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "SELF_INIT_CNTCTS"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "special_values"
                       }
-                    },
-                    "operator": "belongs_to",
-                    "condition": {
-                      "type": "special_values"
                     }
                   },
                   "then_clause": {
                     "type": "then_clause",
-                    "field": {
-                      "direction": "output",
-                      "column": {
-                        "name": "SELF_INIT_CNTCTS"
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "SELF_INIT_CNTCTS"
+                        }
+                      },
+                      "operator": "not_belongs_to",
+                      "condition": {
+                        "type": "special_values"
                       }
-                    },
-                    "operator": "not_belongs_to",
-                    "result": {
-                      "type": "special_values"
                     }
                   }
                 }
