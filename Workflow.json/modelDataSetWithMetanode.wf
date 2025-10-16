@@ -15,30 +15,30 @@ workflow "ModelDataSet"{
     			has_special_values (input.ETHNICITY, max 60%)
     		}
     		postcondition "imputeMissingByMostFrequent(sex)_POST_value_range"{
-    			no_special_values (input.sex)
+    			no_special_values (output.sex)
     		}
     		postcondition "imputeMissingByMostFrequent(IRSCHOOL)_Post_value_range"{
-    			no_special_values (input.IRSCHOOL)
+    			no_special_values (output.IRSCHOOL)
     		}
     		postcondition "imputeMissingByMostFrequent(ETHNICITY)_POST_value_range"{
-    			no_special_values (input.ETHNICITY)
+    			no_special_values (output.ETHNICITY)
     		}
     		invariant "imputeMissingByMostFrequent(sex)_INVARIANT"{
     			condition{
     				if { expression: input.sex belongs_to special_values }
-    				then{ expression: input.sex belongs_to most_frequent }
+    				then{ expression: output.sex belongs_to most_frequent }
     			}
     		}
     		invariant "imputeMissingByMostFrequent(ETHNICITY)_INVARIANT"{
     			condition{
     				if { expression: input.ETHNICITY belongs_to special_values }
-    				then{ expression: input.ETHNICITY belongs_to most_frequent }
+    				then{ expression: output.ETHNICITY belongs_to most_frequent }
     			}
     		}
     		invariant "imputeMissingByMostFrequent(IRSCHOOL)_INVARIANT"{
     			condition{
     				if { expression: input.IRSCHOOL belongs_to special_values }
-    				then{ expression: input.IRSCHOOL belongs_to most_frequent }
+    				then{ expression: output.IRSCHOOL belongs_to most_frequent }
     			}
     		}
     	}
@@ -51,24 +51,24 @@ workflow "ModelDataSet"{
     			has_special_values (input.ACADEMIC_INTEREST_2, max 60%)
     		}
     		postcondition "imputeMissingByFixValue(ACADEMIC_INTEREST_2)_POST_valueRange"{
-    			no_special_values (input.ACADEMIC_INTEREST_2)
+    			no_special_values (output.ACADEMIC_INTEREST_2)
     		}
     		invariant "imputeMissingByFixValue(ACADEMIC_INTEREST_2)_INV_condition"{
     			condition{
     				if { expression: input.ACADEMIC_INTEREST_2 belongs_to special_values }
-    				then{ expression: input.ACADEMIC_INTEREST_2 belongs_to fixed="Unknown" }
+    				then{ expression: output.ACADEMIC_INTEREST_2 belongs_to fixed="Unknown" }
     			}
     		}
     		precondition "imputeMissingByFixValue(ACADEMIC_INTEREST_1)_PRE_valueRange"{
     			has_special_values (input.ACADEMIC_INTEREST_1, max 60%)
     		}
     		postcondition "imputeMissingByFixValue(ACADEMIC_INTEREST_1)_POST_valueRange"{
-    			no_special_values (input.ACADEMIC_INTEREST_1)
+    			no_special_values (output.ACADEMIC_INTEREST_1)
     		}
     		invariant "imputeMissingByFixValue(ACADEMIC_INTEREST_1)_INV_condition"{
     			condition{
     				if { expression: input.ACADEMIC_INTEREST_1 belongs_to special_values }
-    				then{ expression: input.ACADEMIC_INTEREST_1 belongs_to fixed="Unknown" }
+    				then{ expression: output.ACADEMIC_INTEREST_1 belongs_to fixed="Unknown" }
     			}
     		}
     	}
@@ -81,24 +81,24 @@ workflow "ModelDataSet"{
     			has_special_values (input.avg_income, max 60%)
     		}
     		postcondition "imputeMissingByMean(avg_income)_POST_valueRange"{
-    			no_special_values (input.avg_income)
+    			no_special_values (output.avg_income)
     		}
     		invariant "imputeMissingByMean(avg_income)_INV_condition"{
     			condition{
     				if { expression: input.avg_income belongs_to special_values }
-    				then{ expression: input.avg_income belongs_to mean }
+    				then{ expression: output.avg_income belongs_to mean }
     			}
     		}
     		precondition "imputeMissingByMean(distance)_PRE_valueRange"{
     			has_special_values (input.distance, max 60%)
     		}
     		postcondition "imputeMissingByMean(distance)_POST_valueRange"{
-    			no_special_values (input.distance)
+    			no_special_values (output.distance)
     		}
     		invariant "imputeMissingByMean(distance)_INV_condition"{
     			condition{
     				if { expression: input.distance belongs_to special_values }
-    				then{ expression: input.distance belongs_to mean }
+    				then{ expression: output.distance belongs_to mean }
     			}
     		}
     	}
@@ -111,12 +111,12 @@ workflow "ModelDataSet"{
     			has_special_values (input.satscore, max 60%)
     		}
     		postcondition "imputeMissingByLinearInterpolation(satscore)_POST_valueRange"{
-    			no_special_values (input.satscore)
+    			no_special_values (output.satscore)
     		}
     		invariant "imputeMissingByLinearInterpolation(satscore)_INVARIANT"{
     			condition{
     				if { expression: input.satscore belongs_to special_values }
-    				then{ expression: input.satscore belongs_to interpolation }
+    				then{ expression: output.satscore belongs_to interpolation }
     			}
     		}
     	}
@@ -129,12 +129,12 @@ workflow "ModelDataSet"{
     			interval_contract (input.init_span, (-1000, 1000), belongs_to )
     		}
     		postcondition "rowFilterRange(init_span)_POST_valueRange"{
-    			interval_contract (input.init_span, [-216, -216], not_belongs_to)
+    			interval_contract (output.init_span, [-216, -216], not_belongs_to)
     		}
     		invariant "rowFilterRange(init_span)_INV_condition"{
     			condition{
     				if { expression: input.init_span belongs_to in_range(-inf, 0) }
-    				then{ expression: input.init_span not_belongs_to in_range(-inf, 0) }
+    				then{ expression: output.init_span not_belongs_to in_range(-inf, 0) }
     			}
     		}
     	}
@@ -152,7 +152,7 @@ workflow "ModelDataSet"{
     		invariant "columnFilter(TRAVEL_INIT_CNTCTS, REFERRAL_CNCTS, telecq, interest, stuemail, CONTACT_CODE1)_INV_condition"{
     			condition{
     				if { expression: field_range(TRAVEL_INIT_CNTCTS, REFERRAL_CNCTS, telecq, interest, stuemail, CONTACT_CODE1; belongs_to) }
-    				then{ expression: input.TRAVEL_INIT_CNTCTS belongs_to in_range(0, 0) }
+    				then{ expression: output.TRAVEL_INIT_CNTCTS belongs_to in_range(0, 0) }
     			}
     		}
     	}
@@ -169,10 +169,10 @@ workflow "ModelDataSet"{
     			value_range(input.TERRITORY, matches 'N', belongs_to)
     		}
     		postcondition "mapping(TERRITORY)_POST_valueRange_A"{
-    			value_range(input.TERRITORY, matches 'A', not_belongs_to)
+    			value_range(output.TERRITORY, matches 'A', not_belongs_to)
     		}
     		postcondition "mapping(TERRITORY)_POST_valueRange_N"{
-    			value_range(input.TERRITORY, matches 'N', not_belongs_to)
+    			value_range(output.TERRITORY, matches 'N', not_belongs_to)
     		}
     		invariant "Mapping(TERRITORY)_INV_condition_A"{
     			condition {
@@ -200,10 +200,10 @@ workflow "ModelDataSet"{
     			value_range(input.TERRITORY, matches 'N', belongs_to)
     		}
     		postcondition "mapping(Instate)_POST_valueRange_Y"{
-    			value_range(input.TERRITORY, matches 'Y', not_belongs_to)
+    			value_range(output.TERRITORY, matches 'Y', not_belongs_to)
     		}
     		postcondition "mapping(Instate)_POST_valueRange_N"{
-    			value_range(input.TERRITORY, matches 'N', not_belongs_to)
+    			value_range(output.TERRITORY, matches 'N', not_belongs_to)
     		}
     		invariant "Mapping(Instate)_INV_condition_Y"{
     			condition {
@@ -220,6 +220,44 @@ workflow "ModelDataSet"{
     	}
 
     string_to_number = to_numeric(TERRITORY, Instate) |> rule_engine_instate
+    	contracts{
+    		precondition "stringToNumber(TERRITORY)_PRE_valueRange"{
+    			is_type String (input.TERRITORY, belongs_to)
+    		}
+    		postcondition "stringToNumber(TERRITORY)_POST_valueRange"{
+    			is_type Integer (output.TERRITORY, belongs_to)
+    		}
+    		invariant "INV_StringToNumber_condition_TERRITORY"{
+    			condition {
+					if { expression: input.TERRITORY belongs_to type String }
+				    then { expression: output.TERRITORY belongs_to type String }
+				}
+    		}
+    		invariant "INV_specialValue_condition_TERRITORY"{
+    			condition {
+					if { expression: input.TERRITORY not_belongs_to special_values }
+				    then { expression: output.TERRITORY not_belongs_to special_values }
+				}
+    		}
+    		precondition "stringToNumber(Instate)_PRE_valueRange"{
+    			is_type String (input.Instate, belongs_to)
+    		}
+    		postcondition "stringToNumber(Instate)_POST_valueRange"{
+    			is_type Integer (output.Instate, belongs_to)
+    		}
+    		invariant "INV_StringToNumber_condition_Instate"{
+    			condition {
+					if { expression: input.Instate belongs_to type String }
+				    then { expression: output.Instate belongs_to type String }
+				}
+    		}
+    		invariant "INV_specialValue_condition_Instate"{
+    			condition {
+					if { expression: input.Instate not_belongs_to special_values }
+				    then { expression: output.Instate not_belongs_to special_values }
+				}
+    		}
+    	}
 
     numeric_outliers = outliers(avg_income, distance, Instate) {
         replace_by_closest
