@@ -56,31 +56,51 @@ ContractType:
     ValueRangeContract
     | ConditionContract
     | SpecialValueContract
-    | CastTypeContract;
+    | CastTypeContract
+    | IntervalContract
+    | FieldRangeContract;
 
 ValueRangeContract:
-    "value_range" "(" field=ContractField "," value=ContractValue ")";
+    "value_range" "(" field=ContractField "," value=ContractValue ("," belongOp=BelongOp)? ")";
 
 ContractField:
     "input" "." column=Column
-    | "output" "." column=Column;
+    | "output" "." column=Column
+    | "input" "." "datadictionary"
+    | "output" "." "datadictionary";
 
 ContractValue:
     "castable_to" type=Type
     | "in_range" bounds=RangeBounds
-    | "matches" value=Value;
+    | "matches" value=Value
+    | "field_list" columns=ColumnList;
 
 Type:
     "Integer" | "Double" | "String" | "Boolean";
 
+// Nuevo: Contrato de intervalo para RowFilter
+IntervalContract:
+    "interval_contract" "(" field=ContractField "," bounds=RangeBounds ("," belongOp=BelongOp)? ")";
+
+// Nuevo: Contrato de rango de campos para ColumnFilter
+FieldRangeContract:
+    "field_range" "(" columns=ColumnList (";" belongOp=BelongOp)? ")";
+
 ConditionContract:
-    "condition" "{" ifClause=IfClause thenClause=ThenClause "}";
+    "condition" "{" ifClause=IfClause thenClause=ThenClause "}" ("," belongOp=BelongOp)?;
+
+// NUEVA REGLA: Representa la estructura original de tu if
+SimpleCondition:
+    field=ContractField op=BelongOp condition=DataCondition;
+    
+BooleanExpression:
+    SimpleCondition | FieldRangeContract;
 
 IfClause:
-    "if" "{" "expression" ":" field=ContractField op=BelongOp condition=DataCondition "}";
+    "if" "{" "expression" ":" expression=BooleanExpression "}";
 
 ThenClause:
-    "then" "{" "expression" ":" field=ContractField op=BelongOp result=DataResult "}";
+    "then" "{" "expression" ":" expression=BooleanExpression "}";
 
 BelongOp:
     "belongs_to" | "not_belongs_to";
@@ -125,12 +145,12 @@ DataResult:
     | FixedImputeCheck | OutlierCheck | IntervalCheck | MappingCheck | DerivedValueCheck;
 
 SpecialValueContract:
-    "no_special_values" "(" field=ContractField ("," quantifier=Quantifier)? ")"
-    | "has_special_values" "(" field=ContractField ("," quantifier=Quantifier)? ")";
+    "no_special_values" "(" field=ContractField ("," quantifier=Quantifier)? ("," belongOp=BelongOp)? ")"
+    | "has_special_values" "(" field=ContractField ("," quantifier=Quantifier)? ("," belongOp=BelongOp)? ")";
 
 CastTypeContract:
-    "castable_to" type=Type "(" field=ContractField ")"
-    | "is_type" type=Type "(" field=ContractField ")";
+    "castable_to" type=Type "(" field=ContractField ("," belongOp=BelongOp)? ")"
+    | "is_type" type=Type "(" field=ContractField ("," belongOp=BelongOp)? ")";
 
 Transformation:
     RowFilter
@@ -162,7 +182,10 @@ RangeBounds:
     | "(" lower=BoundValue "," upper=BoundValue ")";
 
 BoundValue:
-    value=Number | "*" | "inf" | "-inf";
+    "-inf" | "inf" | "*" | value=SignedNumber;
+
+SignedNumber returns ecore::EString:
+    ("-")? INT ("." INT)?;
 
 StringFilter:
     "matches" "(" column=Column "," pattern=Pattern "," includeExclude=IncludeExclude ")"
@@ -233,7 +256,7 @@ Interval:
     | "(" lower=IntervalBound "," upper=IntervalBound ")";
 
 IntervalBound:
-    value=Number | "-inf" | "inf" | "-Infinity" | "Infinity";
+    value=SignedNumber | "-inf" | "inf" | "-Infinity" | "Infinity";
 
 BinMode:
     "replace" | "as" newName=ID;

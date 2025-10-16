@@ -177,11 +177,19 @@ class WorkflowDSLGenerator extends AbstractGenerator {
 				sb.append(spaces(indent + 2) + "\"type\": \"value_range\",\n")
 				sb.append(spaces(indent + 2) + "\"field\": " + contractType.field.convertToJson(indent + 2) + ",\n")
 				sb.append(spaces(indent + 2) + "\"value\": " + contractType.value.convertToJson(indent + 2))
+				if (contractType.belongOp !== null) {
+					sb.append(",\n")
+					sb.append(spaces(indent + 2) + "\"belong_op\": \"" + contractType.belongOp + "\"")
+				}
 			}
 			ConditionContract: {
 				sb.append(spaces(indent + 2) + "\"type\": \"condition\",\n")
 				sb.append(spaces(indent + 2) + "\"if_clause\": " + contractType.ifClause.convertToJson(indent + 2) + ",\n")
 				sb.append(spaces(indent + 2) + "\"then_clause\": " + contractType.thenClause.convertToJson(indent + 2))
+				if (contractType.belongOp !== null) {
+					sb.append(",\n")
+					sb.append(spaces(indent + 2) + "\"belong_op\": \"" + contractType.belongOp + "\"")
+				}
 			}
 			SpecialValueContract: {
 				sb.append(spaces(indent + 2) + "\"type\": \"special_value\",\n")
@@ -195,6 +203,10 @@ class WorkflowDSLGenerator extends AbstractGenerator {
 					sb.append(",\n")
 					sb.append(spaces(indent + 2) + "\"quantifier\": " + contractType.quantifier.convertToJson(indent + 2))
 				}
+				if (contractType.belongOp !== null) {
+					sb.append(",\n")
+					sb.append(spaces(indent + 2) + "\"belong_op\": \"" + contractType.belongOp + "\"")
+				}
 			}
 			CastTypeContract: {
 				sb.append(spaces(indent + 2) + "\"type\": \"cast_type\",\n")
@@ -205,6 +217,29 @@ class WorkflowDSLGenerator extends AbstractGenerator {
 				sb.append(spaces(indent + 2) + "\"operation\": \"" + (if (isCastable) "castable_to" else "is_type") + "\",\n")
 				sb.append(spaces(indent + 2) + "\"cast_type_name\": \"" + contractType.type + "\",\n")
 				sb.append(spaces(indent + 2) + "\"field\": " + contractType.field.convertToJson(indent + 2))
+				if (contractType.belongOp !== null) {
+					sb.append(",\n")
+					sb.append(spaces(indent + 2) + "\"belong_op\": \"" + contractType.belongOp + "\"")
+				}
+			}
+			IntervalContract: {
+				sb.append(spaces(indent + 2) + "\"type\": \"interval_contract\",\n")
+				sb.append(spaces(indent + 2) + "\"field\": " + contractType.field.convertToJson(indent + 2) + ",\n")
+				sb.append(spaces(indent + 2) + "\"bounds\": " + contractType.bounds.convertToJson(indent + 2))
+				val belongOp = (contractType as IntervalContract).belongOp
+				if (belongOp !== null) {
+					sb.append(",\n")
+					sb.append(spaces(indent + 2) + "\"belong_op\": \"" + belongOp + "\"")
+				}
+			}
+			FieldRangeContract: {
+				sb.append(spaces(indent + 2) + "\"type\": \"field_range\",\n")
+				sb.append(spaces(indent + 2) + "\"columns\": " + contractType.columns.convertToJson(indent + 2))
+				val belongOp = (contractType as FieldRangeContract).belongOp
+				if (belongOp !== null) {
+					sb.append(",\n")
+					sb.append(spaces(indent + 2) + "\"belong_op\": \"" + belongOp + "\"")
+				}
 			}
 		}
 		sb.append("\n")
@@ -215,8 +250,24 @@ class WorkflowDSLGenerator extends AbstractGenerator {
 	def String convertToJson(ContractField field, int indent) {
 		val sb = new StringBuilder
 		sb.append("{\n")
-		sb.append(spaces(indent + 2) + "\"direction\": \"" + (if (field.toString.contains("input")) "input" else "output") + "\",\n")
-		sb.append(spaces(indent + 2) + "\"column\": " + field.column.convertToJson(indent + 2) + "\n")
+		
+		// Detectar si es datadictionary o una columna específica
+		val node = org.eclipse.xtext.nodemodel.util.NodeModelUtils.getNode(field)
+		val fieldText = if (node !== null) node.text.trim else ""
+		
+		val direction = if (fieldText.startsWith("input")) "input" else "output"
+		sb.append(spaces(indent + 2) + "\"direction\": \"" + direction + "\"")
+		
+		if (fieldText.contains("datadictionary")) {
+			sb.append(",\n")
+			sb.append(spaces(indent + 2) + "\"type\": \"datadictionary\"")
+		} else if (field.column !== null) {
+			sb.append(",\n")
+			sb.append(spaces(indent + 2) + "\"type\": \"column\",\n")
+			sb.append(spaces(indent + 2) + "\"column\": " + field.column.convertToJson(indent + 2))
+		}
+		
+		sb.append("\n")
 		sb.append(spaces(indent) + "}")
 		return sb.toString
 	}
@@ -555,14 +606,8 @@ class WorkflowDSLGenerator extends AbstractGenerator {
 		val sb = new StringBuilder
 		sb.append("{\n")
 		sb.append(spaces(indent + 2) + "\"type\": \"if_clause\",\n")
-		if (clause.field !== null) {
-			sb.append(spaces(indent + 2) + "\"field\": " + clause.field.convertToJson(indent + 2) + ",\n")
-		}
-		if (clause.op !== null) {
-			sb.append(spaces(indent + 2) + "\"operator\": \"" + clause.op + "\",\n")
-		}
-		if (clause.condition !== null) {
-			sb.append(spaces(indent + 2) + "\"condition\": " + clause.condition.convertToJson(indent + 2) + "\n")
+		if (clause.expression !== null) {
+			sb.append(spaces(indent + 2) + "\"expression\": " + clause.expression.convertToJson(indent + 2) + "\n")
 		}
 		sb.append(spaces(indent) + "}")
 		return sb.toString
@@ -572,15 +617,36 @@ class WorkflowDSLGenerator extends AbstractGenerator {
 		val sb = new StringBuilder
 		sb.append("{\n")
 		sb.append(spaces(indent + 2) + "\"type\": \"then_clause\",\n")
-		if (clause.field !== null) {
-			sb.append(spaces(indent + 2) + "\"field\": " + clause.field.convertToJson(indent + 2) + ",\n")
+		if (clause.expression !== null) {
+			sb.append(spaces(indent + 2) + "\"expression\": " + clause.expression.convertToJson(indent + 2) + "\n")
 		}
-		if (clause.op !== null) {
-			sb.append(spaces(indent + 2) + "\"operator\": \"" + clause.op + "\",\n")
+		sb.append(spaces(indent) + "}")
+		return sb.toString
+	}
+	
+	def String convertToJson(BooleanExpression expression, int indent) {
+		val sb = new StringBuilder
+		sb.append("{\n")
+		switch expression {
+			SimpleCondition: {
+				sb.append(spaces(indent + 2) + "\"type\": \"simple_condition\",\n")
+				sb.append(spaces(indent + 2) + "\"field\": " + expression.field.convertToJson(indent + 2) + ",\n")
+				sb.append(spaces(indent + 2) + "\"operator\": \"" + expression.op + "\",\n")
+				sb.append(spaces(indent + 2) + "\"condition\": " + expression.condition.convertToJson(indent + 2))
+			}
+			FieldRangeContract: {
+				sb.append(spaces(indent + 2) + "\"type\": \"field_range_contract\",\n")
+				sb.append(spaces(indent + 2) + "\"columns\": " + expression.columns.convertToJson(indent + 2))
+				if (expression.belongOp !== null) {
+					sb.append(",\n")
+					sb.append(spaces(indent + 2) + "\"belong_op\": \"" + expression.belongOp + "\"")
+				}
+			}
+			default: {
+				sb.append(spaces(indent + 2) + "\"type\": \"unknown_boolean_expression\"")
+			}
 		}
-		if (clause.result !== null) {
-			sb.append(spaces(indent + 2) + "\"result\": " + clause.result.convertToJson(indent + 2) + "\n")
-		}
+		sb.append("\n")
 		sb.append(spaces(indent) + "}")
 		return sb.toString
 	}
@@ -813,6 +879,18 @@ class WorkflowDSLGenerator extends AbstractGenerator {
 	def String convertToJson(RangeBounds bounds, int indent) {
 		val sb = new StringBuilder
 		sb.append("{\n")
+		
+		// Detectar el tipo de cierre usando el texto del nodo
+		val node = org.eclipse.xtext.nodemodel.util.NodeModelUtils.getNode(bounds)
+		val boundsText = if (node !== null) node.text.trim else ""
+		
+		// Determinar el tipo de cierre basado en los brackets
+		val leftBracket = if (boundsText.startsWith("[")) "closed" else "open"
+		val rightBracket = if (boundsText.endsWith("]")) "closed" else "open"
+		val closureType = leftBracket + "-" + rightBracket
+		
+		sb.append(spaces(indent + 2) + "\"closure_type\": \"" + closureType + "\",\n")
+		
 		if (bounds.lower !== null) {
 			sb.append(spaces(indent + 2) + "\"lower\": " + bounds.lower.convertToJson(indent + 2))
 		} else {
