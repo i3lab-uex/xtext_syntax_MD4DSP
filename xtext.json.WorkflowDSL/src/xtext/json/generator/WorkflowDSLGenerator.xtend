@@ -199,6 +199,10 @@ class WorkflowDSLGenerator extends AbstractGenerator {
 				val isNoSpecial = contractText.startsWith("no_special_values")
 				sb.append(spaces(indent + 2) + "\"operation\": \"" + (if (isNoSpecial) "no_special_values" else "has_special_values") + "\",\n")
 				sb.append(spaces(indent + 2) + "\"field\": " + contractType.field.convertToJson(indent + 2))
+				if (contractType.specialType !== null) {
+					sb.append(",\n")
+					sb.append(spaces(indent + 2) + "\"special_type\": \"" + contractType.specialType + "\"")
+				}
 				if (contractType.quantifier !== null) {
 					sb.append(",\n")
 					sb.append(spaces(indent + 2) + "\"quantifier\": " + contractType.quantifier.convertToJson(indent + 2))
@@ -658,6 +662,10 @@ class WorkflowDSLGenerator extends AbstractGenerator {
 			sb.append(spaces(indent + 2) + "\"type\": \"special_values\"")
 			if (condition instanceof SpecialValueCheck) {
 				val svc = condition as SpecialValueCheck
+				if (svc.specialType !== null) {
+					sb.append(",\n")
+					sb.append(spaces(indent + 2) + "\"special_type\": \"" + svc.specialType + "\"")
+				}
 				if (svc.quantifier !== null) {
 					sb.append(",\n")
 					sb.append(spaces(indent + 2) + "\"quantifier\": " + svc.quantifier.convertToJson(indent + 2))

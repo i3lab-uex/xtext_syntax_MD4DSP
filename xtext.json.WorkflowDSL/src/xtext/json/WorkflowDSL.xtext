@@ -110,7 +110,10 @@ DataCondition:
     | FixedImputeCheck | OutlierCheck | IntervalCheck | MappingCheck | DerivedValueCheck;
 
 SpecialValueCheck:
-    {SpecialValueCheck} "special_values" ("(" quantifier=Quantifier ")")?;
+    {SpecialValueCheck} "special_values" ("(" specialType=SpecialValueType ("," quantifier=Quantifier)? ")")?;
+
+SpecialValueType:
+    "missing" | "invalid" | "outlier";
 
 CastTypeCheck:
     {CastTypeCheck} "type" type=Type;
@@ -145,8 +148,8 @@ DataResult:
     | FixedImputeCheck | OutlierCheck | IntervalCheck | MappingCheck | DerivedValueCheck;
 
 SpecialValueContract:
-    "no_special_values" "(" field=ContractField ("," quantifier=Quantifier)? ("," belongOp=BelongOp)? ")"
-    | "has_special_values" "(" field=ContractField ("," quantifier=Quantifier)? ("," belongOp=BelongOp)? ")";
+    "no_special_values" "(" field=ContractField ("," specialType=SpecialValueType)? ("," quantifier=Quantifier)? ("," belongOp=BelongOp)? ")"
+    | "has_special_values" "(" field=ContractField ("," specialType=SpecialValueType)? ("," quantifier=Quantifier)? ("," belongOp=BelongOp)? ")";
 
 CastTypeContract:
     "castable_to" type=Type "(" field=ContractField ("," belongOp=BelongOp)? ")"
@@ -287,13 +290,13 @@ FixedImpute:
     "fixed" "=" values=ValueList;
 
 TransformImpute:
-    "transform_special_to_fixed" "(" replacementValue=Value ")"
-    | "transform_special_to_mean"
-    | "transform_special_to_median"
-    | "transform_special_to_most_frequent"
-    | "transform_special_to_interpolation" "(" type=InterpolationType? ")"
-    | "transform_special_to_previous_value"
-    | "transform_special_to_next_value"
+    "transform_special_to_fixed" "(" specialType=SpecialValueType "," replacementValue=Value ")"
+    | "transform_special_to_mean" "(" specialType=SpecialValueType ")"
+    | "transform_special_to_median" "(" specialType=SpecialValueType ")"
+    | "transform_special_to_most_frequent" "(" specialType=SpecialValueType ")"
+    | "transform_special_to_interpolation" "(" specialType=SpecialValueType ("," type=InterpolationType)? ")"
+    | "transform_special_to_previous_value" "(" specialType=SpecialValueType ")"
+    | "transform_special_to_next_value" "(" specialType=SpecialValueType ")"
     | "transform_fixed_to_fixed" "{" rules=MappingRules "}"
     | "transform_fixed_to_derived" "(" expression=MathExpression ")"
     | "transform_derived_to_fixed" "(" derivedExpression=MathExpression "," replacementValue=Value ")";
@@ -324,11 +327,11 @@ OutlierStrategy:
     replacement=ReplacementStrategy;
 
 ReplacementStrategy:
-    "replace_closest"
+    "replace_closest" "(" specialType=SpecialValueType ")"
     | "replace_missing"
-    | "replace_by_closest"
-    | "replace_with" "=" value=Number
-    | "remove";
+    | "replace_by_closest" "(" specialType=SpecialValueType ")"
+    | "replace_with" "(" specialType=SpecialValueType "," value=Number ")"
+    | "remove" "(" specialType=SpecialValueType ")";
 
 Join:
     "join" "(" left=ID "," right=ID ")" "{" spec=JoinSpec "}";
