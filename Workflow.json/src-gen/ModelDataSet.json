@@ -35,7 +35,7 @@
             ]
           },
           "method": {
-            "type": "unknown_method"
+            "type": "transform_special_to_most_frequent"
           }
         },
         "target": "data",
@@ -57,6 +57,7 @@
                       "name": "sex"
                     }
                   },
+                  "special_type": "missing",
                   "quantifier": {
                     "type": "unknown",
                     "value": {
@@ -83,6 +84,7 @@
                       "name": "IRSCHOOL"
                     }
                   },
+                  "special_type": "missing",
                   "quantifier": {
                     "type": "unknown",
                     "value": {
@@ -109,6 +111,7 @@
                       "name": "ETHNICITY"
                     }
                   },
+                  "special_type": "missing",
                   "quantifier": {
                     "type": "unknown",
                     "value": {
@@ -134,7 +137,8 @@
                     "column": {
                       "name": "sex"
                     }
-                  }
+                  },
+                  "special_type": "missing"
                 }
               }
             },
@@ -153,7 +157,8 @@
                     "column": {
                       "name": "IRSCHOOL"
                     }
-                  }
+                  },
+                  "special_type": "missing"
                 }
               }
             },
@@ -172,7 +177,8 @@
                     "column": {
                       "name": "ETHNICITY"
                     }
-                  }
+                  },
+                  "special_type": "missing"
                 }
               }
             },
@@ -197,7 +203,8 @@
                       },
                       "operator": "belongs_to",
                       "condition": {
-                        "type": "special_values"
+                        "type": "special_values",
+                        "special_type": "missing"
                       }
                     }
                   },
@@ -242,7 +249,8 @@
                       },
                       "operator": "belongs_to",
                       "condition": {
-                        "type": "special_values"
+                        "type": "special_values",
+                        "special_type": "missing"
                       }
                     }
                   },
@@ -287,7 +295,8 @@
                       },
                       "operator": "belongs_to",
                       "condition": {
-                        "type": "special_values"
+                        "type": "special_values",
+                        "special_type": "missing"
                       }
                     }
                   },
@@ -333,7 +342,7 @@
             "type": "transform_special_to_fixed",
             "replacement_value": {
       "type": "string",
-      "value": "Unknown"
+      "value": "missing, "Unknown""
     }
           }
         },
@@ -356,6 +365,7 @@
                       "name": "ACADEMIC_INTEREST_2"
                     }
                   },
+                  "special_type": "missing",
                   "quantifier": {
                     "type": "unknown",
                     "value": {
@@ -381,7 +391,8 @@
                     "column": {
                       "name": "ACADEMIC_INTEREST_2"
                     }
-                  }
+                  },
+                  "special_type": "missing"
                 }
               }
             },
@@ -406,7 +417,8 @@
                       },
                       "operator": "belongs_to",
                       "condition": {
-                        "type": "special_values"
+                        "type": "special_values",
+                        "special_type": "missing"
                       }
                     }
                   },
@@ -450,6 +462,7 @@
                       "name": "ACADEMIC_INTEREST_1"
                     }
                   },
+                  "special_type": "missing",
                   "quantifier": {
                     "type": "unknown",
                     "value": {
@@ -475,7 +488,8 @@
                     "column": {
                       "name": "ACADEMIC_INTEREST_1"
                     }
-                  }
+                  },
+                  "special_type": "missing"
                 }
               }
             },
@@ -500,7 +514,8 @@
                       },
                       "operator": "belongs_to",
                       "condition": {
-                        "type": "special_values"
+                        "type": "special_values",
+                        "special_type": "missing"
                       }
                     }
                   },
@@ -547,7 +562,7 @@
             ]
           },
           "method": {
-            "type": "unknown_method"
+            "type": "transform_special_to_mean"
           }
         },
         "target": "missing_val_academic",
@@ -569,6 +584,7 @@
                       "name": "avg_income"
                     }
                   },
+                  "special_type": "missing",
                   "quantifier": {
                     "type": "unknown",
                     "value": {
@@ -594,7 +610,8 @@
                     "column": {
                       "name": "avg_income"
                     }
-                  }
+                  },
+                  "special_type": "missing"
                 }
               }
             },
@@ -619,7 +636,8 @@
                       },
                       "operator": "belongs_to",
                       "condition": {
-                        "type": "special_values"
+                        "type": "special_values",
+                        "special_type": "missing"
                       }
                     }
                   },
@@ -659,6 +677,7 @@
                       "name": "distance"
                     }
                   },
+                  "special_type": "missing",
                   "quantifier": {
                     "type": "unknown",
                     "value": {
@@ -684,7 +703,8 @@
                     "column": {
                       "name": "distance"
                     }
-                  }
+                  },
+                  "special_type": "missing"
                 }
               }
             },
@@ -709,7 +729,8 @@
                       },
                       "operator": "belongs_to",
                       "condition": {
-                        "type": "special_values"
+                        "type": "special_values",
+                        "special_type": "missing"
                       }
                     }
                   },
@@ -749,7 +770,8 @@
             ]
           },
           "method": {
-            "type": "unknown_method"
+            "type": "transform_special_to_interpolation",
+            "interpolation_type": "missing"
           }
         },
         "target": "missing_val_avg_distance",
@@ -771,6 +793,7 @@
                       "name": "satscore"
                     }
                   },
+                  "special_type": "missing",
                   "quantifier": {
                     "type": "unknown",
                     "value": {
@@ -796,7 +819,8 @@
                     "column": {
                       "name": "satscore"
                     }
-                  }
+                  },
+                  "special_type": "missing"
                 }
               }
             },
@@ -821,7 +845,8 @@
                       },
                       "operator": "belongs_to",
                       "condition": {
-                        "type": "special_values"
+                        "type": "special_values",
+                        "special_type": "missing"
                       }
                     }
                   },
@@ -1959,10 +1984,278 @@
             ]
           },
           "strategy": {
-            "type": "replace_by_closest"
+            "type": "replace_by_closest (missing)"
           }
         },
-        "target": "string_to_number"
+        "target": "string_to_number",
+        "contracts": {
+          "contracts": [
+            {
+              "type": "precondition",
+              "name": {
+                "name": "imputeOutlierByClosest(avg_income)_PRE_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "special_value",
+                  "operation": "has_special_values",
+                  "field": {
+                    "direction": "input",
+                    "type": "column",
+                    "column": {
+                      "name": "avg_income"
+                    }
+                  },
+                  "special_type": "outlier",
+                  "belong_op": "belongs_to"
+                }
+              }
+            },
+            {
+              "type": "precondition",
+              "name": {
+                "name": "imputeOutlierByClosest(distance)_PRE_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "special_value",
+                  "operation": "has_special_values",
+                  "field": {
+                    "direction": "input",
+                    "type": "column",
+                    "column": {
+                      "name": "distance"
+                    }
+                  },
+                  "special_type": "outlier",
+                  "belong_op": "belongs_to"
+                }
+              }
+            },
+            {
+              "type": "precondition",
+              "name": {
+                "name": "imputeOutlierByClosest(avg_income)_PRE_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "special_value",
+                  "operation": "has_special_values",
+                  "field": {
+                    "direction": "input",
+                    "type": "column",
+                    "column": {
+                      "name": "Instate"
+                    }
+                  },
+                  "special_type": "outlier",
+                  "belong_op": "belongs_to"
+                }
+              }
+            },
+            {
+              "type": "postcondition",
+              "name": {
+                "name": "imputeOutlierByClosest(avg_income)_POST_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "special_value",
+                  "operation": "has_special_values",
+                  "field": {
+                    "direction": "output",
+                    "type": "column",
+                    "column": {
+                      "name": "avg_income"
+                    }
+                  },
+                  "special_type": "outlier",
+                  "belong_op": "not_belongs_to"
+                }
+              }
+            },
+            {
+              "type": "postcondition",
+              "name": {
+                "name": "imputeOutlierByClosest(distance)_POST_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "special_value",
+                  "operation": "has_special_values",
+                  "field": {
+                    "direction": "output",
+                    "type": "column",
+                    "column": {
+                      "name": "distance"
+                    }
+                  },
+                  "special_type": "outlier",
+                  "belong_op": "not_belongs_to"
+                }
+              }
+            },
+            {
+              "type": "postcondition",
+              "name": {
+                "name": "imputeOutlierByClosest(avg_income)_POST_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "special_value",
+                  "operation": "has_special_values",
+                  "field": {
+                    "direction": "output",
+                    "type": "column",
+                    "column": {
+                      "name": "Instate"
+                    }
+                  },
+                  "special_type": "outlier",
+                  "belong_op": "not_belongs_to"
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "imputeOutlierByClosest(avg_income)_INV_condition"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "avg_income"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "special_values",
+                        "special_type": "outlier"
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "avg_income"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "replace_closest"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "imputeOutlierByClosest(distance)_INV_condition"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "distance"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "special_values",
+                        "special_type": "outlier"
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "distance"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "replace_closest"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "imputeOutlierByClosest(Instate)_INV_condition"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "Instate"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "special_values",
+                        "special_type": "outlier"
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "Instate"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "replace_closest"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
       },
       {
         "type": "step",
@@ -2023,7 +2316,251 @@
             "new_name": "TOTAL_CONTACTS_binned"
           }
         },
-        "target": "numeric_outliers"
+        "target": "numeric_outliers",
+        "contracts": {
+          "contracts": [
+            {
+              "type": "precondition",
+              "name": {
+                "name": "binner(TOTAL_CONTACTS)_PRE_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "interval_contract",
+                  "field": {
+                    "direction": "input",
+                    "type": "column",
+                    "column": {
+                      "name": "TOTAL_CONTACTS"
+                    }
+                  },
+                  "bounds": {
+                    "closure_type": "open-open",
+                    "lower": {
+                      "type": "value",
+                      "value": "-1000"
+                    },
+                    "upper": {
+                      "type": "value",
+                      "value": "1000"
+                    }
+                  },
+                  "belong_op": "belongs_to"
+                }
+              }
+            },
+            {
+              "type": "postcondition",
+              "name": {
+                "name": "binner(TOTAL_CONTACTS)_POST_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "interval_contract",
+                  "field": {
+                    "direction": "output",
+                    "type": "column",
+                    "column": {
+                      "name": "TOTAL_CONTACTS"
+                    }
+                  },
+                  "bounds": {
+                    "closure_type": "open-open",
+                    "lower": {
+                      "type": "value",
+                      "value": "-1000"
+                    },
+                    "upper": {
+                      "type": "value",
+                      "value": "1000"
+                    }
+                  },
+                  "belong_op": "not_belongs_to"
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "binner(TOTAL_CONTACTS)_INV_condition_low"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "TOTAL_CONTACTS"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "in_range",
+                        "bounds": {
+                          "closure_type": "open-open",
+                          "lower": {
+                            "type": "value",
+                            "value": "-1000"
+                          },
+                          "upper": {
+                            "type": "value",
+                            "value": "1"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "TOTAL_CONTACTS"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "low"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "binner(TOTAL_CONTACTS)_INV_condition_moderate"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "TOTAL_CONTACTS"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "in_range",
+                        "bounds": {
+                          "closure_type": "closed-open",
+                          "lower": {
+                            "type": "value",
+                            "value": "1"
+                          },
+                          "upper": {
+                            "type": "value",
+                            "value": "4"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "TOTAL_CONTACTS"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "moderate"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "binner(TOTAL_CONTACTS)_INV_condition_high"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "TOTAL_CONTACTS"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "in_range",
+                        "bounds": {
+                          "closure_type": "closed-open",
+                          "lower": {
+                            "type": "value",
+                            "value": "4"
+                          },
+                          "upper": {
+                            "type": "value",
+                            "value": "1000"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "TOTAL_CONTACTS"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "high"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
       },
       {
         "type": "step",
@@ -2088,9 +2625,69 @@
         "contracts": {
           "contracts": [
             {
+              "type": "precondition",
+              "name": {
+                "name": "binner(SELF_INIT_CNTCTS)_PRE_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "interval_contract",
+                  "field": {
+                    "direction": "input",
+                    "type": "column",
+                    "column": {
+                      "name": "SELF_INIT_CNTCTS"
+                    }
+                  },
+                  "bounds": {
+                    "closure_type": "open-open",
+                    "lower": {
+                      "type": "value",
+                      "value": "-1000"
+                    },
+                    "upper": {
+                      "type": "value",
+                      "value": "1000"
+                    }
+                  },
+                  "belong_op": "belongs_to"
+                }
+              }
+            },
+            {
+              "type": "postcondition",
+              "name": {
+                "name": "binner(SELF_INIT_CNTCTS)_POST_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "interval_contract",
+                  "field": {
+                    "direction": "output",
+                    "type": "column",
+                    "column": {
+                      "name": "SELF_INIT_CNTCTS"
+                    }
+                  },
+                  "bounds": {
+                    "closure_type": "open-open",
+                    "lower": {
+                      "type": "value",
+                      "value": "-1000"
+                    },
+                    "upper": {
+                      "type": "value",
+                      "value": "1000"
+                    }
+                  },
+                  "belong_op": "not_belongs_to"
+                }
+              }
+            },
+            {
               "type": "invariant",
               "name": {
-                "name": "SELF_INIT_CNTCTS_binned_invariant"
+                "name": "binner(SELF_INIT_CNTCTS)_INV_condition_low"
               },
               "body": {
                 "contract_type": {
@@ -2108,7 +2705,18 @@
                       },
                       "operator": "belongs_to",
                       "condition": {
-                        "type": "special_values"
+                        "type": "in_range",
+                        "bounds": {
+                          "closure_type": "open-open",
+                          "lower": {
+                            "type": "value",
+                            "value": "-1000"
+                          },
+                          "upper": {
+                            "type": "value",
+                            "value": "1"
+                          }
+                        }
                       }
                     }
                   },
@@ -2123,9 +2731,133 @@
                           "name": "SELF_INIT_CNTCTS"
                         }
                       },
-                      "operator": "not_belongs_to",
+                      "operator": "belongs_to",
                       "condition": {
-                        "type": "special_values"
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "low"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "binner(SELF_INIT_CNTCTS)_INV_condition_moderate"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "SELF_INIT_CNTCTS"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "in_range",
+                        "bounds": {
+                          "closure_type": "closed-open",
+                          "lower": {
+                            "type": "value",
+                            "value": "1"
+                          },
+                          "upper": {
+                            "type": "value",
+                            "value": "4"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "SELF_INIT_CNTCTS"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "moderate"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "binner(SELF_INIT_CNTCTS)_INV_condition_high"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "SELF_INIT_CNTCTS"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "in_range",
+                        "bounds": {
+                          "closure_type": "closed-open",
+                          "lower": {
+                            "type": "value",
+                            "value": "4"
+                          },
+                          "upper": {
+                            "type": "value",
+                            "value": "1000"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "SELF_INIT_CNTCTS"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "high"
+                        }
                       }
                     }
                   }
@@ -2194,7 +2926,251 @@
             "new_name": "SOLICITED_CNTCTS_binned"
           }
         },
-        "target": "binner_self_init_contacts"
+        "target": "binner_self_init_contacts",
+        "contracts": {
+          "contracts": [
+            {
+              "type": "precondition",
+              "name": {
+                "name": "binner(SOLICITED_CNTCTS)_PRE_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "interval_contract",
+                  "field": {
+                    "direction": "input",
+                    "type": "column",
+                    "column": {
+                      "name": "SOLICITED_CNTCTS"
+                    }
+                  },
+                  "bounds": {
+                    "closure_type": "open-open",
+                    "lower": {
+                      "type": "value",
+                      "value": "-1000"
+                    },
+                    "upper": {
+                      "type": "value",
+                      "value": "1000"
+                    }
+                  },
+                  "belong_op": "belongs_to"
+                }
+              }
+            },
+            {
+              "type": "postcondition",
+              "name": {
+                "name": "binner(SOLICITED_CNTCTS)_POST_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "interval_contract",
+                  "field": {
+                    "direction": "output",
+                    "type": "column",
+                    "column": {
+                      "name": "SOLICITED_CNTCTS"
+                    }
+                  },
+                  "bounds": {
+                    "closure_type": "open-open",
+                    "lower": {
+                      "type": "value",
+                      "value": "-1000"
+                    },
+                    "upper": {
+                      "type": "value",
+                      "value": "1000"
+                    }
+                  },
+                  "belong_op": "not_belongs_to"
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "binner(SOLICITED_CNTCTS)_INV_condition_low"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "SOLICITED_CNTCTS"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "in_range",
+                        "bounds": {
+                          "closure_type": "open-open",
+                          "lower": {
+                            "type": "value",
+                            "value": "-1000"
+                          },
+                          "upper": {
+                            "type": "value",
+                            "value": "1"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "SOLICITED_CNTCTS"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "low"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "binner(SOLICITED_CNTCTS)_INV_condition_moderate"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "SOLICITED_CNTCTS"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "in_range",
+                        "bounds": {
+                          "closure_type": "closed-open",
+                          "lower": {
+                            "type": "value",
+                            "value": "1"
+                          },
+                          "upper": {
+                            "type": "value",
+                            "value": "4"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "SOLICITED_CNTCTS"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "moderate"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "binner(SOLICITED_CNTCTS)_INV_condition_high"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "SOLICITED_CNTCTS"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "in_range",
+                        "bounds": {
+                          "closure_type": "closed-open",
+                          "lower": {
+                            "type": "value",
+                            "value": "4"
+                          },
+                          "upper": {
+                            "type": "value",
+                            "value": "1000"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "SOLICITED_CNTCTS"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "high"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
       },
       {
         "type": "step",
@@ -2212,7 +3188,10 @@
                   "type": "interval",
                   "left_bracket": "[",
                   "right_bracket": ")",
-                  "lower": {"type": "null"},
+                  "lower": {
+                    "type": "value",
+                    "value": -1000
+                  },
                   "upper": {
                     "type": "value",
                     "value": 1.0
@@ -2272,12 +3251,15 @@
                 "interval": {
                   "type": "interval",
                   "left_bracket": "[",
-                  "right_bracket": ")",
+                  "right_bracket": "]",
                   "lower": {
                     "type": "value",
                     "value": 7.0
                   },
-                  "upper": {"type": "null"}
+                  "upper": {
+                    "type": "value",
+                    "value": 1000
+                  }
                 }
               }
             ]
@@ -2287,7 +3269,371 @@
             "new_name": "TERRITORY_binned"
           }
         },
-        "target": "binner_solicited_contacts"
+        "target": "binner_solicited_contacts",
+        "contracts": {
+          "contracts": [
+            {
+              "type": "precondition",
+              "name": {
+                "name": "binner(TERRITORY)_PRE_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "interval_contract",
+                  "field": {
+                    "direction": "input",
+                    "type": "column",
+                    "column": {
+                      "name": "TERRITORY"
+                    }
+                  },
+                  "bounds": {
+                    "closure_type": "closed-closed",
+                    "lower": {
+                      "type": "value",
+                      "value": "0"
+                    },
+                    "upper": {
+                      "type": "value",
+                      "value": "1000"
+                    }
+                  },
+                  "belong_op": "belongs_to"
+                }
+              }
+            },
+            {
+              "type": "postcondition",
+              "name": {
+                "name": "binner(TERRITORY)_POST_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "interval_contract",
+                  "field": {
+                    "direction": "output",
+                    "type": "column",
+                    "column": {
+                      "name": "TERRITORY"
+                    }
+                  },
+                  "bounds": {
+                    "closure_type": "open-open",
+                    "lower": {
+                      "type": "value",
+                      "value": "0"
+                    },
+                    "upper": {
+                      "type": "value",
+                      "value": "1000"
+                    }
+                  },
+                  "belong_op": "not_belongs_to"
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "binner(TERRITORY)_INV_condition_unknown"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "TERRITORY"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "in_range",
+                        "bounds": {
+                          "closure_type": "open-open",
+                          "lower": {
+                            "type": "value",
+                            "value": "-1000"
+                          },
+                          "upper": {
+                            "type": "value",
+                            "value": "1"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "TERRITORY"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "Unknown"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "binner(TERRITORY)_INV_condition_zone1"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "TERRITORY"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "in_range",
+                        "bounds": {
+                          "closure_type": "closed-open",
+                          "lower": {
+                            "type": "value",
+                            "value": "1"
+                          },
+                          "upper": {
+                            "type": "value",
+                            "value": "3"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "TERRITORY"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "Zone1"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "binner(TERRITORY)_INV_condition_zone2"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "TERRITORY"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "in_range",
+                        "bounds": {
+                          "closure_type": "closed-open",
+                          "lower": {
+                            "type": "value",
+                            "value": "3"
+                          },
+                          "upper": {
+                            "type": "value",
+                            "value": "5"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "TERRITORY"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "Zone2"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "binner(TERRITORY)_INV_condition_zone3"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "TERRITORY"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "in_range",
+                        "bounds": {
+                          "closure_type": "closed-open",
+                          "lower": {
+                            "type": "value",
+                            "value": "5"
+                          },
+                          "upper": {
+                            "type": "value",
+                            "value": "7"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "TERRITORY"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "Zone3"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "binner(TERRITORY)_INV_condition_zone4"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "TERRITORY"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "in_range",
+                        "bounds": {
+                          "closure_type": "closed-closed",
+                          "lower": {
+                            "type": "value",
+                            "value": "7"
+                          },
+                          "upper": {
+                            "type": "value",
+                            "value": "1000"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "TERRITORY"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "Zone4"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
       },
       {
         "type": "step",
@@ -2364,7 +3710,311 @@
             "new_name": "satscore_binned"
           }
         },
-        "target": "binner_territory"
+        "target": "binner_territory",
+        "contracts": {
+          "contracts": [
+            {
+              "type": "precondition",
+              "name": {
+                "name": "binner(satscore)_PRE_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "interval_contract",
+                  "field": {
+                    "direction": "input",
+                    "type": "column",
+                    "column": {
+                      "name": "satscore"
+                    }
+                  },
+                  "bounds": {
+                    "closure_type": "closed-closed",
+                    "lower": {
+                      "type": "value",
+                      "value": "-1000"
+                    },
+                    "upper": {
+                      "type": "value",
+                      "value": "2000"
+                    }
+                  },
+                  "belong_op": "belongs_to"
+                }
+              }
+            },
+            {
+              "type": "postcondition",
+              "name": {
+                "name": "binner(satscore)_POST_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "interval_contract",
+                  "field": {
+                    "direction": "output",
+                    "type": "column",
+                    "column": {
+                      "name": "satscore"
+                    }
+                  },
+                  "bounds": {
+                    "closure_type": "open-open",
+                    "lower": {
+                      "type": "value",
+                      "value": "-1000"
+                    },
+                    "upper": {
+                      "type": "value",
+                      "value": "2000"
+                    }
+                  },
+                  "belong_op": "not_belongs_to"
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "binner(satscore)_INV_IF_54 Percentile and Under"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "satscore"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "in_range",
+                        "bounds": {
+                          "closure_type": "open-open",
+                          "lower": {
+                            "type": "value",
+                            "value": "-1000"
+                          },
+                          "upper": {
+                            "type": "value",
+                            "value": "1040"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "satscore"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "54 Percentile and Under"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "binner(satscore)_INV_IF_55-75 Percentile"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "satscore"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "in_range",
+                        "bounds": {
+                          "closure_type": "closed-open",
+                          "lower": {
+                            "type": "value",
+                            "value": "1040"
+                          },
+                          "upper": {
+                            "type": "value",
+                            "value": "1160"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "satscore"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "55-75 Percentile"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "binner(satscore)_INV_IF_76-93 Percentile"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "satscore"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "in_range",
+                        "bounds": {
+                          "closure_type": "closed-open",
+                          "lower": {
+                            "type": "value",
+                            "value": "1160"
+                          },
+                          "upper": {
+                            "type": "value",
+                            "value": "1340"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "satscore"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "76-93 Percentile"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "binner(satscore)_INV_IF_94+ percentile"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "satscore"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "in_range",
+                        "bounds": {
+                          "closure_type": "closed-open",
+                          "lower": {
+                            "type": "value",
+                            "value": "1340"
+                          },
+                          "upper": {
+                            "type": "value",
+                            "value": "2000"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "satscore"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "94+ percentile"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
       },
       {
         "type": "step",
@@ -2382,7 +4032,10 @@
                   "type": "interval",
                   "left_bracket": "[",
                   "right_bracket": ")",
-                  "lower": {"type": "null"},
+                  "lower": {
+                    "type": "value",
+                    "value": 9.0
+                  },
                   "upper": {
                     "type": "value",
                     "value": 42830.0
@@ -2401,7 +4054,7 @@
                   },
                   "upper": {
                     "type": "value",
-                    "value": 55559.0
+                    "value": 55590.0
                   }
                 }
               },
@@ -2410,12 +4063,15 @@
                 "interval": {
                   "type": "interval",
                   "left_bracket": "[",
-                  "right_bracket": ")",
+                  "right_bracket": "]",
                   "lower": {
                     "type": "value",
-                    "value": 55559.0
+                    "value": 55590.0
                   },
-                  "upper": {"type": "null"}
+                  "upper": {
+                    "type": "value",
+                    "value": 100000.0
+                  }
                 }
               }
             ]
@@ -2425,7 +4081,251 @@
             "new_name": "avg_income_binned"
           }
         },
-        "target": "binner_satscore"
+        "target": "binner_satscore",
+        "contracts": {
+          "contracts": [
+            {
+              "type": "precondition",
+              "name": {
+                "name": "binner(avg_income)_PRE_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "interval_contract",
+                  "field": {
+                    "direction": "input",
+                    "type": "column",
+                    "column": {
+                      "name": "avg_income"
+                    }
+                  },
+                  "bounds": {
+                    "closure_type": "closed-closed",
+                    "lower": {
+                      "type": "value",
+                      "value": "-9"
+                    },
+                    "upper": {
+                      "type": "value",
+                      "value": "100000"
+                    }
+                  },
+                  "belong_op": "belongs_to"
+                }
+              }
+            },
+            {
+              "type": "postcondition",
+              "name": {
+                "name": "binner(avg_income)_POST_valueRange"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "interval_contract",
+                  "field": {
+                    "direction": "output",
+                    "type": "column",
+                    "column": {
+                      "name": "avg_income"
+                    }
+                  },
+                  "bounds": {
+                    "closure_type": "closed-closed",
+                    "lower": {
+                      "type": "value",
+                      "value": "9"
+                    },
+                    "upper": {
+                      "type": "value",
+                      "value": "100000"
+                    }
+                  },
+                  "belong_op": "not_belongs_to"
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "binner(avg_income)_INV_condition_low"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "avg_income"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "in_range",
+                        "bounds": {
+                          "closure_type": "closed-open",
+                          "lower": {
+                            "type": "value",
+                            "value": "9"
+                          },
+                          "upper": {
+                            "type": "value",
+                            "value": "42830"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "avg_income"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "low"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "binner(avg_income)_INV_condition_moderate"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "avg_income"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "in_range",
+                        "bounds": {
+                          "closure_type": "closed-open",
+                          "lower": {
+                            "type": "value",
+                            "value": "42830"
+                          },
+                          "upper": {
+                            "type": "value",
+                            "value": "55590"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "avg_income"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "Moderate"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "binner(avg_income)_INV_condition_high"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "avg_income"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "in_range",
+                        "bounds": {
+                          "closure_type": "closed-closed",
+                          "lower": {
+                            "type": "value",
+                            "value": "55590"
+                          },
+                          "upper": {
+                            "type": "value",
+                            "value": "100000"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "avg_income"
+                        }
+                      },
+                      "operator": "belongs_to",
+                      "condition": {
+                        "type": "value_check",
+                        "value": {
+                          "type": "string",
+                          "value": "High"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
       }
     ]
   }
