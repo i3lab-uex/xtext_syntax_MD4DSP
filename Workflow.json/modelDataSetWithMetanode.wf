@@ -1,0 +1,560 @@
+workflow "ModelDataSet"{
+    source data = read_csv("/data/students.csv", ",")
+
+
+
+    missing_val_sex_ethnicity_irschool = impute(sex, ETHNICITY, IRSCHOOL) {
+        transform_special_to_most_frequent (missing)
+    } |> data
+    	contracts{
+    		precondition "imputeMissingByMostFrequent(sex)_PRE_value_range"{
+    			has_special_values (input.sex, missing, max 60%)
+    		}
+    		precondition "imputeMissingByMostFrequent(IRSCHOOL)_PRE_value_range"{
+    			has_special_values (input.IRSCHOOL, missing, max 60%)
+    		}
+    		precondition "imputeMissingByMostFrequent(ETHNICITY)_PRE_value_range"{
+    			has_special_values (input.ETHNICITY, missing, max 60%)
+    		}
+    		postcondition "imputeMissingByMostFrequent(sex)_POST_value_range"{
+    			no_special_values (output.sex, missing)
+    		}
+    		postcondition "imputeMissingByMostFrequent(IRSCHOOL)_Post_value_range"{
+    			no_special_values (output.IRSCHOOL, missing)
+    		}
+    		postcondition "imputeMissingByMostFrequent(ETHNICITY)_POST_value_range"{
+    			no_special_values (output.ETHNICITY, missing)
+    		}
+    		invariant "imputeMissingByMostFrequent(sex)_INVARIANT"{
+    			condition{
+    				if { expression: input.sex belongs_to special_values(missing) }
+    				then{ expression: output.sex belongs_to most_frequent }
+    			}
+    		}
+    		invariant "imputeMissingByMostFrequent(ETHNICITY)_INVARIANT"{
+    			condition{
+    				if { expression: input.ETHNICITY belongs_to special_values(missing) }
+    				then{ expression: output.ETHNICITY belongs_to most_frequent }
+    			}
+    		}
+    		invariant "imputeMissingByMostFrequent(IRSCHOOL)_INVARIANT"{
+    			condition{
+    				if { expression: input.IRSCHOOL belongs_to special_values(missing) }
+    				then{ expression: output.IRSCHOOL belongs_to most_frequent }
+    			}
+    		}
+    	}
+
+
+
+    missing_val_academic = impute(ACADEMIC_INTEREST_1, ACADEMIC_INTEREST_2) {
+        transform_special_to_fixed (missing, "Unknown")
+    } |> missing_val_sex_ethnicity_irschool
+    	contracts{
+    		precondition "imputeMissingByFixValue(ACADEMIC_INTEREST_2)_PRE_valueRange"{
+    			has_special_values (input.ACADEMIC_INTEREST_2, missing, max 60%)
+    		}
+    		postcondition "imputeMissingByFixValue(ACADEMIC_INTEREST_2)_POST_valueRange"{
+    			no_special_values (output.ACADEMIC_INTEREST_2, missing)
+    		}
+    		invariant "imputeMissingByFixValue(ACADEMIC_INTEREST_2)_INV_condition"{
+    			condition{
+    				if { expression: input.ACADEMIC_INTEREST_2 belongs_to special_values(missing) }
+    				then{ expression: output.ACADEMIC_INTEREST_2 belongs_to fixed="Unknown" }
+    			}
+    		}
+    		precondition "imputeMissingByFixValue(ACADEMIC_INTEREST_1)_PRE_valueRange"{
+    			has_special_values (input.ACADEMIC_INTEREST_1, missing, max 60%)
+    		}
+    		postcondition "imputeMissingByFixValue(ACADEMIC_INTEREST_1)_POST_valueRange"{
+    			no_special_values (output.ACADEMIC_INTEREST_1, missing)
+    		}
+    		invariant "imputeMissingByFixValue(ACADEMIC_INTEREST_1)_INV_condition"{
+    			condition{
+    				if { expression: input.ACADEMIC_INTEREST_1 belongs_to special_values(missing) }
+    				then{ expression: output.ACADEMIC_INTEREST_1 belongs_to fixed="Unknown" }
+    			}
+    		}
+    	}
+
+
+
+    missing_val_avg_distance = impute(avg_income, distance) {
+        transform_special_to_mean (missing)
+    } |> missing_val_academic
+    	contracts{
+    		precondition "imputeMissingByMean(avg_income)_PRE_valueRange"{
+    			has_special_values (input.avg_income, missing, max 60%)
+    		}
+    		postcondition "imputeMissingByMean(avg_income)_POST_valueRange"{
+    			no_special_values (output.avg_income, missing)
+    		}
+    		invariant "imputeMissingByMean(avg_income)_INV_condition"{
+    			condition{
+    				if { expression: input.avg_income belongs_to special_values(missing) }
+    				then{ expression: output.avg_income belongs_to mean }
+    			}
+    		}
+    		precondition "imputeMissingByMean(distance)_PRE_valueRange"{
+    			has_special_values (input.distance, missing, max 60%)
+    		}
+    		postcondition "imputeMissingByMean(distance)_POST_valueRange"{
+    			no_special_values (output.distance, missing)
+    		}
+    		invariant "imputeMissingByMean(distance)_INV_condition"{
+    			condition{
+    				if { expression: input.distance belongs_to special_values(missing) }
+    				then{ expression: output.distance belongs_to mean }
+    			}
+    		}
+    	}
+
+
+
+    missing_val_satscore = impute(satscore) {
+        transform_special_to_interpolation (missing)
+    } |> missing_val_avg_distance
+    	contracts{
+    		precondition "imputeMissingByLinearInterpolation(satscore)_PRE_valueRange"{
+    			has_special_values (input.satscore, missing, max 60%)
+    		}
+    		postcondition "imputeMissingByLinearInterpolation(satscore)_POST_valueRange"{
+    			no_special_values (output.satscore, missing)
+    		}
+    		invariant "imputeMissingByLinearInterpolation(satscore)_INVARIANT"{
+    			condition{
+    				if { expression: input.satscore belongs_to special_values(missing) }
+    				then{ expression: output.satscore belongs_to interpolation }
+    			}
+    		}
+    	}
+
+
+
+    filter_row_init_span = filter_rows {
+        range(init_span, [-inf, 0.0), include)
+    } |> missing_val_satscore
+    	contracts{
+    		precondition "rowFilterRange(init_span)_PRE_valueRange"{
+    			interval_contract (input.init_span, (-1000, 1000), belongs_to )
+    		}
+    		postcondition "rowFilterRange(init_span)_POST_valueRange"{
+    			interval_contract (output.init_span, [-216, -216], not_belongs_to)
+    		}
+    		invariant "rowFilterRange(init_span)_INV_condition"{
+    			condition{
+    				if { expression: input.init_span belongs_to in_range(-inf, 0) }
+    				then{ expression: output.init_span not_belongs_to in_range(-inf, 0) }
+    			}
+    		}
+    	}
+
+
+
+    column_filter = remove {
+        TRAVEL_INIT_CNTCTS, REFERRAL_CNTCTS, CONTACT_CODE1, telecq, interest, stuemail
+    } |> filter_row_init_span
+    	contracts{
+    		precondition "columnFilter(TRAVEL_INIT_CNTCTS, REFERRAL_CNCTS, telecq, interest, stuemail, CONTACT_CODE1)_PRE_fieldRange"{
+    			field_range(TRAVEL_INIT_CNTCTS, REFERRAL_CNCTS, telecq, interest, stuemail, CONTACT_CODE1; belongs_to)
+    		}
+    		postcondition "columnFilter(TRAVEL_INIT_CNTCTS, REFERRAL_CNCTS, telecq, interest, stuemail, CONTACT_CODE1)_POST_fieldRange"{
+    			field_range(TRAVEL_INIT_CNTCTS, REFERRAL_CNCTS, telecq, interest, stuemail, CONTACT_CODE1; not_belongs_to)
+    		}
+    		invariant "columnFilter(TRAVEL_INIT_CNTCTS, REFERRAL_CNCTS, telecq, interest, stuemail, CONTACT_CODE1)_INV_condition"{
+    			condition{
+    				if { expression: field_range(TRAVEL_INIT_CNTCTS, REFERRAL_CNCTS, telecq, interest, stuemail, CONTACT_CODE1; belongs_to) }
+    				then{ expression: output.TRAVEL_INIT_CNTCTS belongs_to in_range(0, 0) }
+    			}
+    		}
+    	}
+
+
+
+    rule_engine_territory = map(TERRITORY) {
+        "N" -> "0",
+        "A" -> "0"
+    } as TERRITORY |> column_filter
+    	contracts{
+    		precondition "mapping(TERRITORY)_PRE_valueRange_A"{
+    			value_range(input.TERRITORY, matches 'A', belongs_to)
+    		}
+    		precondition "mapping(TERRITORY)_PRE_valueRange_N"{
+    			value_range(input.TERRITORY, matches 'N', belongs_to)
+    		}
+    		postcondition "mapping(TERRITORY)_POST_valueRange_A"{
+    			value_range(output.TERRITORY, matches 'A', not_belongs_to)
+    		}
+    		postcondition "mapping(TERRITORY)_POST_valueRange_N"{
+    			value_range(output.TERRITORY, matches 'N', not_belongs_to)
+    		}
+    		invariant "Mapping(TERRITORY)_INV_condition_A"{
+    			condition {
+					if { expression: input.TERRITORY belongs_to value "A" }
+				    then { expression: output.TERRITORY belongs_to value "0" }
+				}
+    		}
+    		invariant "Mapping(TERRITORY)_INV_condition_N"{
+    			condition {
+					if { expression: input.TERRITORY belongs_to value "N" }
+				    then { expression: output.TERRITORY belongs_to value "0" }
+				}
+    		}
+    	}
+
+
+
+    rule_engine_instate = map(Instate) {
+        "Y" -> "1",
+        "N" -> "0"
+    } as Instate |> rule_engine_territory
+    	contracts{
+    		precondition "mapping(Instate)_PRE_valueRange_Y"{
+    			value_range(input.TERRITORY, matches 'Y', belongs_to)
+    		}
+    		precondition "mapping(Instate)_PRE_valueRange_N"{
+    			value_range(input.TERRITORY, matches 'N', belongs_to)
+    		}
+    		postcondition "mapping(Instate)_POST_valueRange_Y"{
+    			value_range(output.TERRITORY, matches 'Y', not_belongs_to)
+    		}
+    		postcondition "mapping(Instate)_POST_valueRange_N"{
+    			value_range(output.TERRITORY, matches 'N', not_belongs_to)
+    		}
+    		invariant "Mapping(Instate)_INV_condition_Y"{
+    			condition {
+					if { expression: input.TERRITORY belongs_to value "Y" }
+				    then { expression: output.TERRITORY belongs_to value "1" }
+				}
+    		}
+    		invariant "Mapping(Instate)_INV_condition_N"{
+    			condition {
+					if { expression: input.TERRITORY belongs_to value "N" }
+				    then { expression: output.TERRITORY belongs_to value "0" }
+				}
+    		}
+    	}
+
+
+
+    string_to_number = to_numeric(TERRITORY, Instate) |> rule_engine_instate
+    	contracts{
+    		precondition "stringToNumber(TERRITORY)_PRE_valueRange"{
+    			is_type String (input.TERRITORY, belongs_to)
+    		}
+    		postcondition "stringToNumber(TERRITORY)_POST_valueRange"{
+    			is_type Integer (output.TERRITORY, belongs_to)
+    		}
+    		invariant "INV_StringToNumber_condition_TERRITORY"{
+    			condition {
+					if { expression: input.TERRITORY belongs_to type String }
+				    then { expression: output.TERRITORY belongs_to type String }
+				}
+    		}
+    		invariant "INV_specialValue_condition_TERRITORY"{
+    			condition {
+					if { expression: input.TERRITORY not_belongs_to special_values }
+				    then { expression: output.TERRITORY not_belongs_to special_values }
+				}
+    		}
+    		precondition "stringToNumber(Instate)_PRE_valueRange"{
+    			is_type String (input.Instate, belongs_to)
+    		}
+    		postcondition "stringToNumber(Instate)_POST_valueRange"{
+    			is_type Integer (output.Instate, belongs_to)
+    		}
+    		invariant "INV_StringToNumber_condition_Instate"{
+    			condition {
+					if { expression: input.Instate belongs_to type String }
+				    then { expression: output.Instate belongs_to type String }
+				}
+    		}
+    		invariant "INV_specialValue_condition_Instate"{
+    			condition {
+					if { expression: input.Instate not_belongs_to special_values }
+				    then { expression: output.Instate not_belongs_to special_values }
+				}
+    		}
+    	}
+    	
+    	
+    	
+    numeric_outliers = outliers(avg_income, distance, Instate) {
+        replace_by_closest (missing)
+    } |> string_to_number
+    	contracts{
+    		precondition "imputeOutlierByClosest(avg_income)_PRE_valueRange"{
+    			has_special_values (input.avg_income, outlier, belongs_to)
+    		}
+    		precondition "imputeOutlierByClosest(distance)_PRE_valueRange"{
+    			has_special_values (input.distance, outlier, belongs_to)
+    		}
+    		precondition "imputeOutlierByClosest(avg_income)_PRE_valueRange"{
+    			has_special_values (input.Instate, outlier, belongs_to)
+    		}
+    		postcondition "imputeOutlierByClosest(avg_income)_POST_valueRange"{
+    			has_special_values (output.avg_income, outlier, not_belongs_to)
+    		}
+    		postcondition "imputeOutlierByClosest(distance)_POST_valueRange"{
+    			has_special_values (output.distance, outlier, not_belongs_to)
+    		}
+    		postcondition "imputeOutlierByClosest(avg_income)_POST_valueRange"{
+    			has_special_values (output.Instate, outlier, not_belongs_to)
+    		}
+    		invariant "imputeOutlierByClosest(avg_income)_INV_condition"{
+    			condition {
+					if { expression: input.avg_income belongs_to special_values (outlier)}
+				    then { expression: output.avg_income belongs_to replace_closest }
+				}
+    		}
+    		invariant "imputeOutlierByClosest(distance)_INV_condition"{
+    			condition {
+					if { expression: input.distance belongs_to special_values (outlier)}
+				    then { expression: output.distance belongs_to replace_closest }
+				}
+    		}
+    		invariant "imputeOutlierByClosest(Instate)_INV_condition"{
+    			condition {
+					if { expression: input.Instate belongs_to special_values (outlier)}
+				    then { expression: output.Instate belongs_to replace_closest }
+				}
+    		}
+    	}
+
+
+
+    binner_total_contacts = bin(TOTAL_CONTACTS) {
+        "Low" : [-Infinity, 1.0),
+        "Moderate" : [1.0, 4.0),
+        "High" : [4.0, Infinity)
+    } as TOTAL_CONTACTS_binned |> numeric_outliers
+    	contracts{
+    		precondition "binner(TOTAL_CONTACTS)_PRE_valueRange"{
+    			interval_contract (input.TOTAL_CONTACTS, (-1000, 1000), belongs_to )
+    		}
+    		postcondition "binner(TOTAL_CONTACTS)_POST_valueRange"{
+    			interval_contract (output.TOTAL_CONTACTS, (-1000, 1000), not_belongs_to )
+    		}
+    		invariant "binner(TOTAL_CONTACTS)_INV_condition_low"{
+    			condition {
+					if { expression: input.TOTAL_CONTACTS belongs_to in_range(-1000, 1) }
+				    then { expression: output.TOTAL_CONTACTS belongs_to value "low" }
+				}
+    		}
+    		invariant "binner(TOTAL_CONTACTS)_INV_condition_moderate"{
+    			condition {
+					if { expression: input.TOTAL_CONTACTS belongs_to in_range[1, 4) }
+				    then { expression: output.TOTAL_CONTACTS belongs_to value "moderate" }
+				}
+    		}
+    		invariant "binner(TOTAL_CONTACTS)_INV_condition_high"{
+    			condition {
+					if { expression: input.TOTAL_CONTACTS belongs_to in_range[4, 1000) }
+				    then { expression: output.TOTAL_CONTACTS belongs_to value "high" }
+				}
+    		}
+    	}
+
+
+
+    binner_self_init_contacts = bin(SELF_INIT_CNTCTS) {
+        "Low" : [-Infinity, 1.0),
+        "Moderate" : [1.0, 4.0),
+        "High" : [4.0, Infinity)
+    } as SELF_INIT_CNTCTS_binned |> binner_total_contacts
+    	contracts{
+    		precondition "binner(SELF_INIT_CNTCTS)_PRE_valueRange"{
+    			interval_contract (input.SELF_INIT_CNTCTS, (-1000, 1000), belongs_to )
+    		}
+    		postcondition "binner(SELF_INIT_CNTCTS)_POST_valueRange"{
+    			interval_contract (output.SELF_INIT_CNTCTS, (-1000, 1000), not_belongs_to )
+    		}
+    		invariant "binner(SELF_INIT_CNTCTS)_INV_condition_low"{
+    			condition {
+					if { expression: input.SELF_INIT_CNTCTS belongs_to in_range(-1000, 1) }
+				    then { expression: output.SELF_INIT_CNTCTS belongs_to value "low" }
+				}
+    		}
+    		invariant "binner(SELF_INIT_CNTCTS)_INV_condition_moderate"{
+    			condition {
+					if { expression: input.SELF_INIT_CNTCTS belongs_to in_range[1, 4) }
+				    then { expression: output.SELF_INIT_CNTCTS belongs_to value "moderate" }
+				}
+    		}
+    		invariant "binner(SELF_INIT_CNTCTS)_INV_condition_high"{
+    			condition {
+					if { expression: input.SELF_INIT_CNTCTS belongs_to in_range[4, 1000) }
+				    then { expression: output.SELF_INIT_CNTCTS belongs_to value "high" }
+				}
+    		}
+    	}
+
+
+
+    binner_solicited_contacts = bin(SOLICITED_CNTCTS) {
+        "Low" : [-Infinity, 1.0),
+        "Moderate" : [1.0, 4.0),
+        "High" : [4.0, Infinity)
+    } as SOLICITED_CNTCTS_binned |> binner_self_init_contacts
+    	contracts{
+    		precondition "binner(SOLICITED_CNTCTS)_PRE_valueRange"{
+    			interval_contract (input.SOLICITED_CNTCTS, (-1000, 1000), belongs_to )
+    		}
+    		postcondition "binner(SOLICITED_CNTCTS)_POST_valueRange"{
+    			interval_contract (output.SOLICITED_CNTCTS, (-1000, 1000), not_belongs_to )
+    		}
+    		invariant "binner(SOLICITED_CNTCTS)_INV_condition_low"{
+    			condition {
+					if { expression: input.SOLICITED_CNTCTS belongs_to in_range(-1000, 1) }
+				    then { expression: output.SOLICITED_CNTCTS belongs_to value "low" }
+				}
+    		}
+    		invariant "binner(SOLICITED_CNTCTS)_INV_condition_moderate"{
+    			condition {
+					if { expression: input.SOLICITED_CNTCTS belongs_to in_range[1, 4) }
+				    then { expression: output.SOLICITED_CNTCTS belongs_to value "moderate" }
+				}
+    		}
+    		invariant "binner(SOLICITED_CNTCTS)_INV_condition_high"{
+    			condition {
+					if { expression: input.SOLICITED_CNTCTS belongs_to in_range[4, 1000) }
+				    then { expression: output.SOLICITED_CNTCTS belongs_to value "high" }
+				}
+    		}
+    	}
+
+
+
+    binner_territory = bin(TERRITORY) {
+        "Unknown" : [-1000, 1.0),
+        "Zone 1" : [1.0, 3.0),
+        "Zone 2" : [3.0, 5.0),
+        "Zone 3" : [5.0, 7.0),
+        "Zone 4" : [7.0, 1000]
+    } as TERRITORY_binned |> binner_solicited_contacts
+    	contracts{
+    		precondition "binner(TERRITORY)_PRE_valueRange"{
+    			interval_contract (input.TERRITORY, [0, 1000], belongs_to )
+    		}
+    		postcondition "binner(TERRITORY)_POST_valueRange"{
+    			interval_contract (output.TERRITORY, (0, 1000), not_belongs_to )
+    		}
+    		invariant "binner(TERRITORY)_INV_condition_unknown"{
+    			condition {
+					if { expression: input.TERRITORY belongs_to in_range(-1000, 1) }
+				    then { expression: output.TERRITORY belongs_to value "Unknown" }
+				}
+    		}
+    		invariant "binner(TERRITORY)_INV_condition_zone1"{
+    			condition {
+					if { expression: input.TERRITORY belongs_to in_range[1, 3) }
+				    then { expression: output.TERRITORY belongs_to value "Zone1" }
+				}
+    		}
+    		invariant "binner(TERRITORY)_INV_condition_zone2"{
+    			condition {
+					if { expression: input.TERRITORY belongs_to in_range[3, 5) }
+				    then { expression: output.TERRITORY belongs_to value "Zone2" }
+				}
+    		}
+    		invariant "binner(TERRITORY)_INV_condition_zone3"{
+    			condition {
+					if { expression: input.TERRITORY belongs_to in_range[5, 7) }
+				    then { expression: output.TERRITORY belongs_to value "Zone3" }
+				}
+    		}
+    		invariant "binner(TERRITORY)_INV_condition_zone4"{
+    			condition {
+					if { expression: input.TERRITORY belongs_to in_range[7, 1000] }
+				    then { expression: output.TERRITORY belongs_to value "Zone4" }
+				}
+    		}
+    	}
+
+
+
+    binner_satscore = bin(satscore) {
+        "54 Percentile and Under" : [-Infinity, 1040.0),
+        "55-75 Percentile" : [1040.0, 1160.0),
+        "76-93 Percentile" : [1160.0, 1340.0),
+        "94+ percentile" : [1340.0, Infinity)
+    } as satscore_binned |> binner_territory
+    	contracts{
+    		precondition "binner(satscore)_PRE_valueRange"{
+    			interval_contract (input.satscore, [-1000, 2000], belongs_to )
+    		}
+    		postcondition "binner(satscore)_POST_valueRange"{
+    			interval_contract (output.satscore, (-1000, 2000), not_belongs_to )
+    		}
+    		invariant "binner(satscore)_INV_IF_54 Percentile and Under"{
+    			condition {
+					if { expression: input.satscore belongs_to in_range(-1000, 1040) }
+				    then { expression: output.satscore belongs_to value "54 Percentile and Under" }
+				}
+    		}
+    		invariant "binner(satscore)_INV_IF_55-75 Percentile"{
+    			condition {
+					if { expression: input.satscore belongs_to in_range[1040, 1160) }
+				    then { expression: output.satscore belongs_to value "55-75 Percentile" }
+				}
+    		}
+    		invariant "binner(satscore)_INV_IF_76-93 Percentile"{
+    			condition {
+					if { expression: input.satscore belongs_to in_range[1160, 1340) }
+				    then { expression: output.satscore belongs_to value "76-93 Percentile" }
+				}
+    		}
+    		invariant "binner(satscore)_INV_IF_94+ percentile"{
+    			condition {
+					if { expression: input.satscore belongs_to in_range[1340, 2000) }
+				    then { expression: output.satscore belongs_to value "94+ percentile" }
+				}
+    		}
+    	}
+
+
+
+    binner_avg_income = bin(avg_income) {
+        "low" : [9.0, 42830.0),
+        "Moderate" : [42830.0, 55590.0),
+        "High" : [55590.0, 100000.0]
+    } as avg_income_binned |> binner_satscore
+    	contracts{
+    		precondition "binner(avg_income)_PRE_valueRange"{
+    			interval_contract (input.avg_income, [-9, 100000], belongs_to )
+    		}
+    		postcondition "binner(avg_income)_POST_valueRange"{
+    			interval_contract (output.avg_income, [9, 100000], not_belongs_to )
+    		}
+    		invariant "binner(avg_income)_INV_condition_low"{
+    			condition {
+					if { expression: input.avg_income belongs_to in_range[9, 42830) }
+				    then { expression: output.avg_income belongs_to value "low" }
+				}
+    		}
+    		invariant "binner(avg_income)_INV_condition_moderate"{
+    			condition {
+					if { expression: input.avg_income belongs_to in_range[42830, 55590) }
+				    then { expression: output.avg_income belongs_to value "Moderate" }
+				}
+    		}
+    		invariant "binner(avg_income)_INV_condition_high"{
+    			condition {
+					if { expression: input.avg_income belongs_to in_range[55590, 100000] }
+				    then { expression: output.avg_income belongs_to value "High" }
+				}
+    		}
+    	}
+
+
+
+}
+
+
+
+
+
+
+
+
+

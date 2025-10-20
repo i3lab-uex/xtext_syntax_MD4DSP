@@ -1,5 +1,5 @@
 workflow "Student Data Pipeline" {
-    source data = read_csv("/data/students.csv", ,)
+    source data = read_csv("/data/students.csv", ",")
     
     clean = filter_rows {
         missing(Age, Grade, exclude)
@@ -16,8 +16,8 @@ workflow "Student Data Pipeline" {
         
         invariant "Age_no_special" {
             condition {
-                if input.Age not_belongs_to special_values
-                then output.Age not_belongs_to special_values
+                if { expression: input.Age not_belongs_to special_values}
+                then {expression: output.Age not_belongs_to special_values}
             }
         }
     }

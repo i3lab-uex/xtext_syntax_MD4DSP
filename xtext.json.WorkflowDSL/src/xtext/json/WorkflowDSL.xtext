@@ -23,7 +23,7 @@ FilePath:
     path=STRING;
 
 Delimiter:
-    "," | ";" | "\t" | "|" | value=STRING;
+    value=STRING;
 
 WorkflowBody:
     steps+=Step*;
@@ -56,57 +56,104 @@ ContractType:
     ValueRangeContract
     | ConditionContract
     | SpecialValueContract
-    | CastTypeContract;
+    | CastTypeContract
+    | IntervalContract
+    | FieldRangeContract;
 
 ValueRangeContract:
-    "value_range" "(" field=ContractField "," value=ContractValue ")";
+    "value_range" "(" field=ContractField "," value=ContractValue ("," belongOp=BelongOp)? ")";
 
 ContractField:
     "input" "." column=Column
-    | "output" "." column=Column;
+    | "output" "." column=Column
+    | "input" "." "datadictionary"
+    | "output" "." "datadictionary";
 
 ContractValue:
     "castable_to" type=Type
     | "in_range" bounds=RangeBounds
-    | "matches" value=Value;
+    | "matches" value=Value
+    | "field_list" columns=ColumnList;
 
 Type:
     "Integer" | "Double" | "String" | "Boolean";
 
+// Nuevo: Contrato de intervalo para RowFilter
+IntervalContract:
+    "interval_contract" "(" field=ContractField "," bounds=RangeBounds ("," belongOp=BelongOp)? ")";
+
+// Nuevo: Contrato de rango de campos para ColumnFilter
+FieldRangeContract:
+    "field_range" "(" columns=ColumnList (";" belongOp=BelongOp)? ")";
+
 ConditionContract:
-    "condition" "{" ifClause=IfClause thenClause=ThenClause "}";
+    "condition" "{" ifClause=IfClause thenClause=ThenClause "}" ("," belongOp=BelongOp)?;
+
+// NUEVA REGLA: Representa la estructura original de tu if
+SimpleCondition:
+    field=ContractField op=BelongOp condition=DataCondition;
+    
+BooleanExpression:
+    SimpleCondition | FieldRangeContract;
 
 IfClause:
-    "if" field=ContractField op=BelongOp condition=DataCondition;
+    "if" "{" "expression" ":" expression=BooleanExpression "}";
 
 ThenClause:
-    "then" field=ContractField op=BelongOp result=DataResult;
+    "then" "{" "expression" ":" expression=BooleanExpression "}";
 
 BelongOp:
     "belongs_to" | "not_belongs_to";
 
 DataCondition:
-    SpecialValueCheck | CastTypeCheck | ValueCheck;
+    SpecialValueCheck | CastTypeCheck | ValueCheck | StatisticalImputeCheck | SequentialImputeCheck 
+    | FixedImputeCheck | OutlierCheck | IntervalCheck | MappingCheck | DerivedValueCheck;
 
 SpecialValueCheck:
-    "special_values";
+    {SpecialValueCheck} "special_values" ("(" specialType=SpecialValueType ("," quantifier=Quantifier)? ")")?;
+
+SpecialValueType:
+    "missing" | "invalid" | "outlier";
 
 CastTypeCheck:
-    "type" type=Type;
+    {CastTypeCheck} "type" type=Type;
 
 ValueCheck:
-    "value" value=Value;
+    {ValueCheck} "value" value=Value;
+
+StatisticalImputeCheck:
+    {StatisticalImputeCheck} ("mean" | "median" | "most_frequent")
+    | {StatisticalImputeCheck} "interpolation" type=InterpolationType?;
+
+SequentialImputeCheck:
+    {SequentialImputeCheck} ("previous_value" | "next_value");
+
+FixedImputeCheck:
+    {FixedImputeCheck} "fixed" ("=" values=ValueList | "_value" "(" specialValue=STRING ")")?;
+
+OutlierCheck:
+    {OutlierCheck} ("outlier" | "replace_closest" | "replace_by_closest");
+
+IntervalCheck:
+    {IntervalCheck} "in_range" bounds=RangeBounds;
+
+MappingCheck:
+    {MappingCheck} "mapping" "{" rules=MappingRules "}";
+
+DerivedValueCheck:
+    {DerivedValueCheck} "derived" "(" expression=MathExpression ")";
 
 DataResult:
-    SpecialValueCheck | CastTypeCheck | ValueCheck;
+    SpecialValueCheck | CastTypeCheck | ValueCheck | StatisticalImputeCheck | SequentialImputeCheck 
+    | FixedImputeCheck | OutlierCheck | IntervalCheck | MappingCheck | DerivedValueCheck;
 
 SpecialValueContract:
-    "no_special_values" "(" field=ContractField ")"
-    | "has_special_values" "(" field=ContractField ")";
+    "no_special_values" "(" field=ContractField ("," specialType=SpecialValueType)? ("," quantifier=Quantifier)? ("," belongOp=BelongOp)? ")"
+    | "has_special_values" "(" field=ContractField ("," specialType=SpecialValueType)? ("," quantifier=Quantifier)? ("," belongOp=BelongOp)? ")";
 
 CastTypeContract:
-    "castable_to" type=Type "(" field=ContractField ")"
-    | "is_type" type=Type "(" field=ContractField ")";
+    "castable_to" type=Type "(" field=ContractField ("," belongOp=BelongOp)? ")"
+    | "is_type" type=Type "(" field=ContractField ("," belongOp=BelongOp)? ")";
 
 Transformation:
     RowFilter
@@ -126,7 +173,7 @@ FilterCondition:
     MissingFilter | RangeFilter | StringFilter;
 
 MissingFilter:
-    "missing" "(" columns=ColumnList "," includeExclude=IncludeExclude ")";
+    "missing" "(" columns=ColumnList "," includeExclude=IncludeExclude ("," quantifier=Quantifier)? ")";
 
 RangeFilter:
     "range" "(" column=Column "," bounds=RangeBounds "," includeExclude=IncludeExclude ")";
@@ -138,7 +185,10 @@ RangeBounds:
     | "(" lower=BoundValue "," upper=BoundValue ")";
 
 BoundValue:
-    value=Number | "*" | "inf" | "-inf";
+    "-inf" | "inf" | "*" | value=SignedNumber;
+
+SignedNumber returns ecore::EString:
+    ("-")? INT ("." INT)?;
 
 StringFilter:
     "matches" "(" column=Column "," pattern=Pattern "," includeExclude=IncludeExclude ")"
@@ -182,14 +232,7 @@ MathExpression:
     Primary (operator=Operator right=Primary)*;
 
 Primary:
-    operand=Operand | "(" expression=MathExpression ")" | call=FunctionCall;
-
-FunctionCall:
-    function=Function "(" (operands+=Operand ("," operands+=Operand)*)? ")";
-
-Function:
-    "abs" | "sqrt" | "pow" | "log" | "exp" 
-    | "sin" | "cos" | "tan" | "round" | "ceil" | "floor";
+    operand=Operand | "(" expression=MathExpression ")";
 
 Operand:
     column=Column | number=Number | string=STRING;
@@ -216,7 +259,7 @@ Interval:
     | "(" lower=IntervalBound "," upper=IntervalBound ")";
 
 IntervalBound:
-    value=Number | "-inf" | "inf" | "-Infinity" | "Infinity";
+    value=SignedNumber | "-inf" | "inf" | "-Infinity" | "Infinity";
 
 BinMode:
     "replace" | "as" newName=ID;
@@ -229,7 +272,7 @@ TypeConversion:
     | "to_date" "(" columns=ColumnList "," format=DateFormat? ")";
 
 DecimalSeparator:
-    "separator" "=" ("." | ",");
+    "separator" "=" value=("." | ",");
 
 DateFormat:
     "format" "=" format=STRING;
@@ -241,10 +284,22 @@ ImputeMethod:
     FixedImpute
     | StatisticalImpute
     | SequentialImpute
-    | AdvancedImpute;
+    | TransformImpute;
 
 FixedImpute:
     "fixed" "=" values=ValueList;
+
+TransformImpute:
+    "transform_special_to_fixed" "(" specialType=SpecialValueType "," replacementValue=Value ")"
+    | "transform_special_to_mean" "(" specialType=SpecialValueType ")"
+    | "transform_special_to_median" "(" specialType=SpecialValueType ")"
+    | "transform_special_to_most_frequent" "(" specialType=SpecialValueType ")"
+    | "transform_special_to_interpolation" "(" specialType=SpecialValueType ("," type=InterpolationType)? ")"
+    | "transform_special_to_previous_value" "(" specialType=SpecialValueType ")"
+    | "transform_special_to_next_value" "(" specialType=SpecialValueType ")"
+    | "transform_fixed_to_fixed" "{" rules=MappingRules "}"
+    | "transform_fixed_to_derived" "(" expression=MathExpression ")"
+    | "transform_derived_to_fixed" "(" derivedExpression=MathExpression "," replacementValue=Value ")";
 
 ValueList:
     value=Value | "[" (values+=Value ("," values+=Value)*)? "]";
@@ -252,68 +307,31 @@ ValueList:
 Value:
     number=Number | string=STRING | "null";
 
+InterpolationType:
+    "linear" | "polynomial" | "spline";
+
 StatisticalImpute:
     "mean"
     | "median"
-    | "mode"
     | "most_frequent"
-    | "max"
-    | "min";
+    | "interpolation" type=InterpolationType?;
 
 SequentialImpute:
-    "forward_fill"
-    | "backward_fill"
-    | "previous_value"
+    "previous_value"
     | "next_value";
-
-AdvancedImpute:
-    "interpolation" type=InterpolationType?
-    | "moving_average" ("window" "=" windowSize=Number)?
-    | "linear"
-    | "polynomial" ("degree" "=" degree=Number)?
-    | "spline";
-
-InterpolationType:
-    "linear" | "polynomial" | "spline";
 
 OutlierTreatment:
     "outliers" "(" columns=ColumnList ")" "{" strategy=OutlierStrategy "}";
 
 OutlierStrategy:
-    replacement=ReplacementStrategy method=DetectionMethod options=OutlierOptions?;
+    replacement=ReplacementStrategy;
 
 ReplacementStrategy:
-    "replace_closest"
+    "replace_closest" "(" specialType=SpecialValueType ")"
     | "replace_missing"
-    | "replace_by_closest"
-    | "replace_with" "=" value=Number
-    | "remove"
-    | "cap";
-
-DetectionMethod:
-    IQRMethod | ZScoreMethod | PercentileMethod;
-
-IQRMethod:
-    "iqr" params=IQRParams?;
-
-IQRParams:
-    "scalar" "=" scalar=Number
-    | "estimation" "=" estimation=EstimationType;
-
-EstimationType:
-    "R_4" | "R_7" | "R_8";
-
-ZScoreMethod:
-    "zscore" ("threshold" "=" threshold=Number)?;
-
-PercentileMethod:
-    "percentile" "lower" "=" lower=Number "upper" "=" upper=Number;
-
-OutlierOptions:
-    "scope" "=" scope=OutlierScope;
-
-OutlierScope:
-    "all" | "all_outliers" | "lower_only" | "upper_only";
+    | "replace_by_closest" "(" specialType=SpecialValueType ")"
+    | "replace_with" "(" specialType=SpecialValueType "," value=Number ")"
+    | "remove" "(" specialType=SpecialValueType ")";
 
 Join:
     "join" "(" left=ID "," right=ID ")" "{" spec=JoinSpec "}";
@@ -356,6 +374,13 @@ Float returns ecore::EFloat:
 Regex:
     '/' pattern=STRING '/' flags=STRING?;
 
-terminal COMMENT:
-    '//' !('\n'|'\r')* ('\r'? '\n')?
-    | '/*' -> '*/';
+Quantifier:
+    "max" value=QuantifierValue
+    | "min" value=QuantifierValue
+    | "exactly" value=QuantifierValue
+    | "at_most" value=QuantifierValue
+    | "at_least" value=QuantifierValue;
+
+QuantifierValue:
+    absolute=Number
+    | percentage=Number "%";

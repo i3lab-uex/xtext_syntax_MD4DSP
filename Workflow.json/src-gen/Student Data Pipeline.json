@@ -8,6 +8,9 @@
       "type": "csv_reader",
       "file_path": {
         "path": "/data/students.csv"
+      },
+      "delimiter": {
+        "value": ","
       }
     }
   },
@@ -19,7 +22,18 @@
         "transformation": {
           "type": "row_filter",
           "condition": {
-            "type": "filter_condition"
+            "type": "missing",
+            "columns": {
+              "columns": [
+                {
+                  "name": "Age"
+                },
+                {
+                  "name": "Grade"
+                }
+              ]
+            },
+            "include_exclude": "exclude"
           }
         },
         "target": "data"
@@ -29,6 +43,7 @@
         "name": "numeric",
         "transformation": {
           "type": "type_conversion",
+          "conversion_type": "to_numeric",
           "columns": {
             "columns": [
               {
@@ -52,12 +67,15 @@
                 "contract_type": {
                   "type": "value_range",
                   "field": {
+                    "direction": "input",
+                    "type": "column",
                     "column": {
                       "name": "Age"
                     }
                   },
                   "value": {
-                    "type": "contract_value"
+                    "type": "castable_to",
+                    "cast_type": "Integer"
                   }
                 }
               }
@@ -70,8 +88,11 @@
               "body": {
                 "contract_type": {
                   "type": "cast_type",
+                  "operation": "is_type",
                   "cast_type_name": "Integer",
                   "field": {
+                    "direction": "output",
+                    "type": "column",
                     "column": {
                       "name": "Age"
                     }
@@ -88,10 +109,38 @@
                 "contract_type": {
                   "type": "condition",
                   "if_clause": {
-                    "type": "if_clause"
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "Age"
+                        }
+                      },
+                      "operator": "not_belongs_to",
+                      "condition": {
+                        "type": "special_values"
+                      }
+                    }
                   },
                   "then_clause": {
-                    "type": "then_clause"
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "Age"
+                        }
+                      },
+                      "operator": "not_belongs_to",
+                      "condition": {
+                        "type": "special_values"
+                      }
+                    }
                   }
                 }
               }

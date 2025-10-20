@@ -1,0 +1,1909 @@
+{
+    "nodes": [
+        {
+            "id": 1,
+            "node_name": "File Reader",
+            "node_type": "org.knime.base.node.io.filehandling.csv.reader.FileReaderNodeFactory",
+            "parameters": {
+                "file_path": "/data/students.csv"
+            }
+        },
+        {
+            "id": 2,
+            "node_name": "Missing Value",
+            "parameters": {
+                "in_columns": [
+                    {
+                        "column_name": "sex",
+                        "column_type": "xstring"
+                    },
+                    {
+                        "column_name": "ETHNICITY",
+                        "column_type": "xstring"
+                    },
+                    {
+                        "column_name": "IRSCHOOL",
+                        "column_type": "xstring"
+                    }
+                ],
+                "out_columns": [
+                    {
+                        "column_name": "sex",
+                        "column_type": "xstring"
+                    },
+                    {
+                        "column_name": "ETHNICITY",
+                        "column_type": "xstring"
+                    },
+                    {
+                        "column_name": "IRSCHOOL",
+                        "column_type": "xstring"
+                    }
+                ],
+                "imputationType": "MostFrequent",
+                "fixStringValues": [
+                    null,
+                    null,
+                    null
+                ]
+            }
+        },
+        {
+            "id": 3,
+            "node_name": "Missing Value",
+            "parameters": {
+                "in_columns": [
+                    {
+                        "column_name": "ACADEMIC_INTEREST_1",
+                        "column_type": "xstring"
+                    },
+                    {
+                        "column_name": "ACADEMIC_INTEREST_2",
+                        "column_type": "xstring"
+                    }
+                ],
+                "out_columns": [
+                    {
+                        "column_name": "ACADEMIC_INTEREST_1",
+                        "column_type": "xstring"
+                    },
+                    {
+                        "column_name": "ACADEMIC_INTEREST_2",
+                        "column_type": "xstring"
+                    }
+                ],
+                "imputationType": "Fixed Value",
+                "fixStringValues": [
+                    "Unknown",
+                    "Unknown"
+                ]
+            }
+        },
+        {
+            "id": 4,
+            "node_name": "Missing Value",
+            "parameters": {
+                "in_columns": [
+                    {
+                        "column_name": "avg_income",
+                        "column_type": "xstring"
+                    },
+                    {
+                        "column_name": "distance",
+                        "column_type": "xstring"
+                    }
+                ],
+                "out_columns": [
+                    {
+                        "column_name": "avg_income",
+                        "column_type": "xstring"
+                    },
+                    {
+                        "column_name": "distance",
+                        "column_type": "xstring"
+                    }
+                ],
+                "imputationType": "Mean",
+                "fixStringValues": [
+                    null,
+                    null
+                ]
+            }
+        },
+        {
+            "id": 5,
+            "node_name": "Missing Value",
+            "parameters": {
+                "in_columns": [
+                    {
+                        "column_name": "satscore",
+                        "column_type": "xstring"
+                    }
+                ],
+                "out_columns": [
+                    {
+                        "column_name": "satscore",
+                        "column_type": "xstring"
+                    }
+                ],
+                "imputationType": "Interpolation",
+                "fixStringValues": [
+                    null
+                ]
+            }
+        },
+        {
+            "id": 6,
+            "node_name": "Row Filter (deprecated)",
+            "node_type": "org.knime.base.node.preproc.filter.row.RowFilterNodeFactory",
+            "parameters": {
+                "filter_type": "RangeVal_RowFilter",
+                "lower_bound": 0.0,
+                "upper_bound": 0.0,
+                "has_lower_bound": true,
+                "has_upper_bound": true,
+                "filter_type_inclusion": "INCLUDE",
+                "in_columns": [
+                    {
+                        "column_name": "init_span",
+                        "column_type": "xstring"
+                    }
+                ],
+                "out_columns": [
+                    {
+                        "column_name": "init_span",
+                        "column_type": "xstring"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 7,
+            "node_name": "Column Filter",
+            "node_type": "org.knime.base.node.preproc.filter.column.DataColumnSpecFilterNodeFactory",
+            "parameters": {
+                "in_columns": [],
+                "out_columns": [
+                    {
+                        "column_name": "TRAVEL_INIT_CNTCTS",
+                        "column_type": "xstring"
+                    },
+                    {
+                        "column_name": "REFERRAL_CNTCTS",
+                        "column_type": "xstring"
+                    },
+                    {
+                        "column_name": "CONTACT_CODE1",
+                        "column_type": "xstring"
+                    },
+                    {
+                        "column_name": "telecq",
+                        "column_type": "xstring"
+                    },
+                    {
+                        "column_name": "interest",
+                        "column_type": "xstring"
+                    },
+                    {
+                        "column_name": "stuemail",
+                        "column_type": "xstring"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 8,
+            "node_name": "Rule Engine",
+            "node_type": "org.knime.base.node.rules.engine.RuleEngineNodeFactory",
+            "parameters": {
+                "rules": [
+                    "$TERRITORY$ LIKE \"*N*\" => \"0\"",
+                    "$TERRITORY$ LIKE \"*A*\" => \"0\"",
+                    "TRUE => $TERRITORY$"
+                ],
+                "function_types": [
+                    "LIKE",
+                    "LIKE"
+                ],
+                "new_column_name": "prediction",
+                "replace_column_name": "TERRITORY",
+                "append_column": false,
+                "in_columns": [
+                    {
+                        "column_name": "TERRITORY",
+                        "column_type": "xstring"
+                    }
+                ],
+                "out_columns": [
+                    {
+                        "column_name": "prediction",
+                        "column_type": "xstring"
+                    }
+                ],
+                "mapping": {
+                    "replace_column_name": "TERRITORY",
+                    "mapping_parameters": [
+                        {
+                            "key": "N",
+                            "value": "0"
+                        },
+                        {
+                            "key": "A",
+                            "value": "0"
+                        }
+                    ],
+                    "map_operation": "VALUE_MAPPING",
+                    "unique_replacement_one_column": false
+                }
+            }
+        },
+        {
+            "id": 9,
+            "node_name": "Rule Engine",
+            "node_type": "org.knime.base.node.rules.engine.RuleEngineNodeFactory",
+            "parameters": {
+                "rules": [
+                    "$Instate$ LIKE \"*Y*\" => \"1\"",
+                    "$Instate$ LIKE \"*N*\" => \"0\"",
+                    "TRUE => $Instate$"
+                ],
+                "function_types": [
+                    "LIKE",
+                    "LIKE"
+                ],
+                "new_column_name": "prediction",
+                "replace_column_name": "Instate",
+                "append_column": false,
+                "in_columns": [
+                    {
+                        "column_name": "Instate",
+                        "column_type": "xstring"
+                    }
+                ],
+                "out_columns": [
+                    {
+                        "column_name": "prediction",
+                        "column_type": "xstring"
+                    }
+                ],
+                "mapping": {
+                    "replace_column_name": "Instate",
+                    "mapping_parameters": [
+                        {
+                            "key": "Y",
+                            "value": "1"
+                        },
+                        {
+                            "key": "N",
+                            "value": "0"
+                        }
+                    ],
+                    "map_operation": "VALUE_MAPPING",
+                    "unique_replacement_one_column": false
+                }
+            }
+        },
+        {
+            "id": 10,
+            "node_name": "String to Number",
+            "node_type": "org.knime.base.node.preproc.colconvert.stringtonumber2.StringToNumber2NodeFactory",
+            "parameters": {
+                "decimal_separator": ".",
+                "in_columns": [
+                    {
+                        "column_name": "TERRITORY",
+                        "column_type": "xstring"
+                    },
+                    {
+                        "column_name": "Instate",
+                        "column_type": "xstring"
+                    }
+                ],
+                "out_columns": [
+                    {
+                        "column_name": "TERRITORY",
+                        "column_type": "xstring"
+                    },
+                    {
+                        "column_name": "Instate",
+                        "column_type": "xstring"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 11,
+            "node_name": "Numeric Outliers",
+            "node_type": "org.knime.base.node.stats.outlier.handler.NumericOutliersNodeFactory",
+            "parameters": {
+                "in_columns": [
+                    {
+                        "column_name": "avg_income",
+                        "column_type": "xstring"
+                    },
+                    {
+                        "column_name": "distance",
+                        "column_type": "xstring"
+                    },
+                    {
+                        "column_name": "Instate",
+                        "column_type": "xstring"
+                    }
+                ],
+                "out_columns": [
+                    {
+                        "column_name": "avg_income",
+                        "column_type": "xstring"
+                    },
+                    {
+                        "column_name": "distance",
+                        "column_type": "xstring"
+                    },
+                    {
+                        "column_name": "Instate",
+                        "column_type": "xstring"
+                    }
+                ],
+                "estimation_type": "R_4",
+                "iqr_scalar": 1.5,
+                "replacement_strategy": "Closest permitted value",
+                "outlier_treatment": "Replace outlier values",
+                "detection_option": "All outliers"
+            }
+        },
+        {
+            "id": 12,
+            "node_name": "Numeric Binner",
+            "node_type": "org.knime.base.node.preproc.binner.BinnerNodeFactory",
+            "parameters": {
+                "bins": [
+                    {
+                        "binName": "Low",
+                        "closureType": "closedOpen",
+                        "leftMargin": "0",
+                        "rightMargin": "1.0"
+                    },
+                    {
+                        "binName": "Moderate",
+                        "closureType": "closedOpen",
+                        "leftMargin": "1.0",
+                        "rightMargin": "4.0"
+                    },
+                    {
+                        "binName": "High",
+                        "closureType": "closedOpen",
+                        "leftMargin": "4.0",
+                        "rightMargin": "0"
+                    }
+                ],
+                "in_columns": [
+                    {
+                        "column_name": "TOTAL_CONTACTS",
+                        "column_type": "xstring"
+                    }
+                ],
+                "out_columns": [
+                    {
+                        "column_name": "TOTAL_CONTACTS_binned",
+                        "column_type": "xstring"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 13,
+            "node_name": "Numeric Binner",
+            "node_type": "org.knime.base.node.preproc.binner.BinnerNodeFactory",
+            "parameters": {
+                "bins": [
+                    {
+                        "binName": "Low",
+                        "closureType": "closedOpen",
+                        "leftMargin": "0",
+                        "rightMargin": "1.0"
+                    },
+                    {
+                        "binName": "Moderate",
+                        "closureType": "closedOpen",
+                        "leftMargin": "1.0",
+                        "rightMargin": "4.0"
+                    },
+                    {
+                        "binName": "High",
+                        "closureType": "closedOpen",
+                        "leftMargin": "4.0",
+                        "rightMargin": "0"
+                    }
+                ],
+                "in_columns": [
+                    {
+                        "column_name": "SELF_INIT_CNTCTS",
+                        "column_type": "xstring"
+                    }
+                ],
+                "out_columns": [
+                    {
+                        "column_name": "SELF_INIT_CNTCTS_binned",
+                        "column_type": "xstring"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 14,
+            "node_name": "Numeric Binner",
+            "node_type": "org.knime.base.node.preproc.binner.BinnerNodeFactory",
+            "parameters": {
+                "bins": [
+                    {
+                        "binName": "Low",
+                        "closureType": "closedOpen",
+                        "leftMargin": "0",
+                        "rightMargin": "1.0"
+                    },
+                    {
+                        "binName": "Moderate",
+                        "closureType": "closedOpen",
+                        "leftMargin": "1.0",
+                        "rightMargin": "4.0"
+                    },
+                    {
+                        "binName": "High",
+                        "closureType": "closedOpen",
+                        "leftMargin": "4.0",
+                        "rightMargin": "0"
+                    }
+                ],
+                "in_columns": [
+                    {
+                        "column_name": "SOLICITED_CNTCTS",
+                        "column_type": "xstring"
+                    }
+                ],
+                "out_columns": [
+                    {
+                        "column_name": "SOLICITED_CNTCTS_binned",
+                        "column_type": "xstring"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 15,
+            "node_name": "Numeric Binner",
+            "node_type": "org.knime.base.node.preproc.binner.BinnerNodeFactory",
+            "parameters": {
+                "bins": [
+                    {
+                        "binName": "Unknown",
+                        "closureType": "closedOpen",
+                        "leftMargin": "-1000",
+                        "rightMargin": "1.0"
+                    },
+                    {
+                        "binName": "Zone 1",
+                        "closureType": "closedOpen",
+                        "leftMargin": "1.0",
+                        "rightMargin": "3.0"
+                    },
+                    {
+                        "binName": "Zone 2",
+                        "closureType": "closedOpen",
+                        "leftMargin": "3.0",
+                        "rightMargin": "5.0"
+                    },
+                    {
+                        "binName": "Zone 3",
+                        "closureType": "closedOpen",
+                        "leftMargin": "5.0",
+                        "rightMargin": "7.0"
+                    },
+                    {
+                        "binName": "Zone 4",
+                        "closureType": "closedOpen",
+                        "leftMargin": "7.0",
+                        "rightMargin": "1000"
+                    }
+                ],
+                "in_columns": [
+                    {
+                        "column_name": "TERRITORY",
+                        "column_type": "xstring"
+                    }
+                ],
+                "out_columns": [
+                    {
+                        "column_name": "TERRITORY_binned",
+                        "column_type": "xstring"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 16,
+            "node_name": "Numeric Binner",
+            "node_type": "org.knime.base.node.preproc.binner.BinnerNodeFactory",
+            "parameters": {
+                "bins": [
+                    {
+                        "binName": "54 Percentile and Under",
+                        "closureType": "closedOpen",
+                        "leftMargin": "0",
+                        "rightMargin": "1040.0"
+                    },
+                    {
+                        "binName": "55-75 Percentile",
+                        "closureType": "closedOpen",
+                        "leftMargin": "1040.0",
+                        "rightMargin": "1160.0"
+                    },
+                    {
+                        "binName": "76-93 Percentile",
+                        "closureType": "closedOpen",
+                        "leftMargin": "1160.0",
+                        "rightMargin": "1340.0"
+                    },
+                    {
+                        "binName": "94+ percentile",
+                        "closureType": "closedOpen",
+                        "leftMargin": "1340.0",
+                        "rightMargin": "0"
+                    }
+                ],
+                "in_columns": [
+                    {
+                        "column_name": "satscore",
+                        "column_type": "xstring"
+                    }
+                ],
+                "out_columns": [
+                    {
+                        "column_name": "satscore_binned",
+                        "column_type": "xstring"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 17,
+            "node_name": "Numeric Binner",
+            "node_type": "org.knime.base.node.preproc.binner.BinnerNodeFactory",
+            "parameters": {
+                "bins": [
+                    {
+                        "binName": "low",
+                        "closureType": "closedOpen",
+                        "leftMargin": "9.0",
+                        "rightMargin": "42830.0"
+                    },
+                    {
+                        "binName": "Moderate",
+                        "closureType": "closedOpen",
+                        "leftMargin": "42830.0",
+                        "rightMargin": "55590.0"
+                    },
+                    {
+                        "binName": "High",
+                        "closureType": "closedOpen",
+                        "leftMargin": "55590.0",
+                        "rightMargin": "100000.0"
+                    }
+                ],
+                "in_columns": [
+                    {
+                        "column_name": "avg_income",
+                        "column_type": "xstring"
+                    }
+                ],
+                "out_columns": [
+                    {
+                        "column_name": "avg_income_binned",
+                        "column_type": "xstring"
+                    }
+                ]
+            }
+        }
+    ],
+    "connections": [
+        {
+            "sourceID": 1,
+            "destID": 2
+        },
+        {
+            "sourceID": 2,
+            "destID": 3
+        },
+        {
+            "sourceID": 3,
+            "destID": 4
+        },
+        {
+            "sourceID": 4,
+            "destID": 5
+        },
+        {
+            "sourceID": 5,
+            "destID": 6
+        },
+        {
+            "sourceID": 6,
+            "destID": 7
+        },
+        {
+            "sourceID": 7,
+            "destID": 8
+        },
+        {
+            "sourceID": 8,
+            "destID": 9
+        },
+        {
+            "sourceID": 9,
+            "destID": 10
+        },
+        {
+            "sourceID": 10,
+            "destID": 11
+        },
+        {
+            "sourceID": 11,
+            "destID": 12
+        },
+        {
+            "sourceID": 12,
+            "destID": 13
+        },
+        {
+            "sourceID": 13,
+            "destID": 14
+        },
+        {
+            "sourceID": 14,
+            "destID": 15
+        },
+        {
+            "sourceID": 15,
+            "destID": 16
+        },
+        {
+            "sourceID": 16,
+            "destID": 17
+        }
+    ],
+    "contracts": {
+        "2": {
+            "columns": {
+                "IRSCHOOL": {
+                    "preconditions": [
+                        {
+                            "name": "value_range",
+                            "type": "value_range",
+                            "check": "has_special",
+                            "target_type": "String"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "imputeMissing",
+                            "type": "value_range",
+                            "check": "has_special",
+                            "target_type": "String"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "special_value",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "most_frequent",
+                                "belong_op": "BELONG"
+                            }
+                        }
+                    ]
+                },
+                "sex": {
+                    "preconditions": [
+                        {
+                            "name": "value_range",
+                            "type": "value_range",
+                            "check": "has_special",
+                            "target_type": "String"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "value_range",
+                            "type": "value_range",
+                            "check": "has_special",
+                            "target_type": "String"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "special_value",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "most_frequent",
+                                "belong_op": "BELONG"
+                            }
+                        }
+                    ]
+                },
+                "ETHNICITY": {
+                    "preconditions": [
+                        {
+                            "name": "value_range",
+                            "type": "value_range",
+                            "check": "has_special",
+                            "target_type": "String"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "value_range",
+                            "type": "value_range",
+                            "check": "has_special",
+                            "target_type": "String"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "special_value",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "most_frequent",
+                                "belong_op": "BELONG"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "3": {
+            "columns": {
+                "ACADEMIC_INTEREST_1": {
+                    "preconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "has_special",
+                            "target_type": "String"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "has_special",
+                            "target_type": "String"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "special_value",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "fix_value",
+                                "belong_op": "BELONG",
+                                "target_type": "String"
+                            }
+                        }
+                    ]
+                },
+                "ACADEMIC_INTEREST_2": {
+                    "preconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "has_special",
+                            "target_type": "String"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "has_special",
+                            "target_type": "String"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "special_value",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "fix_value",
+                                "belong_op": "BELONG",
+                                "target_type": "String"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "4": {
+            "columns": {
+                "distance": {
+                    "preconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "has_special",
+                            "target_type": "String"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "has_special",
+                            "target_type": "String"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "special_value",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "mean",
+                                "belong_op": "BELONG"
+                            }
+                        }
+                    ]
+                },
+                "avg_income": {
+                    "preconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "has_special",
+                            "target_type": "String"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "has_special",
+                            "target_type": "String"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "special_value",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "mean",
+                                "belong_op": "BELONG"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "5": {
+            "columns": {
+                "satscore": {
+                    "preconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "has_special",
+                            "target_type": "String"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "has_special",
+                            "target_type": "String"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "special_value",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "interpolation",
+                                "belong_op": "BELONG"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "6": {
+            "columns": {
+                "init_span": {
+                    "preconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "in_range",
+                            "belong_op": "BELONG",
+                            "target_type": "Double"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "not_in_range",
+                            "belong_op": "NOTBELONG",
+                            "target_type": "Double"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "interval",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "interval",
+                                "belong_op": "NOTBELONG"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "7": {
+            "columns": {
+                "interest": {
+                    "preconditions": [
+                        {
+                            "name": "fieldRange",
+                            "type": "value_range",
+                            "check": "exists",
+                            "target_type": "String"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "fieldRange",
+                            "type": "value_range",
+                            "check": "not_exists",
+                            "target_type": "String"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "field_range",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "interval",
+                                "belong_op": "BELONG"
+                            }
+                        }
+                    ]
+                },
+                "CONTACT_CODE1": {
+                    "preconditions": [
+                        {
+                            "name": "fieldRange",
+                            "type": "value_range",
+                            "check": "exists",
+                            "target_type": "String"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "fieldRange",
+                            "type": "value_range",
+                            "check": "not_exists",
+                            "target_type": "String"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "field_range",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "interval",
+                                "belong_op": "BELONG"
+                            }
+                        }
+                    ]
+                },
+                "TRAVEL_INIT_CNTCTS": {
+                    "preconditions": [
+                        {
+                            "name": "fieldRange",
+                            "type": "value_range",
+                            "check": "exists",
+                            "target_type": "String"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "fieldRange",
+                            "type": "value_range",
+                            "check": "not_exists",
+                            "target_type": "String"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "field_range",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "interval",
+                                "belong_op": "BELONG"
+                            }
+                        }
+                    ]
+                },
+                "stuemail": {
+                    "preconditions": [
+                        {
+                            "name": "fieldRange",
+                            "type": "value_range",
+                            "check": "exists",
+                            "target_type": "String"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "fieldRange",
+                            "type": "value_range",
+                            "check": "not_exists",
+                            "target_type": "String"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "field_range",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "interval",
+                                "belong_op": "BELONG"
+                            }
+                        }
+                    ]
+                },
+                "telecq": {
+                    "preconditions": [
+                        {
+                            "name": "fieldRange",
+                            "type": "value_range",
+                            "check": "exists",
+                            "target_type": "String"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "fieldRange",
+                            "type": "value_range",
+                            "check": "not_exists",
+                            "target_type": "String"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "field_range",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "interval",
+                                "belong_op": "BELONG"
+                            }
+                        }
+                    ]
+                },
+                "REFERRAL_CNCTS": {
+                    "preconditions": [
+                        {
+                            "name": "fieldRange",
+                            "type": "value_range",
+                            "check": "exists",
+                            "target_type": "String"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "fieldRange",
+                            "type": "value_range",
+                            "check": "not_exists",
+                            "target_type": "String"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "field_range",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "interval",
+                                "belong_op": "BELONG"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "8": {
+            "columns": {
+                "TERRITORY": {
+                    "preconditions": [
+                        {
+                            "name": "valueRange_A",
+                            "type": "value_range",
+                            "check": "value_in",
+                            "target_type": "String"
+                        },
+                        {
+                            "name": "valueRange_N",
+                            "type": "value_range",
+                            "check": "value_in",
+                            "target_type": "String"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "valueRange_A",
+                            "type": "value_range",
+                            "check": "value_not_in",
+                            "belong_op": "NOTBELONG",
+                            "target_type": "String"
+                        },
+                        {
+                            "name": "valueRange_N",
+                            "type": "value_range",
+                            "check": "value_not_in",
+                            "belong_op": "NOTBELONG",
+                            "target_type": "String"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "value",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "value",
+                                "belong_op": "BELONG"
+                            }
+                        },
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "value",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "value",
+                                "belong_op": "BELONG"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "9": {
+            "columns": {
+                "TERRITORY": {
+                    "preconditions": [
+                        {
+                            "name": "valueRange_Y",
+                            "type": "value_range",
+                            "check": "value_in",
+                            "target_type": "String"
+                        },
+                        {
+                            "name": "valueRange_N",
+                            "type": "value_range",
+                            "check": "value_in",
+                            "target_type": "String"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "valueRange_Y",
+                            "type": "value_range",
+                            "check": "value_not_in",
+                            "belong_op": "NOTBELONG",
+                            "target_type": "String"
+                        },
+                        {
+                            "name": "valueRange_N",
+                            "type": "value_range",
+                            "check": "value_not_in",
+                            "belong_op": "NOTBELONG",
+                            "target_type": "String"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "value",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "value",
+                                "belong_op": "BELONG"
+                            }
+                        },
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "value",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "value",
+                                "belong_op": "BELONG"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "10": {
+            "columns": {
+                "TERRITORY": {
+                    "preconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "castable_to",
+                            "target_type": "String"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "is_type",
+                            "target_type": "Integer"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "castType",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "cast_type",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "cast_type",
+                                "belong_op": "BELONG",
+                                "target_type": "String"
+                            }
+                        },
+                        {
+                            "name": "specialValue",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "special_value",
+                                "belong_op": "NOTBELONG"
+                            },
+                            "then": {
+                                "result_type": "special_value",
+                                "belong_op": "NOTBELONG"
+                            }
+                        }
+                    ]
+                },
+                "Instate": {
+                    "preconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "castable_to",
+                            "target_type": "String"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "is_type",
+                            "target_type": "Integer"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "castType",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "cast_type",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "cast_type",
+                                "belong_op": "BELONG",
+                                "target_type": "String"
+                            }
+                        },
+                        {
+                            "name": "specialValue",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "special_value",
+                                "belong_op": "NOTBELONG"
+                            },
+                            "then": {
+                                "result_type": "special_value",
+                                "belong_op": "NOTBELONG"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "11": {
+            "columns": {
+                "distance": {
+                    "preconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "has_special",
+                            "target_type": "String"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "has_special",
+                            "target_type": "String"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "special_value",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "unknown",
+                                "belong_op": "BELONG"
+                            }
+                        }
+                    ]
+                },
+                "avg_income": {
+                    "preconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "has_special",
+                            "target_type": "String"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "has_special",
+                            "target_type": "String"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "special_value",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "unknown",
+                                "belong_op": "BELONG"
+                            }
+                        }
+                    ]
+                },
+                "Instate": {
+                    "preconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "has_special",
+                            "target_type": "String"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "has_special",
+                            "target_type": "String"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "special_value",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "unknown",
+                                "belong_op": "BELONG"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "12": {
+            "columns": {
+                "TOTAL_CONTACTS": {
+                    "preconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "in_range",
+                            "belong_op": "BELONG",
+                            "target_type": "Double"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "not_in_range",
+                            "belong_op": "NOTBELONG",
+                            "target_type": "Double"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "interval",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "value",
+                                "belong_op": "BELONG"
+                            }
+                        },
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "interval",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "value",
+                                "belong_op": "BELONG"
+                            }
+                        },
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "interval",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "value",
+                                "belong_op": "BELONG"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "13": {
+            "columns": {
+                "SELF_INIT_CNTCTS": {
+                    "preconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "in_range",
+                            "belong_op": "BELONG",
+                            "target_type": "Double"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "not_in_range",
+                            "belong_op": "NOTBELONG",
+                            "target_type": "Double"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "interval",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "value",
+                                "belong_op": "BELONG"
+                            }
+                        },
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "interval",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "value",
+                                "belong_op": "BELONG"
+                            }
+                        },
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "interval",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "value",
+                                "belong_op": "BELONG"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "14": {
+            "columns": {
+                "SOLICITED_CNTCTS": {
+                    "preconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "in_range",
+                            "belong_op": "BELONG",
+                            "target_type": "Double"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "not_in_range",
+                            "belong_op": "NOTBELONG",
+                            "target_type": "Double"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "interval",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "value",
+                                "belong_op": "BELONG"
+                            }
+                        },
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "interval",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "value",
+                                "belong_op": "BELONG"
+                            }
+                        },
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "interval",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "value",
+                                "belong_op": "BELONG"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "15": {
+            "columns": {
+                "TERRITORY": {
+                    "preconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "in_range",
+                            "belong_op": "BELONG",
+                            "target_type": "Double"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "not_in_range",
+                            "belong_op": "NOTBELONG",
+                            "target_type": "Double"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "interval",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "value",
+                                "belong_op": "BELONG"
+                            }
+                        },
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "interval",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "value",
+                                "belong_op": "BELONG"
+                            }
+                        },
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "interval",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "value",
+                                "belong_op": "BELONG"
+                            }
+                        },
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "interval",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "value",
+                                "belong_op": "BELONG"
+                            }
+                        },
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "interval",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "value",
+                                "belong_op": "BELONG"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "16": {
+            "columns": {
+                "satscore": {
+                    "preconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "in_range",
+                            "belong_op": "BELONG",
+                            "target_type": "Double"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "not_in_range",
+                            "belong_op": "NOTBELONG",
+                            "target_type": "Double"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "IF",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "interval",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "value",
+                                "belong_op": "BELONG"
+                            }
+                        },
+                        {
+                            "name": "IF",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "interval",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "value",
+                                "belong_op": "BELONG"
+                            }
+                        },
+                        {
+                            "name": "IF",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "interval",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "value",
+                                "belong_op": "BELONG"
+                            }
+                        },
+                        {
+                            "name": "IF",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "interval",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "value",
+                                "belong_op": "BELONG"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "17": {
+            "columns": {
+                "avg_income": {
+                    "preconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "in_range",
+                            "belong_op": "BELONG",
+                            "target_type": "Double"
+                        }
+                    ],
+                    "postconditions": [
+                        {
+                            "name": "valueRange",
+                            "type": "value_range",
+                            "check": "not_in_range",
+                            "belong_op": "NOTBELONG",
+                            "target_type": "Double"
+                        }
+                    ],
+                    "invariants": [
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "interval",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "value",
+                                "belong_op": "BELONG"
+                            }
+                        },
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "interval",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "value",
+                                "belong_op": "BELONG"
+                            }
+                        },
+                        {
+                            "name": "condition",
+                            "type": "condition",
+                            "if": {
+                                "condition_type": "interval",
+                                "belong_op": "BELONG"
+                            },
+                            "then": {
+                                "result_type": "value",
+                                "belong_op": "BELONG"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}
