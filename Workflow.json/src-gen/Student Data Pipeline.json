@@ -1,0 +1,153 @@
+{
+  "type": "workflow",
+  "name": "Student Data Pipeline",
+  "source": {
+    "type": "data_source",
+    "name": "data",
+    "reader": {
+      "type": "csv_reader",
+      "file_path": {
+        "path": "/data/students.csv"
+      },
+      "delimiter": {
+        "value": ","
+      }
+    }
+  },
+  "body": {
+    "steps": [
+      {
+        "type": "step",
+        "name": "clean",
+        "transformation": {
+          "type": "row_filter",
+          "condition": {
+            "type": "missing",
+            "columns": {
+              "columns": [
+                {
+                  "name": "Age"
+                },
+                {
+                  "name": "Grade"
+                }
+              ]
+            },
+            "include_exclude": "exclude"
+          }
+        },
+        "target": "data"
+      },
+      {
+        "type": "step",
+        "name": "numeric",
+        "transformation": {
+          "type": "type_conversion",
+          "conversion_type": "to_numeric",
+          "columns": {
+            "columns": [
+              {
+                "name": "Age"
+              },
+              {
+                "name": "Grade"
+              }
+            ]
+          }
+        },
+        "target": "clean",
+        "contracts": {
+          "contracts": [
+            {
+              "type": "precondition",
+              "name": {
+                "name": "Age_castable"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "value_range",
+                  "field": {
+                    "direction": "input",
+                    "type": "column",
+                    "column": {
+                      "name": "Age"
+                    }
+                  },
+                  "value": {
+                    "type": "castable_to",
+                    "cast_type": "Integer"
+                  }
+                }
+              }
+            },
+            {
+              "type": "postcondition",
+              "name": {
+                "name": "Age_is_integer"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "cast_type",
+                  "operation": "is_type",
+                  "cast_type_name": "Integer",
+                  "field": {
+                    "direction": "output",
+                    "type": "column",
+                    "column": {
+                      "name": "Age"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "invariant",
+              "name": {
+                "name": "Age_no_special"
+              },
+              "body": {
+                "contract_type": {
+                  "type": "condition",
+                  "if_clause": {
+                    "type": "if_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "input",
+                        "type": "column",
+                        "column": {
+                          "name": "Age"
+                        }
+                      },
+                      "operator": "not_belongs_to",
+                      "condition": {
+                        "type": "special_values"
+                      }
+                    }
+                  },
+                  "then_clause": {
+                    "type": "then_clause",
+                    "expression": {
+                      "type": "simple_condition",
+                      "field": {
+                        "direction": "output",
+                        "type": "column",
+                        "column": {
+                          "name": "Age"
+                        }
+                      },
+                      "operator": "not_belongs_to",
+                      "condition": {
+                        "type": "special_values"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

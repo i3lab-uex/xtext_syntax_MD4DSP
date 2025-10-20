@@ -1,0 +1,386 @@
+grammar xtext.json.WorkflowDSL with org.eclipse.xtext.common.Terminals
+
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+generate workflowDSL "http://www.json.xtext/WorkflowDSL"
+
+Workflow:
+    "workflow" name=STRING "{" source=DataSource body=WorkflowBody "}";
+
+DataSource:
+    "source" name=ID "=" reader=DataReader;
+
+DataReader:
+    CSVReader | FileReader;
+
+CSVReader:
+    "read_csv" "(" filePath=FilePath ("," delimiter=Delimiter)? ")";
+
+FileReader:
+    "read_file" "(" filePath=FilePath ")";
+
+FilePath:
+    path=STRING;
+
+Delimiter:
+    value=STRING;
+
+WorkflowBody:
+    steps+=Step*;
+
+Step:
+    name=ID "=" transformation=Transformation ("|>" target=ID)? contracts=ContractBlock?;
+
+ContractBlock:
+    "contracts" "{" contracts+=Contract* "}";
+
+Contract:
+    Precondition | Postcondition | Invariant;
+
+Precondition:
+    "precondition" name=ContractName "{" body=ContractBody "}";
+
+Postcondition:
+    "postcondition" name=ContractName "{" body=ContractBody "}";
+
+Invariant:
+    "invariant" name=ContractName "{" body=ContractBody "}";
+
+ContractName:
+    name=STRING | name=ID;
+
+ContractBody:
+    type=ContractType;
+
+ContractType:
+    ValueRangeContract
+    | ConditionContract
+    | SpecialValueContract
+    | CastTypeContract
+    | IntervalContract
+    | FieldRangeContract;
+
+ValueRangeContract:
+    "value_range" "(" field=ContractField "," value=ContractValue ("," belongOp=BelongOp)? ")";
+
+ContractField:
+    "input" "." column=Column
+    | "output" "." column=Column
+    | "input" "." "datadictionary"
+    | "output" "." "datadictionary";
+
+ContractValue:
+    "castable_to" type=Type
+    | "in_range" bounds=RangeBounds
+    | "matches" value=Value
+    | "field_list" columns=ColumnList;
+
+Type:
+    "Integer" | "Double" | "String" | "Boolean";
+
+// Nuevo: Contrato de intervalo para RowFilter
+IntervalContract:
+    "interval_contract" "(" field=ContractField "," bounds=RangeBounds ("," belongOp=BelongOp)? ")";
+
+// Nuevo: Contrato de rango de campos para ColumnFilter
+FieldRangeContract:
+    "field_range" "(" columns=ColumnList (";" belongOp=BelongOp)? ")";
+
+ConditionContract:
+    "condition" "{" ifClause=IfClause thenClause=ThenClause "}" ("," belongOp=BelongOp)?;
+
+// NUEVA REGLA: Representa la estructura original de tu if
+SimpleCondition:
+    field=ContractField op=BelongOp condition=DataCondition;
+    
+BooleanExpression:
+    SimpleCondition | FieldRangeContract;
+
+IfClause:
+    "if" "{" "expression" ":" expression=BooleanExpression "}";
+
+ThenClause:
+    "then" "{" "expression" ":" expression=BooleanExpression "}";
+
+BelongOp:
+    "belongs_to" | "not_belongs_to";
+
+DataCondition:
+    SpecialValueCheck | CastTypeCheck | ValueCheck | StatisticalImputeCheck | SequentialImputeCheck 
+    | FixedImputeCheck | OutlierCheck | IntervalCheck | MappingCheck | DerivedValueCheck;
+
+SpecialValueCheck:
+    {SpecialValueCheck} "special_values" ("(" specialType=SpecialValueType ("," quantifier=Quantifier)? ")")?;
+
+SpecialValueType:
+    "missing" | "invalid" | "outlier";
+
+CastTypeCheck:
+    {CastTypeCheck} "type" type=Type;
+
+ValueCheck:
+    {ValueCheck} "value" value=Value;
+
+StatisticalImputeCheck:
+    {StatisticalImputeCheck} ("mean" | "median" | "most_frequent")
+    | {StatisticalImputeCheck} "interpolation" type=InterpolationType?;
+
+SequentialImputeCheck:
+    {SequentialImputeCheck} ("previous_value" | "next_value");
+
+FixedImputeCheck:
+    {FixedImputeCheck} "fixed" ("=" values=ValueList | "_value" "(" specialValue=STRING ")")?;
+
+OutlierCheck:
+    {OutlierCheck} ("outlier" | "replace_closest" | "replace_by_closest");
+
+IntervalCheck:
+    {IntervalCheck} "in_range" bounds=RangeBounds;
+
+MappingCheck:
+    {MappingCheck} "mapping" "{" rules=MappingRules "}";
+
+DerivedValueCheck:
+    {DerivedValueCheck} "derived" "(" expression=MathExpression ")";
+
+DataResult:
+    SpecialValueCheck | CastTypeCheck | ValueCheck | StatisticalImputeCheck | SequentialImputeCheck 
+    | FixedImputeCheck | OutlierCheck | IntervalCheck | MappingCheck | DerivedValueCheck;
+
+SpecialValueContract:
+    "no_special_values" "(" field=ContractField ("," specialType=SpecialValueType)? ("," quantifier=Quantifier)? ("," belongOp=BelongOp)? ")"
+    | "has_special_values" "(" field=ContractField ("," specialType=SpecialValueType)? ("," quantifier=Quantifier)? ("," belongOp=BelongOp)? ")";
+
+CastTypeContract:
+    "castable_to" type=Type "(" field=ContractField ("," belongOp=BelongOp)? ")"
+    | "is_type" type=Type "(" field=ContractField ("," belongOp=BelongOp)? ")";
+
+Transformation:
+    RowFilter
+    | ColumnFilter  
+    | Mapping
+    | MathOp
+    | Binner
+    | TypeConversion
+    | Imputation
+    | OutlierTreatment
+    | Join;
+
+RowFilter:
+    "filter_rows" "{" condition=FilterCondition "}";
+
+FilterCondition:
+    MissingFilter | RangeFilter | StringFilter;
+
+MissingFilter:
+    "missing" "(" columns=ColumnList "," includeExclude=IncludeExclude ("," quantifier=Quantifier)? ")";
+
+RangeFilter:
+    "range" "(" column=Column "," bounds=RangeBounds "," includeExclude=IncludeExclude ")";
+
+RangeBounds:
+    "[" lower=BoundValue "," upper=BoundValue "]"
+    | "[" lower=BoundValue "," upper=BoundValue ")"
+    | "(" lower=BoundValue "," upper=BoundValue "]"
+    | "(" lower=BoundValue "," upper=BoundValue ")";
+
+BoundValue:
+    "-inf" | "inf" | "*" | value=SignedNumber;
+
+SignedNumber returns ecore::EString:
+    ("-")? INT ("." INT)?;
+
+StringFilter:
+    "matches" "(" column=Column "," pattern=Pattern "," includeExclude=IncludeExclude ")"
+    | "like" "(" column=Column "," pattern=Pattern "," includeExclude=IncludeExclude ")";
+
+Pattern:
+    value=STRING | regex=Regex;
+
+IncludeExclude:
+    "include" | "exclude";
+
+ColumnFilter:
+    "select_columns" "{" columns=ColumnList "}"
+    | "drop_columns" "{" columns=ColumnList "}"
+    | "keep" "{" columns=ColumnList "}"
+    | "remove" "{" columns=ColumnList "}";
+
+Mapping:
+    ValueMapping | SubstringMapping;
+
+ValueMapping:
+    "map" "(" column=Column ")" "{" rules=MappingRules "}" mode=MappingMode;
+
+MappingRules:
+    (rules+=MappingRule ("," rules+=MappingRule)*)?;
+
+MappingRule:
+    from=STRING "->" to=STRING
+    | pattern=Pattern "=>" to=STRING;
+
+SubstringMapping:
+    "replace" "(" column=Column "," from=STRING "," to=STRING ")" mode=MappingMode;
+
+MappingMode:
+    "replace" | "as" newName=ID;
+
+MathOp:
+    "math" "(" expression=MathExpression ")" "as" newName=ID;
+
+MathExpression:
+    Primary (operator=Operator right=Primary)*;
+
+Primary:
+    operand=Operand | "(" expression=MathExpression ")";
+
+Operand:
+    column=Column | number=Number | string=STRING;
+
+Operator:
+    "+" | "-" | "*" | "/" | "%" | "^";
+
+Binner:
+    "bin" "(" column=Column ")" "{" definitions=BinDefinitions "}" mode=BinMode;
+
+BinDefinitions:
+    (definitions+=BinDef ("," definitions+=BinDef)*)?;
+
+BinDef:
+    name=BinName ":" interval=Interval;
+
+BinName:
+    name=STRING;
+
+Interval:
+    "[" lower=IntervalBound "," upper=IntervalBound "]"
+    | "[" lower=IntervalBound "," upper=IntervalBound ")"
+    | "(" lower=IntervalBound "," upper=IntervalBound "]"
+    | "(" lower=IntervalBound "," upper=IntervalBound ")";
+
+IntervalBound:
+    value=SignedNumber | "-inf" | "inf" | "-Infinity" | "Infinity";
+
+BinMode:
+    "replace" | "as" newName=ID;
+
+TypeConversion:
+    "to_numeric" "(" columns=ColumnList ")" separator=DecimalSeparator?
+    | "to_string" "(" columns=ColumnList ")"
+    | "to_categorical" "(" columns=ColumnList ")"
+    | "to_boolean" "(" columns=ColumnList ")"
+    | "to_date" "(" columns=ColumnList "," format=DateFormat? ")";
+
+DecimalSeparator:
+    "separator" "=" value=("." | ",");
+
+DateFormat:
+    "format" "=" format=STRING;
+
+Imputation:
+    "impute" "(" columns=ColumnList ")" "{" method=ImputeMethod "}";
+
+ImputeMethod:
+    FixedImpute
+    | StatisticalImpute
+    | SequentialImpute
+    | TransformImpute;
+
+FixedImpute:
+    "fixed" "=" values=ValueList;
+
+TransformImpute:
+    "transform_special_to_fixed" "(" specialType=SpecialValueType "," replacementValue=Value ")"
+    | "transform_special_to_mean" "(" specialType=SpecialValueType ")"
+    | "transform_special_to_median" "(" specialType=SpecialValueType ")"
+    | "transform_special_to_most_frequent" "(" specialType=SpecialValueType ")"
+    | "transform_special_to_interpolation" "(" specialType=SpecialValueType ("," type=InterpolationType)? ")"
+    | "transform_special_to_previous_value" "(" specialType=SpecialValueType ")"
+    | "transform_special_to_next_value" "(" specialType=SpecialValueType ")"
+    | "transform_fixed_to_fixed" "{" rules=MappingRules "}"
+    | "transform_fixed_to_derived" "(" expression=MathExpression ")"
+    | "transform_derived_to_fixed" "(" derivedExpression=MathExpression "," replacementValue=Value ")";
+
+ValueList:
+    value=Value | "[" (values+=Value ("," values+=Value)*)? "]";
+
+Value:
+    number=Number | string=STRING | "null";
+
+InterpolationType:
+    "linear" | "polynomial" | "spline";
+
+StatisticalImpute:
+    "mean"
+    | "median"
+    | "most_frequent"
+    | "interpolation" type=InterpolationType?;
+
+SequentialImpute:
+    "previous_value"
+    | "next_value";
+
+OutlierTreatment:
+    "outliers" "(" columns=ColumnList ")" "{" strategy=OutlierStrategy "}";
+
+OutlierStrategy:
+    replacement=ReplacementStrategy;
+
+ReplacementStrategy:
+    "replace_closest" "(" specialType=SpecialValueType ")"
+    | "replace_missing"
+    | "replace_by_closest" "(" specialType=SpecialValueType ")"
+    | "replace_with" "(" specialType=SpecialValueType "," value=Number ")"
+    | "remove" "(" specialType=SpecialValueType ")";
+
+Join:
+    "join" "(" left=ID "," right=ID ")" "{" spec=JoinSpec "}";
+
+JoinSpec:
+    type=JoinType "on" conditions=JoinConditions options=JoinOptions?;
+
+JoinType:
+    "inner" | "left" | "right" | "full" | "cross";
+
+JoinConditions:
+    conditions+=JoinCondition ("and" conditions+=JoinCondition)*;
+
+JoinCondition:
+    left=Column "=" right=Column
+    | left=Column comparator=Comparator right=Column;
+
+Comparator:
+    "=" | "==" | "!=" | "<" | ">" | "<=" | ">=";
+
+JoinOptions:
+    "suffix" "=" "(" leftSuffix=STRING "," rightSuffix=STRING ")";
+
+Column:
+    name=ID | table=ID "." column=ID;
+
+ColumnList:
+    columns+=Column ("," columns+=Column)*
+    | "*";
+
+Number:
+    INT ('.' INT)? | '.' INT;
+
+Integer returns ecore::EInt:
+    INT;
+
+Float returns ecore::EFloat:
+    INT '.' INT | '.' INT | INT '.';
+
+Regex:
+    '/' pattern=STRING '/' flags=STRING?;
+
+Quantifier:
+    "max" value=QuantifierValue
+    | "min" value=QuantifierValue
+    | "exactly" value=QuantifierValue
+    | "at_most" value=QuantifierValue
+    | "at_least" value=QuantifierValue;
+
+QuantifierValue:
+    absolute=Number
+    | percentage=Number "%";

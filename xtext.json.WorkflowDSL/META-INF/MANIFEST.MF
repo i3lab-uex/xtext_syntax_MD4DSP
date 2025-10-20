@@ -1,0 +1,30 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: xtext.json.WorkflowDSL
+Bundle-ManifestVersion: 2
+Bundle-Name: xtext.json.WorkflowDSL
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: xtext.json.WorkflowDSL; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xtext,
+ org.eclipse.xtext.xbase,
+ org.eclipse.equinox.common;bundle-version="3.19.0",
+ org.eclipse.emf.ecore,
+ org.eclipse.xtext.xbase.lib;bundle-version="2.40.0",
+ org.eclipse.emf.common,
+ org.antlr.runtime;bundle-version="[3.2.0,3.2.1)",
+ com.google.gson;bundle-version="2.8.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Export-Package: xtext.json.services,
+ xtext.json.parser.antlr,
+ xtext.json.parser.antlr.internal,
+ xtext.json.workflowDSL.util,
+ xtext.json.validation,
+ xtext.json.generator,
+ xtext.json.workflowDSL,
+ xtext.json.workflowDSL.impl,
+ xtext.json.serializer,
+ xtext.json.scoping,
+ xtext.json,
+ xtext.json.export
+Import-Package: org.apache.log4j
