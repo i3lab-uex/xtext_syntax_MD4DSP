@@ -153,6 +153,10 @@ mvn clean install
 1. Right-click on `xtext.json.WorkflowDSL` project
 2. **Run As → Eclipse Application**
 3. A new Eclipse instance will launch with WorkflowDSL installed
+4. In the new eclipse, create a new project (default).
+5. Paste the .wf file containing the xtext model in the project.
+6. Open the file in the project in eclipse and transform the project into a xtext project.
+7. Then, you can modify the model and the json will be generated and updated automatically.
 
 ---
 
