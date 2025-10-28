@@ -124,9 +124,19 @@ cd xtext_syntax_MD4DSP
    - `xtext.json.WorkflowDSL.tests`
    - `xtext.json.WorkflowDSL.ui.tests`
 
-### Step 3: Generate Xtext Artifacts
+### Step 3: Build the Project
 
-Right-click on `WorkflowDSL.xtext` → **Run As → Generate Xtext Artifacts**
+- Project → Clean → Clean all projects
+- Project → Build Automatically (should be enabled)
+
+If there are still errors, the project will have to be built manually.
+
+- Right-click on the projects with errors (e.g. xtext.json.WorkflowDSL.tests) → Build path → Configure Build Path ... → Apply and close.
+- There is no need to select anything that is not selected by default.
+
+### Step 4: Generate Xtext Artifacts
+
+Right-click on `GenerateWorkflowDSL.mwe2` → **Run As → MWE2 Workflow**
 
 This generates:
 - Parser
@@ -135,18 +145,6 @@ This generates:
 - Validator
 - Ecore model
 - GenModel
-
-### Step 4: Build the Project
-
-**Option A: Eclipse**
-- Project → Clean → Clean all projects
-- Project → Build Automatically (should be enabled)
-
-**Option B: Maven (Command Line)**
-```bash
-cd xtext.json.WorkflowDSL
-mvn clean install
-```
 
 ### Step 5: Launch Runtime Eclipse
 
