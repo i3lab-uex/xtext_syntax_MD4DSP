@@ -940,6 +940,7 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 
 ## Authors
 
+- **Fran Melchor** - Development and documentation
 - **Carlos Breuer Carrasco** - Development and documentation
 - **Carlos Cambero Rojas** - Development and documentation
 
