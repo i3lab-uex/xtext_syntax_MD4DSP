@@ -21,13 +21,13 @@
 
 ## Project Overview
 
-**WorkflowDSL** is a Domain-Specific Language (DSL) built with **Eclipse Xtext 2.40.0** for defining data processing workflows in a declarative, human-readable format. The project automatically generates KNIME-compatible JSON from `.wf` textual files.
+**WorkflowDSL** is a domain-specific language (DSL) created with **Eclipse Xtext 2.40.0** to define data processing workflows in a declarative, human-readable format. The project automatically generates intermediate JSON with the MD4SP environment from `.wf` text files. For this intermediate JSON, there are automatic mechanisms in place that allow the JSON to be parsed into an MD4DSP workflow. These mechanisms are defined in greater detail in this [repository](https://github.com/i3uex/knime2model_MD4DSP?tab=readme-ov-file).
 
 ### Key Features
 
 - **Declarative Syntax**: Define complex data pipelines in a readable text format
 - **Design by Contract**: Preconditions, postconditions, and invariants
-- **Automatic Code Generation**: Generates KNIME-style JSON with nodes, connections, and contracts
+- **Automatic Code Generation**: Generates a intermediate JSON with nodes, connections, and contracts
 - **Rich Transformations**: Imputation, filtering, mapping, binning, outlier detection, type conversion
 - **Pipeline Composition**: Use `|>` operator to chain transformations
 - **IDE Support**: Full Eclipse IDE integration with syntax highlighting, auto-completion, and validation
@@ -72,7 +72,7 @@ xtext_syntax_MD4DSP/
    - Defines the AST (Abstract Syntax Tree) structure
 
 3. **Code Generator (`WorkflowDSLGenerator.xtend`)**
-   - Transforms `.wf` files into KNIME JSON format
+   - Transforms `.wf` files into intermediate JSON format
    - Implements the visitor pattern to traverse the AST
    - Generates nodes, connections, and contracts sections
 
@@ -89,7 +89,7 @@ xtext_syntax_MD4DSP/
     ↓ [Xtext Parser]
 AST (EMF Model)
     ↓ [WorkflowDSLGenerator.xtend]
-JSON Output (KNIME format)
+JSON Output (intermediate MD4DSP format)
 ```
 
 ---
@@ -739,7 +739,7 @@ The `WorkflowDSLGenerator.xtend` file transforms `.wf` files into JSON:
         {
             "id": 1,
             "node_name": "File Reader",
-            "node_type": "org.knime.base.node...",
+            "node_type": "...",
             "parameters": { ... }
         },
         ...
